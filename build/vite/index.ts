@@ -5,8 +5,6 @@ import progress from 'vite-plugin-progress'
 import EslintPlugin from 'vite-plugin-eslint'
 import PurgeIcons from 'vite-plugin-purge-icons'
 import { ViteEjsPlugin } from 'vite-plugin-ejs'
-// @ts-ignore
-import ElementPlus from 'unplugin-element-plus/vite'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
@@ -25,9 +23,6 @@ export function createVitePlugins() {
     VueJsx(),
     progress(),
     PurgeIcons(),
-    ElementPlus({
-      useSource: true
-    }),
     AutoImport({
       include: [
         /\.[tj]sx?$/, // .ts, .tsx, .js, .jsx
@@ -41,7 +36,11 @@ export function createVitePlugins() {
         // 可额外添加需要 autoImport 的组件
       ],
       dts: 'src/types/auto-imports.d.ts',
-      resolvers: [ElementPlusResolver()],
+      resolvers: [
+        ElementPlusResolver({
+          importStyle: 'sass'
+        })
+      ],
       eslintrc: {
         enabled: false, // Default `false`
         filepath: './.eslintrc-auto-import.json', // Default `./.eslintrc-auto-import.json`
@@ -59,7 +58,11 @@ export function createVitePlugins() {
       // 生成自定义 `auto-components.d.ts` 全局声明
       dts: 'src/types/auto-components.d.ts',
       // 自定义组件的解析器
-      resolvers: [ElementPlusResolver()],
+      resolvers: [
+        ElementPlusResolver({
+          importStyle: 'sass'
+        })
+      ],
       exclude: [/[\\/]node_modules[\\/]/]
     }),
     EslintPlugin({

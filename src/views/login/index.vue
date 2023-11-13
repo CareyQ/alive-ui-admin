@@ -26,7 +26,7 @@ const appStore = useAppStore()
 .page-container {
   height: 100vh;
   width: 100%;
-  background-color: $loginBgColor;
+  background-color: var(--login-bg-color);
 }
 
 .height {
@@ -49,7 +49,7 @@ const appStore = useAppStore()
   @extend .panel;
   width: 500px;
   flex-direction: column;
-  background-color: $primaryColor;
+  background-color: var(--el-color-primary);
   color: white;
   padding: 50px;
   h1 {
