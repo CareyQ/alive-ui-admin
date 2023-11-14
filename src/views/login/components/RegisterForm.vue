@@ -18,13 +18,19 @@ const registerForm = reactive({
 
 const captchaEl = reactive({
   btnDisabled: false,
+  btnDuation: 10,
+  btnText: '获取验证码',
+  btnLoading: false,
+
   inputDisabled: true,
   captchaShow: false,
 
   mobileIsValid: false,
   mobileIsLoading: false,
   mobileValid: false,
-  errorMsg: ''
+
+  mobileErrorMsg: '',
+  codeErrorMsg: ''
 })
 
 const rules: FormRules = {
@@ -42,8 +48,8 @@ const rules: FormRules = {
   ]
 }
 
-const check = (formEl: FormInstance | undefined, val: string) => {
-  formEl?.validateField('mobile', (valid) => {
+const check = (val: string) => {
+  registerFormRef.value?.validateField('mobile', (valid) => {
     if (!valid) {
       return
     }
@@ -52,15 +58,61 @@ const check = (formEl: FormInstance | undefined, val: string) => {
     setTimeout(() => {
       console.log(val)
       captchaEl.mobileIsLoading = false
-      captchaEl.errorMsg = '此手机号已被使用'
+      captchaEl.mobileErrorMsg = '此手机号已被使用'
+      captchaEl.captchaShow = true
     }, 2000)
   })
+}
+
+const getCode = () => {
+  registerFormRef.value?.validateField('mobile', (valid) => {
+    if (!valid) {
+      return
+    }
+    sendSms()
+  })
+}
+
+const sendSms = () => {
+  captchaEl.btnLoading = true
+  captchaEl.btnText = '发送中'
+  if (captchaEl.btnDuation !== 10) {
+    captchaEl.btnDisabled = true
+  }
+
+  setTimeout(() => {
+    captchaEl.btnLoading = false
+  }, 2000)
+
+  let btnTimer = setInterval(() => {
+    const temp = captchaEl.btnDuation--
+    captchaEl.btnText = `${temp}秒后可重发`
+    captchaEl.inputDisabled = false
+    if (temp <= 0) {
+      clearInterval(btnTimer)
+      captchaEl.btnDuation = 10
+      captchaEl.btnText = '重新获取'
+      captchaEl.btnDisabled = false
+    } else if (temp !== 10 && captchaEl.btnDisabled === false) {
+      captchaEl.btnDisabled = true
+    }
+  }, 1000)
 }
 
 const register = async (formEl: FormInstance | undefined) => {
   if (!formEl) return
   await formEl?.validate((valid) => {
     if (!valid) return
+    if (!registerForm.code) {
+      captchaEl.codeErrorMsg = '请输入验证码'
+      return
+    } else {
+      const reg = /^[0-9]\d{5}$/
+      if (!reg.test(registerForm.code)) {
+        captchaEl.codeErrorMsg = '请输入正确的验证码'
+        return
+      }
+    }
   })
 }
 </script>
@@ -110,10 +162,10 @@ const register = async (formEl: FormInstance | undefined) => {
       />
     </el-form-item>
 
-    <el-form-item prop="mobile" :error="captchaEl.errorMsg">
+    <el-form-item prop="mobile" :error="captchaEl.mobileErrorMsg">
       <el-input
         v-model="registerForm.mobile"
-        @blur="check(registerFormRef, registerForm.mobile)"
+        @blur="check(registerForm.mobile)"
         placeholder="请输入手机号码"
         :maxlength="11"
       >
@@ -130,9 +182,9 @@ const register = async (formEl: FormInstance | undefined) => {
       </el-input>
     </el-form-item>
 
-    <el-form-item prop="code" v-if="captchaEl.captchaShow">
+    <el-form-item prop="code" v-if="captchaEl.captchaShow" :error="captchaEl.codeErrorMsg">
       <el-row justify="space-between" style="width: 100%; align-items: flex-end">
-        <el-col :span="15">
+        <el-col :span="14">
           <el-input
             v-model="registerForm.code"
             :disabled="captchaEl.inputDisabled"
@@ -140,10 +192,17 @@ const register = async (formEl: FormInstance | undefined) => {
             clearable
           />
         </el-col>
-        <el-col :span="8">
-          <el-button type="warning" :disabled="captchaEl.btnDisabled" plain style="width: 100%"
-            >发送验证码</el-button
+        <el-col :span="9">
+          <el-button
+            type="warning"
+            :disabled="captchaEl.btnDisabled"
+            :loading="captchaEl.btnLoading"
+            @click="getCode"
+            plain
+            style="width: 100%"
           >
+            {{ captchaEl.btnText }}
+          </el-button>
         </el-col>
       </el-row>
     </el-form-item>
