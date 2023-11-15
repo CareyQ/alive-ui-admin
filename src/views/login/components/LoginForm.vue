@@ -10,7 +10,7 @@ const getShow = computed(() => unref(getLoginState) === LoginStateEnum.LOGIN)
     <el-form-item>
       <el-row justify="space-between" style="width: 100%; align-items: flex-end">
         <h2 class="title">登录</h2>
-        <p style="margin: 0; line-height: 1.2" class="flex align-end">
+        <p style="margin: 0; line-height: 16px" class="flex align-end">
           <span>没有账号？</span>
           <el-button
             type="primary"

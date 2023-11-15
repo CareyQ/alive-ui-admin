@@ -4,6 +4,8 @@ import { Loading, Select, CloseBold } from '@element-plus/icons-vue'
 import { LoginStateEnum, useLoginState } from './useLogin'
 import { validateUsername, validateMobile } from '@/utils/validate'
 
+import * as RegisterApi from '@/api/register'
+
 const { handleBackLogin, getLoginState } = useLoginState()
 
 const getShow = computed(() => unref(getLoginState) === LoginStateEnum.REGISTER)
@@ -48,20 +50,22 @@ const rules: FormRules = {
   ]
 }
 
-const check = (val: string) => {
-  registerFormRef.value?.validateField('mobile', (valid) => {
-    if (!valid) {
-      return
-    }
-    captchaEl.mobileIsValid = true
-    captchaEl.mobileIsLoading = true
-    setTimeout(() => {
-      console.log(val)
-      captchaEl.mobileIsLoading = false
-      captchaEl.mobileErrorMsg = '此手机号已被使用'
-      captchaEl.captchaShow = true
-    }, 2000)
-  })
+const check = async (val: string) => {
+  const valid = await registerFormRef.value?.validateField('mobile')
+  if (!valid) return
+
+  captchaEl.mobileIsValid = true
+  captchaEl.mobileIsLoading = true
+
+  const res = await RegisterApi.checkMobile(val)
+  console.log(res)
+
+  setTimeout(() => {
+    console.log(val)
+    captchaEl.mobileIsLoading = false
+    captchaEl.mobileErrorMsg = '此手机号已被使用'
+    captchaEl.captchaShow = true
+  }, 2000)
 }
 
 const getCode = () => {
@@ -129,7 +133,7 @@ const register = async (formEl: FormInstance | undefined) => {
     <el-form-item>
       <el-row justify="space-between" style="width: 100%; align-items: flex-end">
         <h2 class="title">注册</h2>
-        <p style="margin: 0; line-height: 1.2" class="flex align-end">
+        <p style="margin: 0; line-height: 16px" class="flex align-end">
           <span>已有账号？</span>
           <el-button
             type="primary"
