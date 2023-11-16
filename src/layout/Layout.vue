@@ -1,21 +1,29 @@
-<script lang="tsx">
-import { defineComponent } from 'vue'
-import AppView from './components/AppView.vue'
+<script lang="ts" setup>
+import Header from './components/Header.vue'
+</script>
 
-const renderLayout = () => {
-  return (
-    <>
-      <div>
-        <AppView />
-      </div>
-    </>
-  )
+<template>
+  <div class="main">
+    <el-container>
+      <el-header height="50px">
+        <Header />
+      </el-header>
+      <el-main height="">
+        <!-- Main content -->
+      </el-main>
+      <el-footer height="">
+        <!-- Footer content -->
+      </el-footer>
+    </el-container>
+  </div>
+</template>
+
+<style lang="scss">
+.main {
+  padding: 10px;
 }
 
-export default defineComponent({
-  name: 'Layout',
-  setup() {
-    return () => <div class={['main']}>{renderLayout()}</div>
-  }
-})
-</script>
+.el-header {
+  padding: 0;
+}
+</style>

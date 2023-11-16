@@ -20,5 +20,6 @@ body {
 
 #app {
   @extend .size;
+  background-color: var(--login-bg-color);
 }
 </style>

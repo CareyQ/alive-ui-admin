@@ -25,7 +25,6 @@ const captchaEl = reactive({
   btnLoading: false,
 
   inputDisabled: true,
-  captchaShow: false,
 
   mobileIsValid: false,
   mobileIsLoading: false,
@@ -50,22 +49,22 @@ const rules: FormRules = {
   ]
 }
 
-const check = async (val: string) => {
+const check = async () => {
   const valid = await registerFormRef.value?.validateField('mobile')
   if (!valid) return
 
   captchaEl.mobileIsValid = true
   captchaEl.mobileIsLoading = true
 
-  const res = await RegisterApi.checkMobile(val)
-  console.log(res)
-
-  setTimeout(() => {
-    console.log(val)
-    captchaEl.mobileIsLoading = false
+  const isExist = await RegisterApi.checkMobile(registerForm.mobile)
+  captchaEl.mobileIsLoading = false
+  if (isExist) {
     captchaEl.mobileErrorMsg = '此手机号已被使用'
-    captchaEl.captchaShow = true
-  }, 2000)
+    captchaEl.mobileValid = false
+  } else {
+    captchaEl.mobileErrorMsg = ''
+    captchaEl.mobileValid = true
+  }
 }
 
 const getCode = () => {
@@ -104,6 +103,9 @@ const sendSms = () => {
 }
 
 const register = async (formEl: FormInstance | undefined) => {
+  if (!captchaEl.mobileValid) {
+    return
+  }
   if (!formEl) return
   await formEl?.validate((valid) => {
     if (!valid) return
@@ -169,7 +171,7 @@ const register = async (formEl: FormInstance | undefined) => {
     <el-form-item prop="mobile" :error="captchaEl.mobileErrorMsg">
       <el-input
         v-model="registerForm.mobile"
-        @blur="check(registerForm.mobile)"
+        @change="check()"
         placeholder="请输入手机号码"
         :maxlength="11"
       >
@@ -186,7 +188,7 @@ const register = async (formEl: FormInstance | undefined) => {
       </el-input>
     </el-form-item>
 
-    <el-form-item prop="code" v-if="captchaEl.captchaShow" :error="captchaEl.codeErrorMsg">
+    <el-form-item prop="code" v-if="captchaEl.mobileValid" :error="captchaEl.codeErrorMsg">
       <el-row justify="space-between" style="width: 100%; align-items: flex-end">
         <el-col :span="14">
           <el-input

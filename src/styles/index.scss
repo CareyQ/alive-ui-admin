@@ -39,3 +39,12 @@ img {
   display: block;
   max-width: 100%;
 }
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+  background-color: var(--white-color);
+  height: var(--el-header-height);
+  border-radius: var(--el-border-radius-base);
+  box-shadow: var(--el-box-shadow-light);
+}

@@ -11,7 +11,7 @@ import qs from 'qs'
 import errorCode from './errorCode'
 import { config } from '@/utils/axios/config'
 
-const { result_code, base_url, request_timeout } = config
+const { base_url, request_timeout } = config
 const whiteList: string[] = ['/login']
 const ignoreMsgs = [
   '无效的刷新令牌', // 刷新令牌被删除时，不用提示
@@ -86,7 +86,7 @@ service.interceptors.response.use(
       return response.data
     }
 
-    const code = data.code || result_code
+    const code = data.code
     const msg = data.msg || errorCode[code] || errorCode['default']
     if (ignoreMsgs.indexOf(msg) !== -1) {
       return Promise.reject(msg)
@@ -97,7 +97,7 @@ service.interceptors.response.use(
       return Promise.reject(new Error(msg))
     }
 
-    if (code !== 200) {
+    if (code !== 0) {
       ElNotification.error({ title: msg })
       return Promise.reject('error')
     }

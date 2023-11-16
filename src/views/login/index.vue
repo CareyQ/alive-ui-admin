@@ -26,7 +26,6 @@ const appStore = useAppStore()
 .page-container {
   height: 100vh;
   width: 100%;
-  background-color: var(--login-bg-color);
 }
 
 .height {
