@@ -7,9 +7,21 @@
 }
 
 body {
+  position: relative;
+  font-size: var(--el-font-size-base);
   font-family: var(--el-font-family);
   color: var(--font-color);
   -webkit-font-smoothing: antialiased;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+ul {
+  list-style: none;
+  padding-left: 0;
 }
 
 .flex {
@@ -20,6 +32,10 @@ body {
   justify-content: center;
 }
 
+.justify-between {
+  justify-content: space-between;
+}
+
 .align-center {
   align-items: center;
 }
@@ -28,16 +44,31 @@ body {
   align-items: flex-end;
 }
 
-
 .flex-center {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-img {
-  display: block;
-  max-width: 100%;
+.flex-center-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* 禁止换行 */
+.no-wrap {
+  white-space: nowrap;
+}
+
+/* 超长文本显示省略号 */
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pointer {
+  cursor: pointer;
 }
 
 .nav-menu {
@@ -47,4 +78,71 @@ img {
   height: var(--el-header-height);
   border-radius: var(--el-border-radius-base);
   box-shadow: var(--el-box-shadow-light);
+}
+
+.nav-menu-primary {
+  position: relative;
+  z-index: 1000;
+  color: var(--white-color);
+  background-color: var(--el-color-primary);
+}
+
+.nav-btn,
+.menu-btn {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  cursor: pointer;
+  &:hover {
+    background-color: var(--login-bg-color);
+  }
+}
+
+.nav-menu-primary .menu-btn {
+  border-radius: var(--el-border-radius-base) 0 0 var(--el-border-radius-base);
+  &:hover {
+    background-color: var(--el-color-primary-light-3);
+  }
+}
+
+// 页面内容布局
+.page-split {
+  display: flex;
+}
+
+.page-left {
+  padding: 13px 15px;
+  width: 230px;
+  > * + * {
+    margin-top: 13px;
+  }
+}
+
+.page-right {
+  width: calc(100% - 230px);
+  padding: 13px 0 13px 15px;
+}
+
+
+.table-header {
+  width: 100%;
+  margin-bottom: 13px;
+}
+
+.page-right {
+  .el-table--border .el-table__cell:last-child {
+    border-right: none;
+  }
+  .el-table--border::after {
+    display: none;
+  }
+}
+
+.page {
+  .el-form--inline .el-form-item {
+    margin-right: 12px;
+    margin-bottom: 0;
+  }
 }

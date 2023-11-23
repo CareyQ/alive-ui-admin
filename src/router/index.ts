@@ -1,46 +1,12 @@
 import type { App } from 'vue'
 import type { RouteRecordRaw } from 'vue-router'
 import { createRouter, createWebHistory } from 'vue-router'
-
-const Layout = () => import('@/layout/Layout.vue')
-
-export const routerMap: AppRouteRecordRaw[] = [
-  {
-    path: '/',
-    component: Layout,
-    redirect: '/index',
-    name: 'Home',
-    meta: {},
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/home/index.vue'),
-        name: 'Index',
-        meta: {
-          title: '首页',
-          icon: 'ep:home-filled',
-          noCache: false,
-          affix: true
-        }
-      }
-    ]
-  },
-  {
-    path: '/login',
-    component: () => import('@/views/login/index.vue'),
-    name: 'Login',
-    meta: {
-      hidden: true,
-      title: '登录',
-      noTagsView: true
-    }
-  }
-]
+import staticRouter from './modules/static'
 
 const router = createRouter({
   history: createWebHistory(),
   strict: true,
-  routes: routerMap as RouteRecordRaw[],
+  routes: staticRouter as RouteRecordRaw[],
   scrollBehavior: () => ({ left: 0, top: 0 })
 })
 

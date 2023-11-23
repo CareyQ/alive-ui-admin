@@ -5,5 +5,24 @@
 
   --white-color: #fff;
 
-  --logo-width: 55px;
+  --nav-tab-height: 40px;
+
+  /* 菜单相关变量 */
+  --logo-width: 50px;
+  --menu-width: 200px;
+  --menu-item-height: 50px;
+  --menu-group-width: 300px;
+  --menu-item-group-height: 30px;
+
+  --menu-icon-width: 20px;
+
+  --admin-dropdown-color: #61666d;
+
+  --table-border: 1px solid #f6f6f6;
+
+  --el-border-color-lighter: #f6f6f6 !important;
+}
+
+.el-table {
+  --el-table-header-text-color: #303133 !important;
 }

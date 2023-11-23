@@ -10,6 +10,7 @@ import { ElMessage, ElMessageBox, ElNotification } from 'element-plus'
 import qs from 'qs'
 import errorCode from './errorCode'
 import { config } from '@/utils/axios/config'
+import { getAccessToken, removeToken, setToken } from '@/utils/auth'
 
 const { base_url, request_timeout } = config
 const whiteList: string[] = ['/login']
@@ -33,6 +34,9 @@ service.interceptors.request.use(
         return (hasToken = false)
       }
     })
+    if (getAccessToken() && !hasToken) {
+      ;(config as Recordable).headers.Authorization = getAccessToken() // 让每个请求携带自定义token
+    }
 
     const data = config.data || false
     if (

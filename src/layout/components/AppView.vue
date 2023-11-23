@@ -1,9 +1,17 @@
+<script lang="ts" setup>
+import { useNavTabStore } from '@/store/modules/navTab'
+
+const navTabStore = useNavTabStore()
+
+const getCaches = computed((): string[] => {
+  return navTabStore.getCachedViews
+})
+</script>
+
 <template>
-  <router-view>
-    <template #default="{ Component, route }">
-      <keep-alive>
-        <component :is="Component" :key="route.fullPath" />
-      </keep-alive>
-    </template>
+  <router-view v-slot="{ Component }">
+    <keep-alive :include="['SystemMenu']">
+      <component :is="Component" />
+    </keep-alive>
   </router-view>
 </template>
