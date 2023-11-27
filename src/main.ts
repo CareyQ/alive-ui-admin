@@ -3,6 +3,8 @@ import App from './App.vue'
 import router, { setupRouter } from '@/router'
 import { setupStore } from '@/store'
 
+import 'element-plus/es/hooks/use-locale/index'
+
 import './permission'
 
 // 导入全局的svg图标

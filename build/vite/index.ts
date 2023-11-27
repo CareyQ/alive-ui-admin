@@ -24,30 +24,9 @@ export function createVitePlugins() {
     VueJsx(),
     progress(),
     PurgeIcons(),
-    ElementPlus({}),
-    AutoImport({
-      include: [
-        /\.[tj]sx?$/, // .ts, .tsx, .js, .jsx
-        /\.vue$/,
-        /\.vue\?vue/, // .vue
-        /\.md$/ // .md
-      ],
-      imports: [
-        'vue',
-        'vue-router'
-        // 可额外添加需要 autoImport 的组件
-      ],
-      dts: 'src/types/auto-imports.d.ts',
-      resolvers: [
-        ElementPlusResolver({
-          importStyle: 'sass'
-        })
-      ],
-      eslintrc: {
-        enabled: false, // Default `false`
-        filepath: './.eslintrc-auto-import.json', // Default `./.eslintrc-auto-import.json`
-        globalsPropValue: true // Default `true`, (true | false | 'readonly' | 'readable' | 'writable' | 'writeable')
-      }
+    ElementPlus({
+      useSource: true,
+      defaultLocale: 'zh-cn'
     }),
     Components({
       // 要搜索组件的目录的相对路径
@@ -66,6 +45,33 @@ export function createVitePlugins() {
         })
       ],
       exclude: [/[\\/]node_modules[\\/]/]
+    }),
+    AutoImport({
+      include: [
+        /\.[tj]sx?$/, // .ts, .tsx, .js, .jsx
+        /\.vue$/,
+        /\.vue\?vue/, // .vue
+        /\.md$/ // .md
+      ],
+      imports: [
+        'vue',
+        'vue-router',
+        // 可额外添加需要 autoImport 的组件
+        {
+          '@/hooks/useMessage': ['useMessage']
+        }
+      ],
+      dts: 'src/types/auto-imports.d.ts',
+      resolvers: [
+        ElementPlusResolver({
+          importStyle: 'sass'
+        })
+      ],
+      eslintrc: {
+        enabled: false, // Default `false`
+        filepath: './.eslintrc-auto-import.json', // Default `./.eslintrc-auto-import.json`
+        globalsPropValue: true // Default `true`, (true | false | 'readonly' | 'readable' | 'writable' | 'writeable')
+      }
     }),
     EslintPlugin({
       cache: false,

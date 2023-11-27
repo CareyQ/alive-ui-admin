@@ -125,10 +125,12 @@ ul {
   padding: 13px 0 13px 15px;
 }
 
-
 .table-header {
   width: 100%;
   margin-bottom: 13px;
+  .el-input {
+    width: 200px;
+  }
 }
 
 .page-right {
@@ -140,9 +142,27 @@ ul {
   }
 }
 
-.page {
-  .el-form--inline .el-form-item {
-    margin-right: 12px;
+// 左侧树
+.custom-tree-node {
+  width: 100%;
+  .el-icon {
+    margin-right: 10px;
+    outline: none;
+  }
+}
+
+.custom-tree-node {
+  position: relative;
+}
+
+.el-icon.tree-disabled-icon {
+  position: absolute;
+  left: -20px;
+  top: 2px;
+}
+
+.el-dialog {
+  .el-form-item:last-child {
     margin-bottom: 0;
   }
 }
