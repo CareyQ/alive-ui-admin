@@ -4,6 +4,10 @@ import { isEmpty, sortBy } from 'lodash-es'
 import { RefreshRight, Plus, Refresh, MoreFilled } from '@element-plus/icons-vue'
 import { filterTree } from '@/utils/tree'
 import MenuForm from './MenuForm.vue'
+import { CACHE_KEY, useCache } from '@/hooks/useCache'
+
+const { wsCache } = useCache()
+const message = useMessage()
 
 defineOptions({ name: 'SystemMenu' })
 
@@ -90,6 +94,15 @@ const handleDropClick = (event: string, node: any) => {
   }
 }
 
+const refershCache = async () => {
+  try {
+    await message.confirm('即将更新菜单缓存', '刷新菜单缓存')
+    wsCache.delete(CACHE_KEY.USER)
+    wsCache.delete(CACHE_KEY.ROUTERS)
+    location.reload()
+  } catch {}
+}
+
 onMounted(() => {
   getList()
 })
@@ -130,7 +143,7 @@ onMounted(() => {
       <div class="table-header">
         <el-button type="info" :icon="RefreshRight" @click="getList" />
         <el-button type="primary" :icon="Plus" @click="openForm()">添加</el-button>
-        <el-button type="warning" :icon="Refresh">刷新菜单缓存</el-button>
+        <el-button type="warning" :icon="Refresh" @click="refershCache">刷新菜单缓存</el-button>
       </div>
 
       <el-table
@@ -192,7 +205,7 @@ onMounted(() => {
     </div>
   </div>
 
-  <MenuForm ref="formRef" />
+  <MenuForm ref="formRef" @success="getList" />
 </template>
 
 <style lang="scss" scoped>

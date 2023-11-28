@@ -19,6 +19,7 @@
 
 .menu.opened {
   display: block;
+  z-index: 999;
 }
 
 .sub-menu__title,

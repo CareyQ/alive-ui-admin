@@ -108,6 +108,15 @@ ul {
 }
 
 // 页面内容布局
+.page:not(.page-split) {
+  .table-header {
+    padding: 13px 15px 0 13px;
+  }
+  .table-header + .table-header {
+    padding-top: 0;
+  }
+}
+
 .page-split {
   display: flex;
 }
@@ -139,6 +148,17 @@ ul {
   }
   .el-table--border::after {
     display: none;
+  }
+}
+
+.table-header-split {
+  display: flex;
+  justify-content: space-between;
+  .el-form-item {
+    margin-bottom: 0;
+  }
+  .el-form-item:last-child {
+    margin-right: 0;
   }
 }
 

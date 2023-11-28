@@ -29,11 +29,5 @@
       "vite-plugin-svg-icons/client"
     ]
   },
-  "include": [
-    "src",
-    "types/**/*.d.ts",
-    "src/types/auto-imports.d.ts",
-    "src/types/auto-components.d.ts"
-  ],
-  "exclude": ["dist", "target", "node_modules"]
+  "include": ["src", "types/**/*.d.ts", "mock/**/*.ts"]
 }

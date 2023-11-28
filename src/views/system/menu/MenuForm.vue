@@ -1,8 +1,7 @@
 <script lang="ts" setup>
 import * as MenuApi from '@/api/system/menu'
-import { CACHE_KEY, useCache } from '@/hooks/useCache'
 
-const { wsCache } = useCache()
+const message = useMessage()
 
 const dialogTitle = ref('')
 const dialogVisible = ref(false)
@@ -13,7 +12,7 @@ const formLoading = ref(false)
 const formRef = ref()
 
 const formData = ref({
-  id: 0,
+  id: '',
   type: 1,
   parentId: '',
   name: '',
@@ -97,7 +96,7 @@ const getParentMenu = async () => {
 
 const resetForm = () => {
   formData.value = {
-    id: 0,
+    id: '',
     type: 1,
     parentId: '',
     name: '',
@@ -112,16 +111,41 @@ const resetForm = () => {
   }
   formRef.value?.resetFields()
 }
+
+const emit = defineEmits(['success'])
+const submitForm = async () => {
+  const valid = await formRef.value?.validate()
+  if (!valid) {
+    return
+  }
+  formLoading.value = true
+  try {
+    const data = formData.value
+    await MenuApi.saveMenu(data)
+    message.success('保存成功')
+    dialogVisible.value = false
+    emit('success')
+  } finally {
+    formLoading.value = false
+  }
+  dialogVisible.value = false
+}
 </script>
 
 <template>
   <el-dialog :title="dialogTitle" v-model="dialogVisible" width="30%">
-    <el-form :modle="formData" :rules="formRules" label-width="80px" :loading="formLoading">
+    <el-form
+      ref="formRef"
+      :model="formData"
+      :rules="formRules"
+      label-width="80px"
+      :loading="formLoading"
+    >
       <el-form-item label="所属类型" prop="type">
         <el-radio-group
           v-model="formData.type"
           @change="handleTypeChange"
-          :disabled="formData.id > 0"
+          :disabled="(formData?.id as any) > 0"
         >
           <el-radio-button v-for="dict in typeMock" :key="dict.value" :label="dict.value">
             {{ dict.label }}
@@ -157,6 +181,10 @@ const resetForm = () => {
         <el-input v-model="formData.permission" placeholder="请输入权限标识" />
       </el-form-item>
 
+      <el-form-item label="路由地址" prop="path" v-if="formData.type !== 4">
+        <el-input v-model="formData.path" placeholder="请输入路由地址" />
+      </el-form-item>
+
       <el-form-item label="组件路径" prop="component" v-if="formData.type === 3">
         <el-input v-model="formData.component" placeholder="例：system/menu/index" />
       </el-form-item>
@@ -172,7 +200,7 @@ const resetForm = () => {
       <el-row>
         <el-col :span="formData.type !== 3 ? 24 : 11">
           <el-form-item label="启用状态">
-            <el-switch v-model="formData.status" :active-value="1" />
+            <el-switch v-model="formData.status" :active-value="1" :inactive-value="0" />
           </el-form-item>
         </el-col>
 
@@ -186,8 +214,8 @@ const resetForm = () => {
 
     <template #footer>
       <span>
-        <el-button>取消</el-button>
-        <el-button type="primary">保存</el-button>
+        <el-button @click="dialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="submitForm">保存</el-button>
       </span>
     </template>
   </el-dialog>

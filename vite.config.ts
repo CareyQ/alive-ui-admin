@@ -25,12 +25,12 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
     root: root,
     // 服务端渲染
     server: {
-      // 是否开启 https
-      https: false,
-      // 端口号
       port: env.VITE_PORT,
       host: "0.0.0.0",
       open: env.VITE_OPEN === 'true',
+      hmr: {
+        overlay: false
+      }
     },
     // 项目使用的vite插件，单独提取到build/vite/plugin中管理
     plugins: createVitePlugins(),

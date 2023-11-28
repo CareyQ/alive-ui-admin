@@ -1,8 +1,8 @@
 import request from '@/utils/axios'
 
 export interface MenuVO {
-  id: number
-  parentId: number
+  id: number | string
+  parentId: number | string
   type: number
   name: string
   permission: string
