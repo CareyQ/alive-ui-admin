@@ -23,7 +23,11 @@
     "paths": {
       "@/*": ["src/*"]
     },
-    "types": ["vite/client", "element-plus/global", "vite-plugin-svg-icons/client"]
+    "types": [
+      "vite/client",
+      "element-plus/global",
+      "vite-plugin-svg-icons/client"
+    ]
   },
   "include": [
     "src",
