@@ -31,7 +31,7 @@ export default class horizontalScroll {
     this.el.scrollLeft += event.deltaY
       ? event.deltaY
       : event.detail && event.detail !== 0
-        ? event.detail
-        : -event.wheelDelta
+      ? event.detail
+      : -event.wheelDelta
   }
 }

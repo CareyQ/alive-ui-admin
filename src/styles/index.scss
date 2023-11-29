@@ -117,7 +117,7 @@ ul {
     padding-top: 0;
   }
   // 去除外边框
-  .el-table--border::before, 
+  .el-table--border::before,
   .el-table--border::after,
   .el-table__border-left-patch {
     display: none;
@@ -198,7 +198,7 @@ ul {
 }
 
 // 抽屉
-.el-drawer  {
+.el-drawer {
   .el-drawer__header {
     margin-bottom: 0;
   }

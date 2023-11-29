@@ -69,16 +69,10 @@ export default (() => {
     let __VLS_name!: 'index'
     function __VLS_template() {
       let __VLS_ctx!: InstanceType<
-        import('./__VLS_types.js').PickNotAny<
-          typeof __VLS_publicComponent,
-          new () => {}
-        >
+        import('./__VLS_types.js').PickNotAny<typeof __VLS_publicComponent, new () => {}>
       > &
         InstanceType<
-          import('./__VLS_types.js').PickNotAny<
-            typeof __VLS_internalComponent,
-            new () => {}
-          >
+          import('./__VLS_types.js').PickNotAny<typeof __VLS_internalComponent, new () => {}>
         > & {}
       /* Components */
       let __VLS_localComponents!: NonNullable<
@@ -165,11 +159,7 @@ export default (() => {
           typeof __VLS_components,
           'Pagination'
         > &
-        import('./__VLS_types.js').WithComponent<
-          'RoleForm',
-          typeof __VLS_components,
-          'RoleForm'
-        > &
+        import('./__VLS_types.js').WithComponent<'RoleForm', typeof __VLS_components, 'RoleForm'> &
         import('./__VLS_types.js').WithComponent<
           'RoleAssignMenuDrawer',
           typeof __VLS_components,
@@ -336,10 +326,7 @@ export default (() => {
                 type: 'info',
                 icon: __VLS_ctx.RefreshRight
               })
-              let __VLS_2!: import('./__VLS_types.js').PickNotAny<
-                typeof __VLS_0,
-                typeof __VLS_1
-              >
+              let __VLS_2!: import('./__VLS_types.js').PickNotAny<typeof __VLS_0, typeof __VLS_1>
               type __VLS_3 = import('./__VLS_types.js').InstanceProps<
                 typeof __VLS_2,
                 typeof __VLS_templateComponents.ElButton
@@ -368,10 +355,7 @@ export default (() => {
                 type: 'primary',
                 icon: __VLS_ctx.Plus
               })
-              let __VLS_7!: import('./__VLS_types.js').PickNotAny<
-                typeof __VLS_5,
-                typeof __VLS_6
-              >
+              let __VLS_7!: import('./__VLS_types.js').PickNotAny<typeof __VLS_5, typeof __VLS_6>
               type __VLS_8 = import('./__VLS_types.js').InstanceProps<
                 typeof __VLS_7,
                 typeof __VLS_templateComponents.ElButton
@@ -439,9 +423,9 @@ export default (() => {
             'show-overflow-tooltip': true,
             class: 'menu-table'
           }
-          ;(await import('./__VLS_types.js')).directiveFunction(
-            __VLS_ctx.vLoading
-          )(__VLS_ctx.tableLoading)
+          ;(await import('./__VLS_types.js')).directiveFunction(__VLS_ctx.vLoading)(
+            __VLS_ctx.tableLoading
+          )
           // @ts-ignore
           ;[tableData, tableLoading]
           // @ts-ignore
@@ -478,10 +462,7 @@ export default (() => {
                 prop: 'isDefault'
               })
               let __VLS_12!: import('./__VLS_types.js').ExtractComponentSlots<
-                import('./__VLS_types.js').PickNotAny<
-                  typeof __VLS_10,
-                  typeof __VLS_11
-                >
+                import('./__VLS_types.js').PickNotAny<typeof __VLS_10, typeof __VLS_11>
               >
               const { row } = __VLS_12.default
               {
@@ -549,10 +530,7 @@ export default (() => {
                 width: '300'
               })
               let __VLS_20!: import('./__VLS_types.js').ExtractComponentSlots<
-                import('./__VLS_types.js').PickNotAny<
-                  typeof __VLS_18,
-                  typeof __VLS_19
-                >
+                import('./__VLS_types.js').PickNotAny<typeof __VLS_18, typeof __VLS_19>
               >
               const { row } = __VLS_20.default
               {
@@ -664,10 +642,7 @@ export default (() => {
             page: __VLS_ctx.queryParams.current,
             total: __VLS_ctx.total
           })
-          let __VLS_33!: import('./__VLS_types.js').PickNotAny<
-            typeof __VLS_31,
-            typeof __VLS_32
-          >
+          let __VLS_33!: import('./__VLS_types.js').PickNotAny<typeof __VLS_31, typeof __VLS_32>
           type __VLS_34 = import('./__VLS_types.js').InstanceProps<
             typeof __VLS_33,
             typeof __VLS_templateComponents.Pagination
@@ -707,10 +682,7 @@ export default (() => {
           ref: 'formRef'
         })
         const __VLS_37 = __VLS_templateComponents.RoleForm({ ref: 'formRef' })
-        let __VLS_38!: import('./__VLS_types.js').PickNotAny<
-          typeof __VLS_36,
-          typeof __VLS_37
-        >
+        let __VLS_38!: import('./__VLS_types.js').PickNotAny<typeof __VLS_36, typeof __VLS_37>
         type __VLS_39 = import('./__VLS_types.js').InstanceProps<
           typeof __VLS_38,
           typeof __VLS_templateComponents.RoleForm
@@ -740,10 +712,7 @@ export default (() => {
         const __VLS_42 = __VLS_templateComponents.RoleAssignMenuDrawer({
           ref: 'menuDrawerRef'
         })
-        let __VLS_43!: import('./__VLS_types.js').PickNotAny<
-          typeof __VLS_41,
-          typeof __VLS_42
-        >
+        let __VLS_43!: import('./__VLS_types.js').PickNotAny<typeof __VLS_41, typeof __VLS_42>
         type __VLS_44 = import('./__VLS_types.js').InstanceProps<
           typeof __VLS_43,
           typeof __VLS_templateComponents.RoleAssignMenuDrawer
