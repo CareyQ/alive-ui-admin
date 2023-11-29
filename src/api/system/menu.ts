@@ -31,3 +31,7 @@ export const getDetail = (id: number) => {
 export const saveMenu = (data: MenuVO) => {
   return request.post({ url: '/system/menu/save', data })
 }
+
+export const getSimpleTree = () => {
+  return request.get({ url: '/system/menu/simple-tree' })
+}

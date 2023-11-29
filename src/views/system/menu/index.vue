@@ -142,7 +142,7 @@ onMounted(() => {
     <div class="page-right">
       <div class="table-header">
         <el-button type="info" :icon="RefreshRight" @click="getList" />
-        <el-button type="primary" :icon="Plus" @click="openForm()">添加</el-button>
+        <el-button type="primary" :icon="Plus" @click="openForm()">添加菜单</el-button>
         <el-button type="warning" :icon="Refresh" @click="refershCache">刷新菜单缓存</el-button>
       </div>
 

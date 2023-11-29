@@ -38,7 +38,7 @@ const dropdownChange = (visible: boolean) => {
 <style lang="scss" scoped>
 .el-dropdown {
   position: relative;
-  z-index: 2010;
+  z-index: 9;
   padding: 0 10px;
   height: 100%;
   width: 44px;
@@ -53,7 +53,7 @@ const dropdownChange = (visible: boolean) => {
   position: absolute;
   animation: fadeIn 0.6s both;
   height: 100%;
-  z-index: 2010;
+  z-index: 10;
 }
 
 .el-avatar {
@@ -107,7 +107,7 @@ const dropdownChange = (visible: boolean) => {
 
 <style lang="scss">
 .admin-dropdown {
-  z-index: 2009 !important;
+  z-index: 9 !important;
   width: 220px;
   top: 55px !important;
   left: -135px !important;

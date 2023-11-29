@@ -109,11 +109,21 @@ ul {
 
 // 页面内容布局
 .page:not(.page-split) {
+  padding-bottom: 15px;
   .table-header {
     padding: 13px 15px 0 13px;
   }
   .table-header + .table-header {
     padding-top: 0;
+  }
+  // 去除外边框
+  .el-table--border::before, 
+  .el-table--border::after,
+  .el-table__border-left-patch {
+    display: none;
+  }
+  .el-table--border .el-table__cell:last-child {
+    border-right: none;
   }
 }
 
@@ -183,6 +193,13 @@ ul {
 
 .el-dialog {
   .el-form-item:last-child {
+    margin-bottom: 0;
+  }
+}
+
+// 抽屉
+.el-drawer  {
+  .el-drawer__header {
     margin-bottom: 0;
   }
 }
