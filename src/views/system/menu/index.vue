@@ -17,6 +17,7 @@ const treeRef = ref()
 const tableRef = ref()
 const formRef = ref()
 
+const treeFilter = ref('')
 const treeAll = ref<any>([])
 const treeData = ref<any>([])
 const defaultCurrentKey = ref(null)
@@ -103,6 +104,15 @@ const refershCache = async () => {
   } catch {}
 }
 
+watch(treeFilter, (val: string) => {
+  treeRef.value!.filter(val)
+})
+
+const filterNode = (value: string, data: Tree) => {
+  if (!value) return true
+  return data.name.includes(value)
+}
+
 onMounted(() => {
   getList()
 })
@@ -111,7 +121,7 @@ onMounted(() => {
 <template>
   <div class="page page-split">
     <div class="page-left">
-      <el-input placeholder="输入菜单名搜索" />
+      <el-input v-model="treeFilter" placeholder="输入菜单名搜索" clearable />
       <el-tree
         ref="treeRef"
         v-loading="treeLoading"
@@ -119,12 +129,18 @@ onMounted(() => {
         :props="{ label: 'name' }"
         node-key="id"
         :current-node-key="defaultCurrentKey"
+        :filter-node-method="filterNode"
         @current-change="handleCurrentChange"
         highlight-current
       >
         <template #default="{ node }">
           <span class="custom-tree-node flex-center-between">
-            <span>{{ node.label }}</span>
+            <div>
+              <span>{{ node.label }}</span>
+              <span v-if="node.data.status === 0" style="color: var(--el-color-danger)">
+                [停用]
+              </span>
+            </div>
             <el-dropdown @command="handleDropClick($event, node)">
               <el-icon><MoreFilled /></el-icon>
               <template #dropdown>
