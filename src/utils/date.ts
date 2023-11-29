@@ -10,7 +10,7 @@ import dayjs from 'dayjs'
 // @ts-ignore
 export const dateFormatter = (row, column, cellValue) => {
   if (!cellValue) {
-    return
+    return ''
   }
   return formatDate(cellValue)
 }

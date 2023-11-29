@@ -71,6 +71,7 @@ const open = async (id: number) => {
 defineExpose({ open })
 
 const handleTypeChange = (value: number) => {
+  formData.value.parentId = ''
   if (value === 1) {
     labelPrefix.value = '目录'
   }

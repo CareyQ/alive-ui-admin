@@ -6,6 +6,8 @@ import * as DictApi from '@/api/system/dict'
 import DictTypeForm from './DictTypeForm.vue'
 import DictDataForm from './DictDataForm.vue'
 
+defineOptions({ name: 'SystemDcit' })
+
 const message = useMessage()
 const dictStore = useDictStoreWithOut()
 
@@ -31,6 +33,7 @@ const getDictTypeList = async () => {
       return
     }
     treeData.value = data
+    selectDictType.value = null
   } finally {
     dictTypeLoading.value = false
   }
@@ -165,8 +168,8 @@ onMounted(() => {
         <el-form-item label="状态" prop="status">
           <el-select v-model="queryParams.status" placeholder="请选择状态" clearable>
             <el-option
-              v-for="item in getIntDictOptions(DICT_TYPE.COMMON_STATUS)"
-              :key="item.value"
+              v-for="(item, index) in getIntDictOptions(DICT_TYPE.COMMON_STATUS)"
+              :key="index"
               :label="item.label"
               :value="item.value"
             />

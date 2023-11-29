@@ -5,6 +5,8 @@ import * as RoleApi from '@/api/system/role'
 import RoleForm from './RoleForm.vue'
 import RoleAssignMenuDrawer from './RoleAssignMenuDrawer.vue'
 
+defineOptions({ name: 'SystemRole' })
+
 const message = useMessage()
 
 const tableLoading = ref(false)

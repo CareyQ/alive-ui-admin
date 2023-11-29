@@ -20,7 +20,7 @@ const formRef = ref()
 const treeFilter = ref('')
 const treeAll = ref<any>([])
 const treeData = ref<any>([])
-const defaultCurrentKey = ref(null)
+const defaultCurrentKey = ref('')
 const tableData = ref<any>([])
 
 const getList = async () => {
@@ -33,16 +33,18 @@ const getList = async () => {
     treeData.value = filterTree(data, 2)
     treeAll.value = data
     nextTick(() => {
-      defaultCurrentKey.value = data[0].id
-      treeRef.value.setCurrentKey(data[0].id)
+      if (!defaultCurrentKey.value) {
+        defaultCurrentKey.value = data[0].id
+      }
+      treeRef.value.setCurrentKey(defaultCurrentKey.value)
     })
-    defaultCurrentKey.value = data && data.length > 0 ? data[0].id : null
   } finally {
     tableLoading.value = treeLoading.value = false
   }
 }
 
 const handleCurrentChange = (node) => {
+  defaultCurrentKey.value = node.id
   tableLoading.value = true
   try {
     const rootNode = findTargetNode(treeAll.value, node.id)
@@ -88,8 +90,6 @@ const openForm = (id?: number) => {
 }
 
 const handleDropClick = (event: string, node: any) => {
-  console.log(node)
-
   if (event === 'edit') {
     openForm(node.data.id)
   }
@@ -132,6 +132,7 @@ onMounted(() => {
         :filter-node-method="filterNode"
         @current-change="handleCurrentChange"
         highlight-current
+        default-expand-all
       >
         <template #default="{ node }">
           <span class="custom-tree-node flex-center-between">
