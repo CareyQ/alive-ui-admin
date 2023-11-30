@@ -38,32 +38,42 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <el-header height="50px" class="flex align-center">
-    <div class="menu-container">
-      <div class="nav-menu nav-menu-primary">
-        <div class="menu-btn flex-center" @click.stop="toggleCollapse()">
-          <Icon :icon="collapse ? 'gg:menu' : 'gg:close'" color="var(--white-color)" :size="24" />
+  <div class="header-wrap">
+    <el-header height="50px" class="flex align-center">
+      <div class="menu-container">
+        <div class="nav-menu nav-menu-primary">
+          <div class="menu-btn flex-center" @click.stop="toggleCollapse()">
+            <Icon :icon="collapse ? 'gg:menu' : 'gg:close'" color="var(--white-color)" :size="24" />
+          </div>
+          <router-link
+            class="logo-container flex align-center"
+            to="/"
+            style="color: inherit; text-decoration: none"
+          >
+            <img class="logo" src="@/assets/logo-white.png" :alt="title" />
+            <span class="title no-wrap ellipsis">{{ title }}</span>
+          </router-link>
         </div>
-        <router-link
-          class="logo-container flex align-center"
-          to="/"
-          style="color: inherit; text-decoration: none"
-        >
-          <img class="logo" src="@/assets/logo-white.png" :alt="title" />
-          <span class="title no-wrap ellipsis">{{ title }}</span>
-        </router-link>
+        <Menu />
       </div>
-      <Menu />
-    </div>
 
-    <div class="flex header-left">
-      <NavTab />
-      <Tool />
-    </div>
-  </el-header>
+      <div class="flex header-left">
+        <NavTab />
+        <Tool />
+      </div>
+    </el-header>
+  </div>
 </template>
 
 <style lang="scss" scoped>
+.header-wrap {
+  padding: 10px 16px 0 10px;
+}
+
+.el-header {
+  padding: 0;
+}
+
 .menu-container {
   position: relative;
   width: var(--menu-width);

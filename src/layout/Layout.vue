@@ -33,15 +33,7 @@ const getCaches = computed((): string[] => {
   </div>
 </template>
 
-<style lang="scss">
-.main {
-  padding: 10px;
-}
-
-.el-header {
-  padding: 0;
-}
-
+<style lang="scss" scoped>
 .el-main {
   margin-top: 16px;
   padding: 0;
@@ -50,5 +42,11 @@ const getCaches = computed((): string[] => {
 
 .main-content {
   background-color: var(--white-color);
+}
+
+.el-scrollbar {
+  padding-left: 10px;
+  padding-right: 16px;
+  height: calc(100vh - 70px);
 }
 </style>

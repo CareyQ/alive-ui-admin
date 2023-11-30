@@ -1,44 +1,37 @@
 <script lang="ts" setup>
-import * as DeptApi from '@/api/system/dept'
+import * as PostApi from '@/api/system/post'
 
 const message = useMessage()
 const formLoading = ref(false)
 const dialogTitle = ref('')
 const dialogVisible = ref(false)
 
-const treeData = ref<any[]>([])
-
 const formRef = ref()
 
 const formData = ref({
   id: '',
   name: '',
-  parentId: '',
-  sort: Number(0),
-  managerId: undefined,
-  mobile: undefined,
   remark: undefined,
   status: 1
 })
 
 const formRules = reactive({
-  name: [{ required: true, message: '请输入部门名称', trigger: 'blur' }]
+  name: [{ required: true, message: '请输入岗位名称', trigger: 'blur' }]
 })
 
 const open = async (id: number) => {
   resetForm()
   dialogVisible.value = true
-  treeData.value = await DeptApi.getSimpleList()
   if (id) {
-    dialogTitle.value = '编辑部门'
+    dialogTitle.value = '编辑岗位'
     formLoading.value = true
     try {
-      formData.value = await DeptApi.getDetail(id)
+      formData.value = await PostApi.getDetail(id)
     } finally {
       formLoading.value = false
     }
   } else {
-    dialogTitle.value = '新增部门'
+    dialogTitle.value = '新增岗位'
   }
 }
 defineExpose({ open })
@@ -47,10 +40,6 @@ const resetForm = () => {
   formData.value = {
     id: '',
     name: '',
-    parentId: '',
-    sort: Number(0),
-    managerId: undefined,
-    mobile: undefined,
     remark: undefined,
     status: 1
   }
@@ -66,7 +55,7 @@ const submitForm = async () => {
   formLoading.value = true
   try {
     const data = formData.value
-    await DeptApi.save(data)
+    await PostApi.save(data)
     message.success('保存成功')
     dialogVisible.value = false
     emit('success')
@@ -86,28 +75,8 @@ const submitForm = async () => {
       label-width="80px"
       :loading="formLoading"
     >
-      <el-form-item label="父级部门" prop="parentId">
-        <el-tree-select
-          v-model="formData.parentId"
-          :data="treeData"
-          :props="{ label: 'name', value: 'id' }"
-          placeholder="不选择默认顶级部门"
-          clearable
-          check-strictly
-          default-expand-all
-        />
-      </el-form-item>
-
-      <el-form-item label="部门名称" prop="name">
-        <el-input v-model="formData.name" placeholder="请输入部门名称" />
-      </el-form-item>
-
-      <el-form-item label="负责人" prop="managerId">
-        <el-input v-model="formData.managerId" placeholder="请选择负责人" />
-      </el-form-item>
-
-      <el-form-item label="联系电话" prop="mobile">
-        <el-input v-model="formData.mobile" placeholder="请输入联系电话" />
+      <el-form-item label="岗位名称" prop="name">
+        <el-input v-model="formData.name" placeholder="请输入岗位名称" />
       </el-form-item>
 
       <el-form-item label="备注" prop="remark">

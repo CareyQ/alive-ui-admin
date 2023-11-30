@@ -88,7 +88,6 @@ onMounted(() => {
       border
       stripe
       show-overflow-tooltip
-      class="menu-table"
     >
       <el-table-column align="center" label="角色名称" prop="name" />
       <el-table-column align="center" label="备注" prop="remark" />
