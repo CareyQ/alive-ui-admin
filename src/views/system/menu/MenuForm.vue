@@ -135,19 +135,9 @@ const submitForm = async () => {
 
 <template>
   <el-dialog :title="dialogTitle" v-model="dialogVisible" width="30%">
-    <el-form
-      ref="formRef"
-      :model="formData"
-      :rules="formRules"
-      label-width="80px"
-      :loading="formLoading"
-    >
+    <el-form ref="formRef" :model="formData" :rules="formRules" label-width="80px" :loading="formLoading">
       <el-form-item label="所属类型" prop="type">
-        <el-radio-group
-          v-model="formData.type"
-          @change="handleTypeChange"
-          :disabled="(formData?.id as any) > 0"
-        >
+        <el-radio-group v-model="formData.type" @change="handleTypeChange" :disabled="(formData?.id as any) > 0">
           <el-radio-button v-for="dict in typeMock" :key="dict.value" :label="dict.value">
             {{ dict.label }}
           </el-radio-button>
@@ -155,18 +145,8 @@ const submitForm = async () => {
       </el-form-item>
 
       <el-form-item :label="'父级' + labelSuffix" v-if="formData.type !== 1" prop="parentId">
-        <el-select
-          v-model="formData.parentId"
-          :placeholder="`请选择父级${labelSuffix}`"
-          style="width: 100%"
-          clearable
-        >
-          <el-option
-            v-for="item in parent"
-            :key="item?.value"
-            :label="item?.label"
-            :value="item?.value"
-          />
+        <el-select v-model="formData.parentId" :placeholder="`请选择父级${labelSuffix}`" style="width: 100%" clearable>
+          <el-option v-for="item in parent" :key="item?.value" :label="item?.label" :value="item?.value" />
         </el-select>
       </el-form-item>
 

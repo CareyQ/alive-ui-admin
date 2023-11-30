@@ -28,16 +28,11 @@ export const useRenderMenuItem = () => {
         return
       }
 
-      const { oneShowingChild, onlyOneChild } = hasOneShowingChild(
-        v.children,
-        v
-      )
+      const { oneShowingChild, onlyOneChild } = hasOneShowingChild(v.children, v)
 
       const fullPath = isUrl(v.path) ? v.path : pathResolve(parentPath, v.path)
 
-      const one =
-        oneShowingChild &&
-        (!onlyOneChild?.children || onlyOneChild?.noShowingChildren)
+      const one = oneShowingChild && (!onlyOneChild?.children || onlyOneChild?.noShowingChildren)
 
       const { renderMenuGroup } = useRenderMenuGroup()
       const elementRef = ref<HTMLElement | null>(null)
@@ -48,15 +43,9 @@ export const useRenderMenuItem = () => {
           class={['no-wrap', one ? 'menu-item' : 'sub-menu']}
           onClick={() => handleClick(elementRef)}
         >
-          <MenuTitle
-            meta={onlyOneChild ? onlyOneChild?.meta : meta}
-            once={one}
-          />
+          <MenuTitle meta={onlyOneChild ? onlyOneChild?.meta : meta} once={one} />
           {one ? null : (
-            <div
-              class="menu-group-warpper"
-              onClick={(event) => event.stopPropagation()}
-            >
+            <div class="menu-group-warpper" onClick={(event) => event.stopPropagation()}>
               {renderMenuGroup(v.children, fullPath)}
             </div>
           )}

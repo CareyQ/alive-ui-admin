@@ -20,10 +20,7 @@ export const filterAffixTabs = (routes: AppRouteRecordRaw[], parentPath = '') =>
   return tabs
 }
 
-export const filterNotAffixTabView = (
-  tabs: RouteLocationNormalizedLoaded[],
-  self: RouteLocationNormalizedLoaded
-) => {
+export const filterNotAffixTabView = (tabs: RouteLocationNormalizedLoaded[], self: RouteLocationNormalizedLoaded) => {
   const res: RouteLocationNormalizedLoaded[] = []
   tabs.forEach((tab) => {
     if (tab.fullPath === self.fullPath) {

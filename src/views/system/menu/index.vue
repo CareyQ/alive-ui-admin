@@ -138,9 +138,7 @@ onMounted(() => {
           <span class="custom-tree-node flex-center-between">
             <div>
               <span>{{ node.label }}</span>
-              <span v-if="node.data.status === 0" style="color: var(--el-color-danger)">
-                [停用]
-              </span>
+              <span v-if="node.data.status === 0" style="color: var(--el-color-danger)"> [停用] </span>
             </div>
             <el-dropdown @command="handleDropClick($event, node)">
               <el-icon><MoreFilled /></el-icon>
@@ -211,9 +209,7 @@ onMounted(() => {
           <template #default="scope">
             <el-button link type="primary" size="small">新增权限</el-button>
             <el-divider direction="vertical" />
-            <el-button link type="primary" size="small" @click="openForm(scope.row.id)">
-              编辑
-            </el-button>
+            <el-button link type="primary" size="small" @click="openForm(scope.row.id)"> 编辑 </el-button>
             <el-divider direction="vertical" />
             <el-button link type="danger" size="small">删除</el-button>
           </template>

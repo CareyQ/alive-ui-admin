@@ -88,10 +88,7 @@ export const generateRoute = (routes: AppCustomRouteRecordRaw[]): AppRouteRecord
     // 路由地址转首字母大写驼峰，作为路由名称，适配keepAlive
     let data: AppRouteRecordRaw = {
       path: route.path,
-      name:
-        route.componentName && route.componentName.length > 0
-          ? route.componentName
-          : toCamelCase(route.path, true),
+      name: route.componentName && route.componentName.length > 0 ? route.componentName : toCamelCase(route.path, true),
       redirect: route.redirect,
       meta: meta
     }
@@ -104,9 +101,7 @@ export const generateRoute = (routes: AppCustomRouteRecordRaw[]): AppRouteRecord
       const childrenData: AppRouteRecordRaw = {
         path: '',
         name:
-          route.componentName && route.componentName.length > 0
-            ? route.componentName
-            : toCamelCase(route.path, true),
+          route.componentName && route.componentName.length > 0 ? route.componentName : toCamelCase(route.path, true),
         redirect: route.redirect,
         meta: meta
       }

@@ -3,11 +3,7 @@ import { useRouter, type RouteLocationNormalizedLoaded } from 'vue-router'
 import { useNavTabStore } from '@/store/modules/navTab'
 import { usePermissionStore } from '@/store/modules/permission'
 import { useTemplateRefsList } from '@vueuse/core'
-import {
-  ContextMenu,
-  type ContextMenuItem,
-  type ContextmenuItemClickEmitArg
-} from '@/layout/components/ContextMenu'
+import { ContextMenu, type ContextMenuItem, type ContextmenuItemClickEmitArg } from '@/layout/components/ContextMenu'
 import horizontalScroll from '@/utils/horizontalScroll'
 import { filterAffixTabs, filterNotAffixTabView } from './helper'
 
@@ -184,10 +180,7 @@ watch(
       >
         <div class="nowrap flex align-center">
           {{ item.meta.title }}
-          <transition
-            @after-leave="selectNavTab(tabsRefs[navTabStore.getActiveIndex])"
-            name="el-fade-in"
-          >
+          <transition @after-leave="selectNavTab(tabsRefs[navTabStore.getActiveIndex])" name="el-fade-in">
             <Icon class="nav-tab__item--close" icon="ep:close" :size="12" v-if="!item.meta.affix" />
           </transition>
         </div>
@@ -195,11 +188,7 @@ watch(
     </router-link>
     <div :style="activeBoxStyle" class="nav-tab-active-box"></div>
   </div>
-  <ContextMenu
-    ref="contextmenuRef"
-    :items="state.contextmenuItems"
-    @contextmenu-item-click="onContextmenuItem"
-  />
+  <ContextMenu ref="contextmenuRef" :items="state.contextmenuItems" @contextmenu-item-click="onContextmenuItem" />
 </template>
 
 <style lang="scss" scoped>

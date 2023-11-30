@@ -81,14 +81,7 @@ onMounted(() => {
       <el-button type="primary" :icon="Plus" @click="openForm(undefined)">添加岗位</el-button>
     </div>
 
-    <el-table
-      ref="tableRef"
-      v-loading="tableLoading"
-      :data="tableData"
-      border
-      stripe
-      show-overflow-tooltip
-    >
+    <el-table ref="tableRef" v-loading="tableLoading" :data="tableData" border stripe show-overflow-tooltip>
       <el-table-column align="center" label="岗位名称" prop="name" width="300" />
       <el-table-column align="center" label="备注" prop="remark" />
       <el-table-column align="center" label="状态" prop="status" width="150">
@@ -96,13 +89,7 @@ onMounted(() => {
           <el-switch v-model="scope.row.status" :active-value="1" />
         </template>
       </el-table-column>
-      <el-table-column
-        align="center"
-        label="创建时间"
-        prop="createTime"
-        :formatter="dateFormatter"
-        width="300"
-      />
+      <el-table-column align="center" label="创建时间" prop="createTime" :formatter="dateFormatter" width="300" />
 
       <el-table-column align="center" label="操作" width="200">
         <template #default="{ row }">

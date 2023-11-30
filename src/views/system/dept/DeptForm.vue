@@ -28,7 +28,10 @@ const formRules = reactive({
 const open = async (id: number) => {
   resetForm()
   dialogVisible.value = true
-  treeData.value = await DeptApi.getSimpleList()
+  const data = await DeptApi.getSimpleList()
+  if (data) {
+    treeData.value = data
+  }
   if (id) {
     dialogTitle.value = '编辑部门'
     formLoading.value = true
@@ -79,13 +82,7 @@ const submitForm = async () => {
 
 <template>
   <el-dialog :title="dialogTitle" v-model="dialogVisible" width="30%">
-    <el-form
-      ref="formRef"
-      :model="formData"
-      :rules="formRules"
-      label-width="80px"
-      :loading="formLoading"
-    >
+    <el-form ref="formRef" :model="formData" :rules="formRules" label-width="80px" :loading="formLoading">
       <el-form-item label="父级部门" prop="parentId">
         <el-tree-select
           v-model="formData.parentId"

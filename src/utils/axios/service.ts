@@ -1,10 +1,4 @@
-import axios, {
-  AxiosError,
-  AxiosInstance,
-  AxiosRequestHeaders,
-  AxiosResponse,
-  InternalAxiosRequestConfig
-} from 'axios'
+import axios, { AxiosError, AxiosInstance, AxiosRequestHeaders, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 
 import { ElMessage, ElMessageBox, ElNotification } from 'element-plus'
 import qs from 'qs'
@@ -41,8 +35,7 @@ service.interceptors.request.use(
     const data = config.data || false
     if (
       config.method?.toUpperCase() === 'POST' &&
-      (config.headers as AxiosRequestHeaders)['Content-Type'] ===
-        'application/x-www-form-urlencoded'
+      (config.headers as AxiosRequestHeaders)['Content-Type'] === 'application/x-www-form-urlencoded'
     ) {
       config.data = qs.stringify(data)
     }
@@ -83,10 +76,7 @@ service.interceptors.response.use(
       throw new Error()
     }
 
-    if (
-      response.request.responseType === 'blob' ||
-      response.request.responseType === 'arraybuffer'
-    ) {
+    if (response.request.responseType === 'blob' || response.request.responseType === 'arraybuffer') {
       return response.data
     }
 

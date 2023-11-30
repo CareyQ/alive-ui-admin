@@ -81,36 +81,19 @@ onMounted(() => {
       </el-form>
     </div>
 
-    <el-table
-      ref="tableRef"
-      v-loading="tableLoading"
-      :data="tableData"
-      border
-      stripe
-      show-overflow-tooltip
-    >
+    <el-table ref="tableRef" v-loading="tableLoading" :data="tableData" border stripe show-overflow-tooltip>
       <el-table-column align="center" label="角色名称" prop="name" />
       <el-table-column align="center" label="备注" prop="remark" />
       <el-table-column align="center" label="默认角色" prop="isDefault">
         <template #default="{ row }">
-          <el-checkbox
-            v-model="row.isDefault"
-            @change="handleDefaultChange(row.id, row.isDefault)"
-          />
+          <el-checkbox v-model="row.isDefault" @change="handleDefaultChange(row.id, row.isDefault)" />
         </template>
       </el-table-column>
-      <el-table-column
-        align="center"
-        label="创建时间"
-        prop="createTime"
-        :formatter="dateFormatter"
-      />
+      <el-table-column align="center" label="创建时间" prop="createTime" :formatter="dateFormatter" />
 
       <el-table-column align="center" label="操作" width="300">
         <template #default="{ row }">
-          <el-button link type="primary" size="small" @click="openMenuDrawer(row.id)">
-            菜单权限
-          </el-button>
+          <el-button link type="primary" size="small" @click="openMenuDrawer(row.id)"> 菜单权限 </el-button>
           <el-divider direction="vertical" />
           <el-button link type="primary" size="small" @click="openForm(row.id)"> 编辑 </el-button>
           <el-divider direction="vertical" />

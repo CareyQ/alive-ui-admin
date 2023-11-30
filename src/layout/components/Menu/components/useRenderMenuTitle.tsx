@@ -28,14 +28,6 @@ export default defineComponent({
         </>
       )
     }
-    return () => (
-      <>
-        {props.once ? (
-          renderTitle()
-        ) : (
-          <div class="sub-menu__title">{renderTitle()}</div>
-        )}
-      </>
-    )
+    return () => <>{props.once ? renderTitle() : <div class="sub-menu__title">{renderTitle()}</div>}</>
   }
 })

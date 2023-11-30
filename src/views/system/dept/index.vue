@@ -89,8 +89,8 @@ onMounted(() => {
       <el-table-column align="center" label="联系电话" prop="mobile" />
       <el-table-column align="center" label="排序" prop="sort" />
       <el-table-column align="center" label="状态" prop="status">
-        <template #default="scope">
-          <el-switch v-model="scope.row.status" :active-value="1" />
+        <template #default="{ row }">
+          <Tag :type="DICT_TYPE.COMMON_STATUS" :value="row.status" />
         </template>
       </el-table-column>
       <el-table-column align="center" label="备注" prop="remark" />

@@ -10,11 +10,7 @@ const DEFAULT_CONFIG: TreeHelperConfig = {
   pid: 'pid'
 }
 
-export const findPath = <T = any>(
-  tree: any,
-  func: Fn,
-  config: Partial<TreeHelperConfig> = {}
-): T | T[] | null => {
+export const findPath = <T = any>(tree: any, func: Fn, config: Partial<TreeHelperConfig> = {}): T | T[] | null => {
   config = getConfig(config)
   const path: T[] = []
   const list = [...tree]
@@ -37,8 +33,7 @@ export const findPath = <T = any>(
   return null
 }
 
-export const getConfig = (config: Partial<TreeHelperConfig>) =>
-  Object.assign({}, DEFAULT_CONFIG, config)
+export const getConfig = (config: Partial<TreeHelperConfig>) => Object.assign({}, DEFAULT_CONFIG, config)
 
 /**
  * 过滤树，获取指定层级的树

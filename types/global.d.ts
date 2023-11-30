@@ -14,6 +14,8 @@ declare global {
 
   type LocaleType = 'zh-CN' | 'en'
 
+  type ElType = EpPropMergeType<StringConstructor,'' | 'success' | 'warning' | 'info' | 'danger' | 'default', unknown>
+
   type AxiosHeaders =
     | 'application/json'
     | 'application/x-www-form-urlencoded'

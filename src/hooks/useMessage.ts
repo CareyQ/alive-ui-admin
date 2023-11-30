@@ -44,15 +44,11 @@ export const useMessage = () => {
     },
     // 删除窗体
     delConfirm(content?: string, tip?: string) {
-      return ElMessageBox.confirm(
-        content ? content : '是否删除所选中数据？',
-        tip ? tip : '系统提示',
-        {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }
-      )
+      return ElMessageBox.confirm(content ? content : '是否删除所选中数据？', tip ? tip : '系统提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
     },
     // 提交内容
     prompt(content: string, tip: string) {

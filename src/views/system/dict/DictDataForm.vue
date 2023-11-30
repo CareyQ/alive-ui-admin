@@ -9,11 +9,39 @@ const dictType = ref<DictApi.DictType | null>(null)
 
 const formRef = ref()
 
+interface ColorType {
+  label: string
+  value: ElType
+}
+const colorTypeOptions: ColorType[] = [
+  {
+    value: 'default',
+    label: '默认'
+  },
+  {
+    value: 'success',
+    label: '成功'
+  },
+  {
+    value: 'info',
+    label: '信息'
+  },
+  {
+    value: 'warning',
+    label: '警告'
+  },
+  {
+    value: 'danger',
+    label: '危险'
+  }
+]
+
 const formData = ref({
   id: '',
   label: '',
   value: '',
   dictType: '',
+  colorType: '',
   remark: '',
   status: 1
 })
@@ -52,6 +80,7 @@ const resetForm = () => {
     label: '',
     value: '',
     dictType: '',
+    colorType: '',
     remark: '',
     status: 1
   }
@@ -80,13 +109,7 @@ const submitForm = async () => {
 
 <template>
   <el-dialog :title="dialogTitle" v-model="dialogVisible" width="30%">
-    <el-form
-      ref="formRef"
-      :model="formData"
-      :rules="formRules"
-      label-width="80px"
-      :loading="formLoading"
-    >
+    <el-form ref="formRef" :model="formData" :rules="formRules" label-width="80px" :loading="formLoading">
       <el-form-item label="字典类型" v-if="dictType">
         {{ `${dictType?.name}（${dictType?.type}）` }}
       </el-form-item>
@@ -97,6 +120,22 @@ const submitForm = async () => {
 
       <el-form-item label="数据值" prop="value">
         <el-input v-model="formData.value" placeholder="请输入数据值" />
+      </el-form-item>
+
+      <el-form-item label="颜色类型" prop="colorType">
+        <el-select v-model="formData.colorType" placeholder="请选择颜色类型">
+          <el-option
+            v-for="item in colorTypeOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value as string"
+          >
+            <div class="flex-center-between">
+              <span>{{ item.label }}</span>
+              <el-tag :type="item.value" style="width: 60px">{{ item.value }}</el-tag>
+            </div>
+          </el-option>
+        </el-select>
       </el-form-item>
 
       <el-form-item label="备注" prop="remark">

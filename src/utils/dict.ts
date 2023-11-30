@@ -12,9 +12,10 @@ const dictStore = useDictStoreWithOut()
  * @returns {*|Array} 数据字典数组
  */
 export interface DictDataType {
-  dictType: string
+  dictType?: string
   label: string
   value: string | number | boolean
+  colorType: ElType
 }
 
 export const getDictOptions = (dictType: string) => {

@@ -15,19 +15,13 @@ export const useRenderMenuGroup = () => {
     appStore.setCollapse(true)
   }
 
-  const renderMenuGroupChild = (
-    routers: AppRouteRecordRaw[],
-    parentPath = '/'
-  ) => {
+  const renderMenuGroupChild = (routers: AppRouteRecordRaw[], parentPath = '/') => {
     return routers.map((v) => {
       const meta = (v.meta ?? {}) as RouteMeta
       const fullPath = isUrl(v.path) ? v.path : pathResolve(parentPath, v.path)
       return (
         <li class="menu-group-link">
-          <span
-            class="pointer"
-            onClick={(event) => pushRouter(event, fullPath)}
-          >
+          <span class="pointer" onClick={(event) => pushRouter(event, fullPath)}>
             {meta.title}
           </span>
         </li>
@@ -35,10 +29,7 @@ export const useRenderMenuGroup = () => {
     })
   }
 
-  const renderMenuGroup = (
-    routers: AppRouteRecordRaw[] = [],
-    parentPath = '/'
-  ) => {
+  const renderMenuGroup = (routers: AppRouteRecordRaw[] = [], parentPath = '/') => {
     return routers.map((v) => {
       const meta = (v.meta ?? {}) as RouteMeta
       const children = filterChild(v.children ?? ([] as AppRouteRecordRaw[]))
@@ -55,9 +46,7 @@ export const useRenderMenuGroup = () => {
             <div class="menu-item-group__title">
               <span>{meta.title as string}</span>
             </div>
-            <div class="menu-item-group__links">
-              {hasChild ? renderMenuGroupChild(children, fullPath) : null}
-            </div>
+            <div class="menu-item-group__links">{hasChild ? renderMenuGroupChild(children, fullPath) : null}</div>
           </li>
         </ul>
       )

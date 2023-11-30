@@ -118,9 +118,7 @@ onMounted(() => {
     <div class="page-left">
       <div>
         <el-button type="info" :icon="RefreshRight" @click="getDictTypeList" />
-        <el-button type="primary" :icon="Plus" @click="openDictTypeForm(undefined)">
-          新增类型
-        </el-button>
+        <el-button type="primary" :icon="Plus" @click="openDictTypeForm(undefined)"> 新增类型 </el-button>
       </div>
 
       <el-input placeholder="输入字典类型搜索" />
@@ -136,12 +134,7 @@ onMounted(() => {
       >
         <template #default="{ node }">
           <span class="custom-tree-node flex-center-between">
-            <el-tooltip
-              v-if="node.data.status === 0"
-              effect="dark"
-              placement="top"
-              content="已停用"
-            >
+            <el-tooltip v-if="node.data.status === 0" effect="dark" placement="top" content="已停用">
               <Icon icon="mdi:cancel" color="var(--el-color-danger)" class="tree-disabled-icon" />
             </el-tooltip>
 
@@ -183,9 +176,7 @@ onMounted(() => {
 
       <div class="table-header">
         <el-button type="info" :icon="RefreshRight" @click="getDictDataPage" />
-        <el-button type="primary" :icon="Plus" @click="openDictDataForm(undefined)">
-          添加数据
-        </el-button>
+        <el-button type="primary" :icon="Plus" @click="openDictDataForm(undefined)"> 添加数据 </el-button>
         <el-button type="warning" :icon="Refresh" @click="refreshCache">刷新字典缓存</el-button>
       </div>
 
@@ -198,16 +189,21 @@ onMounted(() => {
         show-overflow-tooltip
         class="data-table"
       >
-        <el-table-column label="字典标签" prop="label" width="200" />
-        <el-table-column label="字典键值" prop="value" width="200" />
+        <el-table-column label="字典标签" prop="label" />
+        <el-table-column label="字典键值" prop="value" />
         <el-table-column label="备注" prop="remark" />
-        <el-table-column align="center" label="状态" prop="status" width="120">
+
+        <el-table-column align="center" label="颜色类型" prop="colorType">
+          <template #default="{ row }">
+            <el-tag :type="row.colorType">
+              {{ row.colorType }}
+            </el-tag>
+          </template>
+        </el-table-column>
+
+        <el-table-column align="center" label="状态" prop="status">
           <template #default="scope">
-            <el-tag
-              v-model="scope.row.status"
-              :active-value="1"
-              :type="scope.row.status === 1 ? 'success' : 'danger'"
-            >
+            <el-tag v-model="scope.row.status" :active-value="1" :type="scope.row.status === 1 ? 'success' : 'danger'">
               {{ scope.row.status === 1 ? '启用' : '停用' }}
             </el-tag>
           </template>
@@ -215,13 +211,9 @@ onMounted(() => {
 
         <el-table-column align="center" label="操作" width="200">
           <template #default="scope">
-            <el-button link type="primary" size="small" @click="openDictDataForm(scope.row.id)">
-              编辑
-            </el-button>
+            <el-button link type="primary" size="small" @click="openDictDataForm(scope.row.id)"> 编辑 </el-button>
             <el-divider direction="vertical" />
-            <el-button link type="danger" size="small" @click="handleDictDataDel(scope.row.id)">
-              删除
-            </el-button>
+            <el-button link type="danger" size="small" @click="handleDictDataDel(scope.row.id)"> 删除 </el-button>
           </template>
         </el-table-column>
       </el-table>

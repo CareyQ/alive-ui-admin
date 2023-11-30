@@ -54,8 +54,7 @@ export const useNavTabStore = defineStore('navTab', {
         const name = item.name as string
         cacheMap.add(name)
       }
-      if (Array.from(this.cachedViews).sort().toString() === Array.from(cacheMap).sort().toString())
-        return
+      if (Array.from(this.cachedViews).sort().toString() === Array.from(cacheMap).sort().toString()) return
       this.cachedViews = cacheMap
     },
     closeTab(route: RouteLocationNormalizedLoaded) {
@@ -97,11 +96,9 @@ export const useNavTabStore = defineStore('navTab', {
       }
     },
     setActiveRoute(route: RouteLocationNormalizedLoaded) {
-      const currentRouteIndex: number = this.tabsView.findIndex(
-        (item: RouteLocationNormalizedLoaded) => {
-          return item.path === route.path
-        }
-      )
+      const currentRouteIndex: number = this.tabsView.findIndex((item: RouteLocationNormalizedLoaded) => {
+        return item.path === route.path
+      })
       if (currentRouteIndex === -1) return
       this.activeIndex = currentRouteIndex
     }

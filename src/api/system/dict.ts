@@ -12,6 +12,7 @@ export interface DictData {
   label: string
   value: string
   dictType: string
+  colorType: string
   remark: string
   status: number
 }

@@ -6,14 +6,7 @@ import { usePermissionStoreWithOut } from '@/store/modules/permission'
 import { getAccessToken } from '@/utils/auth'
 
 // 路由不重定向白名单
-const whiteList = [
-  '/login',
-  '/social-login',
-  '/auth-redirect',
-  '/bind',
-  '/register',
-  '/oauthLogin/gitee'
-]
+const whiteList = ['/login', '/social-login', '/auth-redirect', '/bind', '/register', '/oauthLogin/gitee']
 
 router.beforeEach(async (to, from, next) => {
   if (getAccessToken()) {

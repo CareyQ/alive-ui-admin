@@ -45,11 +45,7 @@ onUnmounted(() => {
           <div class="menu-btn flex-center" @click.stop="toggleCollapse()">
             <Icon :icon="collapse ? 'gg:menu' : 'gg:close'" color="var(--white-color)" :size="24" />
           </div>
-          <router-link
-            class="logo-container flex align-center"
-            to="/"
-            style="color: inherit; text-decoration: none"
-          >
+          <router-link class="logo-container flex align-center" to="/" style="color: inherit; text-decoration: none">
             <img class="logo" src="@/assets/logo-white.png" :alt="title" />
             <span class="title no-wrap ellipsis">{{ title }}</span>
           </router-link>

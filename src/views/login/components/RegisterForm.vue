@@ -124,25 +124,13 @@ const register = async (formEl: FormInstance | undefined) => {
 </script>
 
 <template>
-  <el-form
-    ref="registerFormRef"
-    :model="registerForm"
-    size="large"
-    :rules="rules"
-    style="width: 100%"
-    v-if="getShow"
-  >
+  <el-form ref="registerFormRef" :model="registerForm" size="large" :rules="rules" style="width: 100%" v-if="getShow">
     <el-form-item>
       <el-row justify="space-between" style="width: 100%; align-items: flex-end">
         <h2 class="title">注册</h2>
         <p style="margin: 0; line-height: 16px" class="flex align-end">
           <span>已有账号？</span>
-          <el-button
-            type="primary"
-            text
-            style="height: 1rem; padding: 0"
-            @click="handleBackLogin()"
-          >
+          <el-button type="primary" text style="height: 1rem; padding: 0" @click="handleBackLogin()">
             点此登录
           </el-button>
         </p>
@@ -150,31 +138,15 @@ const register = async (formEl: FormInstance | undefined) => {
     </el-form-item>
 
     <el-form-item prop="username">
-      <el-input
-        v-model="registerForm.username"
-        :maxlength="16"
-        placeholder="请输入用户名"
-        clearable
-      />
+      <el-input v-model="registerForm.username" :maxlength="16" placeholder="请输入用户名" clearable />
     </el-form-item>
 
     <el-form-item prop="password">
-      <el-input
-        v-model="registerForm.password"
-        type="password"
-        placeholder="请输入密码"
-        clearable
-        show-password
-      />
+      <el-input v-model="registerForm.password" type="password" placeholder="请输入密码" clearable show-password />
     </el-form-item>
 
     <el-form-item prop="mobile" :error="captchaEl.mobileErrorMsg">
-      <el-input
-        v-model="registerForm.mobile"
-        @change="check()"
-        placeholder="请输入手机号码"
-        :maxlength="11"
-      >
+      <el-input v-model="registerForm.mobile" @change="check()" placeholder="请输入手机号码" :maxlength="11">
         <template #suffix>
           <el-icon class="is-loading" v-if="captchaEl.mobileIsValid && captchaEl.mobileIsLoading">
             <Loading />
@@ -214,9 +186,7 @@ const register = async (formEl: FormInstance | undefined) => {
     </el-form-item>
 
     <el-form-item>
-      <el-button type="primary" class="login-btn" @click="register(registerFormRef)">
-        注 册
-      </el-button>
+      <el-button type="primary" class="login-btn" @click="register(registerFormRef)"> 注 册 </el-button>
     </el-form-item>
   </el-form>
 </template>

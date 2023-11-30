@@ -9,17 +9,9 @@ const dropdownChange = (visible: boolean) => {
 </script>
 
 <template>
-  <el-dropdown
-    trigger="click"
-    @visible-change="dropdownChange"
-    popper-class="admin-dropdown"
-    :teleported="false"
-  >
+  <el-dropdown trigger="click" @visible-change="dropdownChange" popper-class="admin-dropdown" :teleported="false">
     <div :class="[isVisible && 'is-active', 'avatar-wrap', 'flex-center']">
-      <el-avatar
-        ref="avatarRef"
-        src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"
-      />
+      <el-avatar ref="avatarRef" src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png" />
     </div>
     <template #dropdown>
       <div class="username no-wrap ellipsis">Admin</div>

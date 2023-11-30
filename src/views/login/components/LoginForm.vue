@@ -44,14 +44,7 @@ const handleLogin = async () => {
 </script>
 
 <template>
-  <el-form
-    size="large"
-    ref="loginFormRef"
-    style="width: 100%"
-    :rules="LoginRules"
-    :model="loginForm"
-    v-if="getShow"
-  >
+  <el-form size="large" ref="loginFormRef" style="width: 100%" :rules="LoginRules" :model="loginForm" v-if="getShow">
     <el-form-item>
       <el-row justify="space-between" style="width: 100%; align-items: flex-end">
         <h2 class="title">登录</h2>
@@ -84,17 +77,13 @@ const handleLogin = async () => {
         </el-col>
 
         <el-col :span="12" :offset="6">
-          <el-link style="float: right" type="primary" :underline="false" href="">
-            忘记密码？
-          </el-link>
+          <el-link style="float: right" type="primary" :underline="false" href=""> 忘记密码？ </el-link>
         </el-col>
       </el-row>
     </el-form-item>
 
     <el-form-item>
-      <el-button type="primary" class="login-btn" @click="handleLogin" :loading="loginLoading">
-        登 录
-      </el-button>
+      <el-button type="primary" class="login-btn" @click="handleLogin" :loading="loginLoading"> 登 录 </el-button>
     </el-form-item>
   </el-form>
 </template>
