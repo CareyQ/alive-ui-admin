@@ -109,7 +109,7 @@ const submitForm = async () => {
 
 <template>
   <el-dialog :title="dialogTitle" v-model="dialogVisible" width="30%">
-    <el-form ref="formRef" :model="formData" :rules="formRules" label-width="80px" :loading="formLoading">
+    <el-form ref="formRef" :model="formData" :rules="formRules" label-width="80px" v-loading="formLoading">
       <el-form-item label="字典类型" v-if="dictType">
         {{ `${dictType?.name}（${dictType?.type}）` }}
       </el-form-item>

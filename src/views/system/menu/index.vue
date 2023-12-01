@@ -86,14 +86,23 @@ const filterAllMenu = (treeList: any[]): any[] => {
   return res
 }
 
-const openForm = (id?: number) => {
-  formRef.value.open(id)
+const openForm = (id?: number, parentId?: number) => {
+  formRef.value.open(id, parentId)
 }
 
 const handleDropClick = (event: string, node: any) => {
   if (event === 'edit') {
     openForm(node.data.id)
+  } else if (event === 'delete') {
+    handleDel(node.data.id)
   }
+}
+
+const handleDel = async (id: number) => {
+  await message.delConfirm()
+  await MenuApi.delMenu(id)
+  message.success('删除成功')
+  await getList()
 }
 
 const refershCache = async () => {
@@ -185,7 +194,7 @@ onMounted(() => {
             <Tag :type="DICT_TYPE.COMMON_STATUS" :value="row.status" />
           </template>
         </el-table-column>
-        <el-table-column align="center" label="权限">
+        <el-table-column align="center" label="按钮">
           <template #default="scope">
             <el-popover
               effect="light"
@@ -208,11 +217,11 @@ onMounted(() => {
         </el-table-column>
         <el-table-column align="center" label="操作" width="180">
           <template #default="scope">
-            <el-button link type="primary" size="small">新增权限</el-button>
+            <el-button link type="primary" size="small" @click="openForm(undefined, scope.row.id)">新增按钮</el-button>
             <el-divider direction="vertical" />
             <el-button link type="primary" size="small" @click="openForm(scope.row.id)"> 编辑 </el-button>
             <el-divider direction="vertical" />
-            <el-button link type="danger" size="small">删除</el-button>
+            <el-button link type="danger" size="small" @click="handleDel(scope.row.id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

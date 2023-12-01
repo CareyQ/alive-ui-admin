@@ -118,7 +118,7 @@ onMounted(() => {
 
 <template>
   <el-dialog :title="dialogTitle" v-model="dialogVisible" width="36%" class="dialog-inline">
-    <el-form :model="formData" :loading="formLoading" v-if="isEdit">
+    <el-form :model="formData" v-loading="formLoading" v-if="isEdit">
       <el-row :gutter="40">
         <el-col :span="12">
           <el-form-item label="用户编号:" prop="id">
@@ -134,7 +134,7 @@ onMounted(() => {
       </el-row>
     </el-form>
 
-    <el-form ref="formRef" :model="formData" :rules="formRules" label-position="top" :loading="formLoading">
+    <el-form ref="formRef" :model="formData" :rules="formRules" label-position="top" v-loading="formLoading">
       <el-row :gutter="40" v-if="!isEdit">
         <el-col :span="12">
           <el-form-item label="用户名" prop="username">

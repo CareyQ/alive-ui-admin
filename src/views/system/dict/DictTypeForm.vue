@@ -70,7 +70,7 @@ const submitForm = async () => {
 
 <template>
   <el-dialog :title="dialogTitle" v-model="dialogVisible" width="30%">
-    <el-form ref="formRef" :model="formData" :rules="formRules" label-width="80px" :loading="formLoading">
+    <el-form ref="formRef" :model="formData" :rules="formRules" label-width="80px" v-loading="formLoading">
       <el-form-item label="字典名称" prop="name">
         <el-input v-model="formData.name" placeholder="请输入字典名称" :maxlength="20" />
       </el-form-item>

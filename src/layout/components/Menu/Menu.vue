@@ -18,7 +18,7 @@ export default defineComponent({
     const menuClass = computed(() => `menu ${unref(collapse) ? '' : 'opened'}`)
 
     return () => (
-      <ul className={menuClass.value} ref={menuRef.value}>
+      <ul class={menuClass.value} ref={menuRef.value}>
         {{
           default: () => {
             const { renderMenuItem } = useRenderMenuItem()

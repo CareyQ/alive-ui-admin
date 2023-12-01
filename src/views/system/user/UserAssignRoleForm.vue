@@ -62,7 +62,7 @@ const submitForm = async () => {
 
 <template>
   <el-dialog title="分配角色" v-model="dialogVisible" width="25%">
-    <el-form ref="formRef" :model="formData" :loading="formLoading">
+    <el-form ref="formRef" :model="formData" v-loading="formLoading">
       <el-form-item label="用户名:">
         <el-text>{{ username }}</el-text>
       </el-form-item>
