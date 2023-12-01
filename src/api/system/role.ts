@@ -33,3 +33,7 @@ export const changeDefault = (id: number, isDefault: boolean) => {
     url: `/system/role/default?id=${id}&isDefault=${isDefault}`
   })
 }
+
+export const getList = () => {
+  return request.get({ url: '/system/role/list' })
+}

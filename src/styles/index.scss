@@ -152,6 +152,15 @@ ul {
   }
 }
 
+.table-header.el-form--inline {
+  .el-form-item {
+    margin-right: 10px;
+  }
+  .el-form-item:last-child {
+    margin-left: 20px;
+  }
+}
+
 .page-right {
   .el-table--border .el-table__cell:last-child {
     border-right: none;
@@ -196,7 +205,7 @@ ul {
   top: 2px;
 }
 
-.el-dialog {
+.el-dialog:not(.dialog-inline) {
   .el-form-item:last-child {
     margin-bottom: 0;
   }

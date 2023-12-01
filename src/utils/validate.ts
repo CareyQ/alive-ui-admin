@@ -22,6 +22,9 @@ export const validateUsername = (_rule: any, value: any, callback: any) => {
  * @param callback 回调
  */
 export const validateMobile = (_rule: any, value: any, callback: any) => {
+  if (value === '' || value === undefined) {
+    callback()
+  }
   const reg = /^[1][3,4,5,6,7,8,9][0-9]{9}$/
   if (!reg.test(value)) {
     callback(new Error('请输入正确的手机号码'))
@@ -37,6 +40,9 @@ export const validateMobile = (_rule: any, value: any, callback: any) => {
  * @param callback 回调
  */
 export const validateEmail = (_rule: any, value: any, callback: any) => {
+  if (value === '' || value === undefined) {
+    callback()
+  }
   const reg = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/
   if (!reg.test(value)) {
     callback(new Error('请输入正确的邮箱'))

@@ -11,6 +11,7 @@ export interface User {
   gender?: number
   email?: string
   mobile?: string
+  status?: number
 }
 
 export interface UserPageDTO {
@@ -41,6 +42,6 @@ export const updateStatus = (id: number, status: number) => {
   return request.put({ url: `/system/user/status?id=${id}&status=${status}` })
 }
 
-export const updatePassword = (id: number, passowrd: string) => {
-  return request.get({ url: `/system/user/status?id=${id}&passowrd=${passowrd}` })
+export const updatePassword = (id: number, password: string) => {
+  return request.put({ url: `/system/user/password?id=${id}&password=${password}` })
 }

@@ -15,6 +15,7 @@ declare global {
   type LocaleType = 'zh-CN' | 'en'
 
   type ElType = EpPropMergeType<StringConstructor,'' | 'success' | 'warning' | 'info' | 'danger' | 'default', unknown>
+  type ElDate = EpPropMergeType<(new (...args: any[]) => import("..").ModelValueType & {}) | (() => import("..").ModelValueType) | ((new (...args: any[]) => import("..").ModelValueType & {}) | (() => import("..").ModelValueType))[], unknown, unknown>;
 
   type AxiosHeaders =
     | 'application/json'
