@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import * as MenuApi from '@/api/system/menu'
 import { isEmpty, sortBy } from 'lodash-es'
+import { DICT_TYPE } from '@/utils/dict'
 import { RefreshRight, Plus, Refresh, MoreFilled } from '@element-plus/icons-vue'
 import { filterTree } from '@/utils/tree'
 import MenuForm from './MenuForm.vue'
@@ -180,8 +181,8 @@ onMounted(() => {
           </template>
         </el-table-column>
         <el-table-column align="center" label="状态" prop="status" width="80">
-          <template #default="scope">
-            <el-switch v-model="scope.row.status" :active-value="1" />
+          <template #default="{ row }">
+            <Tag :type="DICT_TYPE.COMMON_STATUS" :value="row.status" />
           </template>
         </el-table-column>
         <el-table-column align="center" label="权限">

@@ -195,17 +195,15 @@ onMounted(() => {
 
         <el-table-column align="center" label="颜色类型" prop="colorType">
           <template #default="{ row }">
-            <el-tag :type="row.colorType">
+            <el-tag :type="row.colorType === 'default' ? '' : row.colorType" v-if="row.colorType">
               {{ row.colorType }}
             </el-tag>
           </template>
         </el-table-column>
 
         <el-table-column align="center" label="状态" prop="status">
-          <template #default="scope">
-            <el-tag v-model="scope.row.status" :active-value="1" :type="scope.row.status === 1 ? 'success' : 'danger'">
-              {{ scope.row.status === 1 ? '启用' : '停用' }}
-            </el-tag>
+          <template #default="{ row }">
+            <Tag :type="DICT_TYPE.COMMON_STATUS" :value="row.status" />
           </template>
         </el-table-column>
 

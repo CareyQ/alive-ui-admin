@@ -29,3 +29,18 @@ export const validateMobile = (_rule: any, value: any, callback: any) => {
     callback()
   }
 }
+
+/**
+ * 邮箱验证
+ * @param rule 规则
+ * @param value 待验证内容
+ * @param callback 回调
+ */
+export const validateEmail = (_rule: any, value: any, callback: any) => {
+  const reg = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/
+  if (!reg.test(value)) {
+    callback(new Error('请输入正确的邮箱'))
+  } else {
+    callback()
+  }
+}

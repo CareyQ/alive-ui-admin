@@ -24,6 +24,9 @@ const getDictObj = (dictType: string, value: string) => {
   const dictOptions = getDictOptions(dictType)
   dictOptions.forEach((dict: DictDataType) => {
     if (dict.value === value) {
+      if (dict.colorType === 'default') {
+        dict.colorType = ''
+      }
       dictData.value = dict
     }
   })

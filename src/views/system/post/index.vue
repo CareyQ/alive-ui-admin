@@ -85,8 +85,8 @@ onMounted(() => {
       <el-table-column align="center" label="岗位名称" prop="name" width="300" />
       <el-table-column align="center" label="备注" prop="remark" />
       <el-table-column align="center" label="状态" prop="status" width="150">
-        <template #default="scope">
-          <el-switch v-model="scope.row.status" :active-value="1" />
+        <template #default="{ row }">
+          <Tag :type="DICT_TYPE.COMMON_STATUS" :value="row.status" />
         </template>
       </el-table-column>
       <el-table-column align="center" label="创建时间" prop="createTime" :formatter="dateFormatter" width="300" />
