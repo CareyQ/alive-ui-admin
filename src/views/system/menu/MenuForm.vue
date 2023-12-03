@@ -10,9 +10,28 @@ const labelSuffix = ref('')
 const formLoading = ref(false)
 const formRef = ref()
 
+const menuType = [
+  {
+    value: 1,
+    label: '目录'
+  },
+  {
+    value: 2,
+    label: '分组'
+  },
+  {
+    value: 3,
+    label: '菜单'
+  },
+  {
+    value: 4,
+    label: '按钮'
+  }
+]
+
 const currentType = ref({
-  type: 1,
-  label: '目录'
+  type: menuType[0].value,
+  label: menuType[0].label
 })
 
 const formData = ref<MenuApi.MenuVO>({
@@ -44,14 +63,21 @@ const open = async (id: number, parentId?: number) => {
     parent.value = await MenuApi.getMenuTree()
     if (id) {
       dialogTitle.value = '编辑'
-      formData.value = await MenuApi.getDetail(id)
+      const data = await MenuApi.getDetail(id)
+      formData.value = data
+
+      const type = getType(data.type)
+      if (type) {
+        currentType.value.type = type.value
+        currentType.value.label = type.label
+      }
     } else {
       dialogTitle.value = '新增'
     }
 
     if (parentId) {
-      currentType.value.type = 4
-      currentType.value.label = '按钮'
+      currentType.value.type = menuType[3].value
+      currentType.value.label = menuType[3].label
       formData.value.parentId = parentId
     }
   } finally {
@@ -59,6 +85,10 @@ const open = async (id: number, parentId?: number) => {
   }
 }
 defineExpose({ open })
+
+const getType = (type: number) => {
+  return menuType.find((item) => item.value === type)
+}
 
 const handleParentChange = (node) => {
   const { type } = node

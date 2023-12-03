@@ -1,5 +1,6 @@
 import type { RouteMeta } from 'vue-router'
 import { findPath } from '@/utils/tree'
+import { isEmpty } from 'lodash-es'
 
 type OnlyOneChildType = AppRouteRecordRaw & { noShowingChildren?: boolean }
 
@@ -22,7 +23,7 @@ export const hasOneShowingChild = (
   const showingChildren = filterChild(children)
 
   // When there is only one child router, the child router is displayed by default
-  if (showingChildren.length === 1) {
+  if (showingChildren.length === 1 && isEmpty(showingChildren[0].children)) {
     return {
       oneShowingChild: true,
       onlyOneChild: showingChildren[0]

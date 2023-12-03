@@ -1,4 +1,5 @@
 import type { RouteMeta } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { hasOneShowingChild } from '../helper'
 import { isUrl } from '@/utils/utils'
 import MenuTitle from './useRenderMenuTitle'
@@ -6,8 +7,13 @@ import { useRenderMenuGroup } from './useRenderMenuGroup'
 import { pathResolve } from '@/utils/routerHelper'
 
 export const useRenderMenuItem = () => {
+  const router = useRouter()
+
   const renderMenuItem = (routers: AppRouteRecordRaw[], parentPath = '/') => {
-    const handleClick = (elementRef: Ref<HTMLElement | null>) => {
+    const handleClick = (elementRef: Ref<HTMLElement | null>, one?: boolean | false, path?: string) => {
+      if (one && path) {
+        router.push(path)
+      }
       if (elementRef.value) {
         const parentElement = elementRef.value.parentElement
         if (parentElement) {
@@ -41,7 +47,7 @@ export const useRenderMenuItem = () => {
         <li
           ref={elementRef}
           class={['no-wrap', one ? 'menu-item' : 'sub-menu']}
-          onClick={() => handleClick(elementRef)}
+          onClick={() => handleClick(elementRef, oneShowingChild, v.path)}
         >
           <MenuTitle meta={onlyOneChild ? onlyOneChild?.meta : meta} once={one} />
           {one ? null : (

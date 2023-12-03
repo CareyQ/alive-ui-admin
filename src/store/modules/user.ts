@@ -1,7 +1,8 @@
 import { store } from '../index'
 import { defineStore } from 'pinia'
 import { CACHE_KEY, useCache } from '@/hooks/useCache'
-import { getMenuTree } from '@/api/login'
+import { getMenuTree, logout } from '@/api/login'
+import { removeToken } from '@/utils/auth'
 
 interface UserInfo {
   menus: AppCustomRouteRecordRaw[]
@@ -33,6 +34,16 @@ export const useUserStore = defineStore('admin-user', {
       this.menus = routers
       this.isSetUser = true
       wsCache.set(CACHE_KEY.ROUTERS, routers)
+    },
+    async logout() {
+      await logout()
+      removeToken()
+      wsCache.clear()
+      this.resetState()
+    },
+    resetState() {
+      this.menus = []
+      this.isSetUser = false
     }
   }
 })

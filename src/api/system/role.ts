@@ -3,6 +3,7 @@ import request from '@/utils/axios'
 export interface Role {
   id: number | string
   name: string
+  code: string
   remark: string
 }
 

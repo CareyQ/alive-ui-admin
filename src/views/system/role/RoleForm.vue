@@ -11,11 +11,13 @@ const formRef = ref()
 const formData = ref({
   id: '',
   name: '',
+  code: '',
   remark: ''
 })
 
 const formRules = reactive({
-  name: [{ required: true, message: '请输入角色名称', trigger: 'blur' }]
+  name: [{ required: true, message: '请输入角色名称', trigger: 'blur' }],
+  code: [{ required: true, message: '请输入角色标识', trigger: 'blur' }]
 })
 
 const open = async (id: number) => {
@@ -39,6 +41,7 @@ const resetForm = () => {
   formData.value = {
     id: '',
     name: '',
+    code: '',
     remark: ''
   }
   formRef.value?.resetFields()
@@ -67,7 +70,11 @@ const submitForm = async () => {
   <el-dialog :title="dialogTitle" v-model="dialogVisible" width="30%">
     <el-form ref="formRef" :model="formData" :rules="formRules" label-width="80px" v-loading="formLoading">
       <el-form-item label="角色名称" prop="name">
-        <el-input v-model="formData.name" placeholder="请输入角色名称" />
+        <el-input v-model="formData.name" placeholder="请输入角色名称" :maxlength="20" />
+      </el-form-item>
+
+      <el-form-item label="角色标识" prop="code">
+        <el-input v-model="formData.code" placeholder="请输入角色标识" :maxlength="50" />
       </el-form-item>
 
       <el-form-item label="备注" prop="remark">

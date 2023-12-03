@@ -83,6 +83,7 @@ onMounted(() => {
 
     <el-table ref="tableRef" v-loading="tableLoading" :data="tableData" border stripe show-overflow-tooltip>
       <el-table-column align="center" label="角色名称" prop="name" />
+      <el-table-column align="center" label="角色标识" prop="code" />
       <el-table-column align="center" label="备注" prop="remark" />
       <el-table-column align="center" label="默认角色" prop="isDefault">
         <template #default="{ row }">

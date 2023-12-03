@@ -1,10 +1,31 @@
 <script lang="ts" setup>
+import { ElMessageBox } from 'element-plus'
+import { useUserStore } from '@/store/modules/user'
+import { useNavTabStore } from '@/store/modules/navTab'
 import DropdownMenuItem from './DropdownMenuItem.vue'
+
+const userStore = useUserStore()
+const navTabStore = useNavTabStore()
+const { replace } = useRouter()
 
 const isVisible = ref<boolean>(false)
 
 const dropdownChange = (visible: boolean) => {
   isVisible.value = visible
+}
+
+const logout = () => {
+  ElMessageBox.confirm('是否退出系统', '温馨提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'info'
+  })
+    .then(async () => {
+      await userStore.logout()
+      navTabStore.delCachedView()
+      replace('/login?redirect=/index')
+    })
+    .catch(() => {})
 }
 </script>
 
@@ -21,7 +42,7 @@ const dropdownChange = (visible: boolean) => {
 
       <ul class="dropdown-menu">
         <DropdownMenuItem icon="mdi:account-box-outline" text="个人资料" />
-        <DropdownMenuItem icon="mdi:exit-to-app" text="退出登录" />
+        <DropdownMenuItem icon="mdi:exit-to-app" text="退出登录" @click="logout" />
       </ul>
     </template>
   </el-dropdown>
