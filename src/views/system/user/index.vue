@@ -141,7 +141,7 @@ onMounted(() => {
         </el-select>
       </el-form-item>
 
-      <el-form-item label="创建日期" prop="mobile">
+      <el-form-item label="创建日期" prop="createStartDate">
         <el-date-picker
           v-model="createDate"
           value-format="YYYY-MM-DD"

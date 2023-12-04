@@ -132,7 +132,7 @@ const submitForm = async () => {
           >
             <div class="flex-center-between">
               <span>{{ item.label }}</span>
-              <el-tag :type="item.value" style="width: 60px">{{ item.value }}</el-tag>
+              <el-tag :type="item.value === 'default' ? '' : item.value" style="width: 60px">{{ item.value }}</el-tag>
             </div>
           </el-option>
         </el-select>
