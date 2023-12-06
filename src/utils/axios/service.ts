@@ -4,7 +4,9 @@ import { ElMessage, ElMessageBox, ElNotification } from 'element-plus'
 import qs from 'qs'
 import errorCode from './errorCode'
 import { config } from '@/utils/axios/config'
+import { resetRouter } from '@/router'
 import { getAccessToken, removeToken, setToken } from '@/utils/auth'
+import { useCache } from '@/hooks/useCache'
 
 const { base_url, request_timeout } = config
 const whiteList: string[] = ['/login']
@@ -84,6 +86,15 @@ service.interceptors.response.use(
     const msg = data.msg || errorCode[code] || errorCode['default']
     if (ignoreMsgs.indexOf(msg) !== -1) {
       return Promise.reject(msg)
+    }
+
+    if (code === 401) {
+      ElNotification.error('登录已过期，请重新登录')
+      resetRouter()
+      removeToken()
+      const { wsCache } = useCache()
+      wsCache.clear()
+      return Promise.reject('登录已过期，请重新登录')
     }
 
     if (code === 500) {
