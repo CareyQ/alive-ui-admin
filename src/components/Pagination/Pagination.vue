@@ -68,7 +68,6 @@ const handleCurrentChange = (val) => {
     layout="total, prev, pager, next, sizes"
     @size-change="handleSizeChange"
     @current-change="handleCurrentChange"
-    hide-on-single-page
   />
 </template>
 

@@ -94,15 +94,14 @@ export const getDictLabel = (dictType: string, value: any): string => {
 export enum DICT_TYPE {
   COMMON_STATUS = 'common_status',
 
+  USER_TYPE = 'user_type',
+
   // ========== SYSTEM 模块 ==========
   SYSTEM_USER_GENDER = 'system_user_gender',
   SYSTEM_MENU_TYPE = 'system_menu_type',
   SYSTEM_ROLE_TYPE = 'system_role_type',
   SYSTEM_DATA_SCOPE = 'system_data_scope',
   SYSTEM_NOTICE_TYPE = 'system_notice_type',
-  SYSTEM_OPERATE_TYPE = 'system_operate_type',
-  SYSTEM_LOGIN_TYPE = 'system_login_type',
-  SYSTEM_LOGIN_RESULT = 'system_login_result',
   SYSTEM_SMS_CHANNEL_CODE = 'system_sms_channel_code',
   SYSTEM_SMS_TEMPLATE_TYPE = 'system_sms_template_type',
   SYSTEM_SMS_SEND_STATUS = 'system_sms_send_status',
@@ -111,5 +110,10 @@ export enum DICT_TYPE {
   SYSTEM_OAUTH2_GRANT_TYPE = 'system_oauth2_grant_type',
   SYSTEM_MAIL_SEND_STATUS = 'system_mail_send_status',
   SYSTEM_NOTIFY_TEMPLATE_TYPE = 'system_notify_template_type',
-  SYSTEM_SOCIAL_TYPE = 'system_social_type'
+  SYSTEM_SOCIAL_TYPE = 'system_social_type',
+  // ========== INFRA 模块 ==========
+  INFRA_LOGIN_TYPE = 'infra_login_type',
+  INFRA_LOGIN_RESULT = 'infra_login_result',
+  INFRA_OPERATE_TYPE = 'infra_operate_type',
+  INFRA_ERROR_LOG_PROCESS_STATUS = 'infra_error_log_process_status'
 }

@@ -117,7 +117,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <el-dialog :title="dialogTitle" v-model="dialogVisible" width="36%" class="dialog-inline">
+  <Dialog :title="dialogTitle" v-model="dialogVisible" width="36%" class="dialog-inline">
     <el-form :model="formData" v-loading="formLoading" v-if="isEdit">
       <el-row :gutter="40">
         <el-col :span="12">
@@ -237,5 +237,5 @@ onMounted(() => {
         <el-button type="primary" @click="submitForm">保存</el-button>
       </span>
     </template>
-  </el-dialog>
+  </Dialog>
 </template>

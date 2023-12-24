@@ -2,7 +2,7 @@
 import { Refresh, Search } from '@element-plus/icons-vue'
 import { dateFormatter } from '@/utils/date'
 import { DICT_TYPE } from '@/utils/dict'
-import * as LogApi from '@/api/system/log'
+import * as LogApi from '@/api/infra/log'
 
 defineOptions({ name: 'SystemLoginLog' })
 
@@ -77,7 +77,7 @@ onMounted(() => {
     <el-table ref="tableRef" v-loading="tableLoading" :data="tableData" border stripe show-overflow-tooltip>
       <el-table-column align="center" label="日志类型" prop="type">
         <template #default="{ row }">
-          <Tag :type="DICT_TYPE.SYSTEM_LOGIN_TYPE" :value="row.type" />
+          <Tag :type="DICT_TYPE.INFRA_LOGIN_TYPE" :value="row.type" />
         </template>
       </el-table-column>
       <el-table-column align="center" label="用户名" prop="username" />
@@ -86,7 +86,7 @@ onMounted(() => {
       <el-table-column align="center" label="设备" prop="device" />
       <el-table-column align="center" label="登录结果" prop="result">
         <template #default="{ row }">
-          <Tag :type="DICT_TYPE.SYSTEM_LOGIN_RESULT" :value="row.result" />
+          <Tag :type="DICT_TYPE.INFRA_LOGIN_RESULT" :value="row.result" />
         </template>
       </el-table-column>
       <el-table-column align="center" label="登录时间" prop="loginTime" :formatter="dateFormatter" />

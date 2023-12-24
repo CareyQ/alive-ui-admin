@@ -61,7 +61,7 @@ const submitForm = async () => {
 </script>
 
 <template>
-  <el-dialog title="分配角色" v-model="dialogVisible" width="25%">
+  <Dialog title="分配角色" v-model="dialogVisible" width="25%">
     <el-form ref="formRef" :model="formData" v-loading="formLoading">
       <el-form-item label="用户名:">
         <el-text>{{ username }}</el-text>
@@ -80,5 +80,5 @@ const submitForm = async () => {
         <el-button type="primary" @click="submitForm">保存</el-button>
       </span>
     </template>
-  </el-dialog>
+  </Dialog>
 </template>

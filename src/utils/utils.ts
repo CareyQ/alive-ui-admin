@@ -24,3 +24,13 @@ export const findIndex = <T = Recordable>(ary: Array<T>, fn: Fn): number => {
   })
   return index
 }
+
+export const isNumber = (val: unknown): val is number => {
+  return is(val, 'Number')
+}
+
+const toString = Object.prototype.toString
+
+export const is = (val: unknown, type: string) => {
+  return toString.call(val) === `[object ${type}]`
+}

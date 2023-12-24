@@ -19,10 +19,15 @@
   --admin-dropdown-color: #61666d;
 
   --table-border: 1px solid #f6f6f6;
+  --dialog-header-border: 1px solid #ebeef5;
 
   --el-border-color-lighter: #f6f6f6 !important;
 }
 
 .el-table {
   --el-table-header-text-color: #303133 !important;
+}
+
+.el-descriptions {
+  --el-border-color-lighter: #ebeef5 !important;
 }
