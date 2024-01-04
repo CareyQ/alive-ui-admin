@@ -206,8 +206,10 @@ ul {
 }
 
 .el-dialog:not(.dialog-inline) {
-  .el-form-item:last-child {
-    margin-bottom: 0;
+  .el-form:not(.table-header) {
+    .el-form-item:last-child {
+      margin-bottom: 0;
+    }
   }
 }
 

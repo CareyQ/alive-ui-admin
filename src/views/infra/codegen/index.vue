@@ -2,6 +2,7 @@
 import { Refresh, Search, RefreshRight, Plus } from '@element-plus/icons-vue'
 import * as LogApi from '@/api/infra/log'
 import { dateFormatter } from '@/utils/date'
+import ImportTable from './ImportTable.vue'
 
 defineOptions({ name: 'InfraCodegen' })
 
@@ -38,7 +39,10 @@ const resetQuery = async () => {
   await getPage()
 }
 
-const openForm = () => {}
+const importRef = ref()
+const openImportTable = () => {
+  importRef.value.open()
+}
 
 onMounted(() => {
   getPage()
@@ -75,7 +79,7 @@ onMounted(() => {
 
     <div class="table-header">
       <el-button type="info" :icon="RefreshRight" @click="getPage" />
-      <el-button type="primary" :icon="Plus" @click="openForm(undefined)">导入</el-button>
+      <el-button type="primary" :icon="Plus" @click="openImportTable()">导入</el-button>
     </div>
 
     <el-table ref="tableRef" v-loading="tableLoading" :data="tableData" border stripe show-overflow-tooltip>
@@ -95,4 +99,5 @@ onMounted(() => {
       @pagination="getPage"
     />
   </div>
+  <ImportTable ref="importRef" />
 </template>

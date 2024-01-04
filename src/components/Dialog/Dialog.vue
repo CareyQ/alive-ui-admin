@@ -97,5 +97,9 @@ const getBindValue = computed(() => {
   .el-scrollbar {
     padding: 16px;
   }
+
+  .el-table .el-scrollbar {
+    padding: 0;
+  }
 }
 </style>
