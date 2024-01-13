@@ -3,9 +3,11 @@ import { Refresh, Search } from '@element-plus/icons-vue'
 import * as CodegenApi from '@/api/infra/codegen'
 import * as ConfigApi from '@/api/infra/dataSourceConfig'
 
+const message = useMessage()
 const tableLoading = ref(false)
 const dialogTitle = ref('导入表')
 const dialogVisible = ref(false)
+const importLoading = ref(false)
 
 const dbConfigList = ref<ConfigApi.DataSourceConfigDTO[]>([])
 const tableData = ref<any>([])
@@ -19,6 +21,10 @@ const queryParams = reactive({
 
 const open = async () => {
   dbConfigList.value = await ConfigApi.getConfigList()
+  if (dbConfigList.value.length === 0) {
+    message.error('未找到数据源配置')
+    return
+  }
   queryParams.dataSourceConfigId = dbConfigList.value[0].id as number
   dialogVisible.value = true
   await getList()
@@ -43,7 +49,27 @@ const resetQuery = async () => {
 const tableList = ref<string[]>([])
 const handleSelectionChange = (selection) => {
   tableList.value = selection.map((item) => item.name)
-  console.log(tableList.value)
+}
+
+const emit = defineEmits(['success'])
+const handleImportTable = async () => {
+  importLoading.value = true
+  try {
+    if (tableList.value.length === 0) {
+      message.error('请选择要导入的表')
+      return
+    }
+    await CodegenApi.importCodegenTable({
+      dataSourceConfigId: queryParams.dataSourceConfigId,
+      tableNames: tableList.value
+    })
+    message.success('导入成功')
+    emit('success')
+    dialogVisible.value = false
+    tableList.value = []
+  } finally {
+    importLoading.value = false
+  }
 }
 </script>
 
@@ -79,7 +105,14 @@ const handleSelectionChange = (selection) => {
     <template #footer>
       <span>
         <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="primary">导入</el-button>
+        <el-button
+          type="primary"
+          :disabled="tableList.length === 0"
+          :loading="importLoading"
+          @click="handleImportTable"
+        >
+          导入
+        </el-button>
       </span>
     </template>
   </Dialog>

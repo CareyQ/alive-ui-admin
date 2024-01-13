@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { Refresh, Search, RefreshRight, Plus } from '@element-plus/icons-vue'
-import * as LogApi from '@/api/infra/log'
+import * as CodegenApi from '@/api/infra/codegen'
 import { dateFormatter } from '@/utils/date'
 import ImportTable from './ImportTable.vue'
+import EditTable from './EditTable.vue'
 
 defineOptions({ name: 'InfraCodegen' })
 
@@ -25,7 +26,7 @@ const queryParams = reactive({
 const getPage = async () => {
   tableLoading.value = true
   try {
-    const data = await LogApi.getLoginLog(queryParams)
+    const data = await CodegenApi.getPage(queryParams)
     tableData.value = data.records
     total.value = data.total
   } finally {
@@ -42,6 +43,11 @@ const resetQuery = async () => {
 const importRef = ref()
 const openImportTable = () => {
   importRef.value.open()
+}
+
+const editRef = ref()
+const openForm = (id: number) => {
+  editRef.value.open(id)
 }
 
 onMounted(() => {
@@ -83,13 +89,24 @@ onMounted(() => {
     </div>
 
     <el-table ref="tableRef" v-loading="tableLoading" :data="tableData" border stripe show-overflow-tooltip>
-      <el-table-column align="center" label="日志类型" prop="type" />
-      <el-table-column align="center" label="用户名" prop="username" />
-      <el-table-column align="center" label="IP" prop="ip" />
-      <el-table-column align="center" label="IP 信息" prop="ipInfo" />
-      <el-table-column align="center" label="设备" prop="device" />
-      <el-table-column align="center" label="登录结果" prop="result" />
-      <el-table-column align="center" label="登录时间" prop="loginTime" :formatter="dateFormatter" />
+      <el-table-column align="center" label="表名称" prop="tableName" />
+      <el-table-column align="center" label="表描述" prop="tableComment" />
+      <el-table-column align="center" label="数据源" prop="dataSourceName" />
+      <el-table-column align="center" label="实体" prop="className" />
+      <el-table-column align="center" label="创建时间" prop="createTime" :formatter="dateFormatter" />
+      <el-table-column align="center" label="更新时间" prop="updateTime" :formatter="dateFormatter" />
+
+      <el-table-column align="center" label="操作" width="250">
+        <template #default="{ row }">
+          <el-button type="primary" link size="small" @click="openForm(row.id)"> 编辑 </el-button>
+          <el-divider direction="vertical" />
+          <el-button link type="primary" size="small"> 预览 </el-button>
+          <el-divider direction="vertical" />
+          <el-button link type="primary" size="small"> 生成代码 </el-button>
+          <el-divider direction="vertical" />
+          <el-button link type="danger" size="small"> 删除 </el-button>
+        </template>
+      </el-table-column>
     </el-table>
 
     <Pagination
@@ -99,5 +116,6 @@ onMounted(() => {
       @pagination="getPage"
     />
   </div>
-  <ImportTable ref="importRef" />
+  <ImportTable ref="importRef" @success="getPage" />
+  <EditTable ref="editRef" @success="getPage" />
 </template>

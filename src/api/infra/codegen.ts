@@ -1,25 +1,26 @@
 import request from '@/utils/axios'
 
-export interface DataSourceConfigDTO {
-  id?: number
-  name?: string
-  url?: string
-  username?: string
-  password?: string
+export interface TablePageDTO {
+  tableName?: string
+  tableComment?: string
+  startDate?: string
+  endDate?: string
+  current: number
+  size: number
 }
 
 export const getDbList = (params) => {
   return request.get({ url: '/infra/codegen/db/table/list', params })
 }
 
-export const getConfigList = () => {
-  return request.get({ url: '/infra/data-source-config/list' })
+export const importCodegenTable = (data) => {
+  return request.post({ url: '/infra/codegen/import', data })
 }
 
-export const getConfigDetail = (id: number) => {
-  return request.get({ url: '/infra/data-source-config/detail?id=' + id })
+export const getPage = (data: TablePageDTO) => {
+  return request.post({ url: '/infra/codegen/table/page', data })
 }
 
-export const delConfig = (id: number) => {
-  return request.delete({ url: '/infra/data-source-config/del?id=' + id })
+export const getDetail = (tableId: number) => {
+  return request.get({ url: '/infra/codegen/detail?tableId=' + tableId })
 }
