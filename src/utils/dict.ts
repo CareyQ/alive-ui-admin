@@ -115,5 +115,6 @@ export enum DICT_TYPE {
   INFRA_LOGIN_TYPE = 'infra_login_type',
   INFRA_LOGIN_RESULT = 'infra_login_result',
   INFRA_OPERATE_TYPE = 'infra_operate_type',
-  INFRA_ERROR_LOG_PROCESS_STATUS = 'infra_error_log_process_status'
+  INFRA_ERROR_LOG_PROCESS_STATUS = 'infra_error_log_process_status',
+  INFRA_CODEGEN_SCENE = 'infra_codegen_scene'
 }

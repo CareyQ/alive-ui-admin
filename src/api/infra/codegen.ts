@@ -9,6 +9,11 @@ export interface TablePageDTO {
   size: number
 }
 
+export interface CodegenPreviewVO {
+  filePath: string
+  code: string
+}
+
 export const getDbList = (params) => {
   return request.get({ url: '/infra/codegen/db/table/list', params })
 }
@@ -23,4 +28,16 @@ export const getPage = (data: TablePageDTO) => {
 
 export const getDetail = (tableId: number) => {
   return request.get({ url: '/infra/codegen/detail?tableId=' + tableId })
+}
+
+export const previewCodegen = (tableId: number) => {
+  return request.get({ url: '/infra/codegen/preview?tableId=' + tableId })
+}
+
+export const delCodegen = (tableId: number) => {
+  return request.delete({ url: '/infra/codegen/del?tableId=' + tableId })
+}
+
+export const updateCodegen = (data: any) => {
+  return request.post({ url: '/infra/codegen/update', data })
 }

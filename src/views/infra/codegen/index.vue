@@ -4,8 +4,11 @@ import * as CodegenApi from '@/api/infra/codegen'
 import { dateFormatter } from '@/utils/date'
 import ImportTable from './ImportTable.vue'
 import EditTable from './EditTable.vue'
+import PreviewCode from './PreviewCode.vue'
 
 defineOptions({ name: 'InfraCodegen' })
+
+const message = useMessage()
 
 const tableLoading = ref(false)
 const tableData = ref<any>([])
@@ -48,6 +51,18 @@ const openImportTable = () => {
 const editRef = ref()
 const openForm = (id: number) => {
   editRef.value.open(id)
+}
+
+const previewRef = ref()
+const previewForm = (id: number) => {
+  previewRef.value.open(id)
+}
+
+const handleDel = async (id: number) => {
+  await message.delConfirm()
+  await CodegenApi.delCodegen(id)
+  message.success('删除成功')
+  await getPage()
 }
 
 onMounted(() => {
@@ -100,11 +115,11 @@ onMounted(() => {
         <template #default="{ row }">
           <el-button type="primary" link size="small" @click="openForm(row.id)"> 编辑 </el-button>
           <el-divider direction="vertical" />
-          <el-button link type="primary" size="small"> 预览 </el-button>
+          <el-button link type="primary" size="small" @click="previewForm(row.id)"> 预览 </el-button>
           <el-divider direction="vertical" />
           <el-button link type="primary" size="small"> 生成代码 </el-button>
           <el-divider direction="vertical" />
-          <el-button link type="danger" size="small"> 删除 </el-button>
+          <el-button link type="danger" size="small" @click="handleDel(row.id)"> 删除 </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -118,4 +133,5 @@ onMounted(() => {
   </div>
   <ImportTable ref="importRef" @success="getPage" />
   <EditTable ref="editRef" @success="getPage" />
+  <PreviewCode ref="previewRef" />
 </template>

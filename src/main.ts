@@ -15,12 +15,17 @@ import { setupElementPlus } from '@/plugins/elementPlus'
 // 引入全局样式
 import '@/styles/index.scss'
 
+// 解决v-html 的安全隐患
+import VueDOMPurifyHTML from 'vue-dompurify-html'
+
 const setupAll = async () => {
   const app = createApp(App)
   setupElementPlus(app)
   setupStore(app)
   setupRouter(app)
   await router.isReady()
+
+  app.use(VueDOMPurifyHTML)
   app.mount('#app')
 }
 
