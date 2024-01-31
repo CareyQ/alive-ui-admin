@@ -181,7 +181,13 @@ watch(
         <div class="nowrap flex align-center">
           {{ item.meta.title }}
           <transition @after-leave="selectNavTab(tabsRefs[navTabStore.getActiveIndex])" name="el-fade-in">
-            <Icon class="nav-tab__item--close" icon="ep:close" :size="12" v-if="!item.meta.affix" />
+            <Icon
+              class="nav-tab__item--close"
+              icon="ep:close"
+              :size="12"
+              v-if="!item.meta.affix"
+              @click.prevent.stop="closeTab(item)"
+            />
           </transition>
         </div>
       </div>
