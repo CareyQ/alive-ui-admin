@@ -41,3 +41,7 @@ export const delCodegen = (tableId: number) => {
 export const updateCodegen = (data: any) => {
   return request.post({ url: '/infra/codegen/update', data })
 }
+
+export const downloadCodegen = (tableId: number) => {
+  return request.download({ url: '/infra/codegen/download?tableId=' + tableId })
+}

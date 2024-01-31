@@ -35,7 +35,6 @@ const open = async (tableId: number) => {
     loading.value = true
     const data = await CodegenApi.previewCodegen(tableId)
     previewCodegen.value = data
-    console.log(previewCodegen.value)
 
     let file = handleFiles(data)
     preview.fileTree = handleTree(file, 'id', 'parentId', 'children', '/')

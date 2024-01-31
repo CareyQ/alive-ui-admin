@@ -7,17 +7,23 @@ const activeName = ref('first')
 const dialogTitle = ref('编辑表')
 const dialogVisible = ref(false)
 const submitLoading = ref(false)
+const dataLoading = ref(false)
 const formRef = ref()
 
-const table = ref<any>()
+const table = ref<any>({})
 const columns = ref<any>([])
 
 const open = async (tableId: number) => {
-  const res = await CodegenApi.getDetail(tableId)
-  table.value = res.table
-  columns.value = res.columns
-  dialogTitle.value = `编辑表（${table.value.tableName}）`
   dialogVisible.value = true
+  dataLoading.value = true
+  dialogTitle.value = `编辑表（${table.value.tableName}）`
+  try {
+    const res = await CodegenApi.getDetail(tableId)
+    table.value = res.table
+    columns.value = res.columns
+  } finally {
+    dataLoading.value = false
+  }
 }
 defineExpose({ open })
 
@@ -59,7 +65,14 @@ const submitForm = async () => {
   <Dialog :title="dialogTitle" v-model="dialogVisible" width="80%" align-center scroll maxHeight="760px">
     <el-tabs v-model="activeName">
       <el-tab-pane label="表信息" name="first">
-        <el-form ref="formRef" :model="table" :rules="formRules" label-width="100px" class="tabs-form">
+        <el-form
+          ref="formRef"
+          :model="table"
+          :rules="formRules"
+          label-width="100px"
+          class="tabs-form"
+          v-loading="dataLoading"
+        >
           <h3 class="sub-title">基本信息</h3>
           <el-row>
             <el-col :span="8">
@@ -123,7 +136,7 @@ const submitForm = async () => {
       </el-tab-pane>
 
       <el-tab-pane label="字段信息" name="second">
-        <el-table ref="tableRef" :data="columns" border stripe show-overflow-tooltip>
+        <el-table ref="tableRef" :data="columns" border stripe show-overflow-tooltip v-loading="dataLoading">
           <el-table-column align="center" label="字段名称" prop="columnName" />
           <el-table-column align="center" label="字段描述" prop="columnComment">
             <template #default="{ row }">

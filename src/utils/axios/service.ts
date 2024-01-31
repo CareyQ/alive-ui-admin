@@ -73,13 +73,17 @@ service.interceptors.request.use(
 
 service.interceptors.response.use(
   async (response: AxiosResponse<any>) => {
-    const { data } = response
+    let { data } = response
     if (!data) {
       throw new Error()
     }
 
     if (response.request.responseType === 'blob' || response.request.responseType === 'arraybuffer') {
-      return response.data
+      // 注意：如果导出的响应为 json，说明可能失败了，不直接返回进行下载
+      if (response.data.type !== 'application/json') {
+        return response.data
+      }
+      data = await new Response(response.data).json()
     }
 
     const code = data.code

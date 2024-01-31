@@ -219,3 +219,10 @@ ul {
     margin-bottom: 0;
   }
 }
+
+.el-form--inline {
+  .el-input,
+  .el-select {
+    width: 180px;
+  }
+}

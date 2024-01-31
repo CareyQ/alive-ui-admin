@@ -18,6 +18,8 @@ import '@/styles/index.scss'
 // 解决v-html 的安全隐患
 import VueDOMPurifyHTML from 'vue-dompurify-html'
 
+import Logger from '@/utils/logger'
+
 const setupAll = async () => {
   const app = createApp(App)
   setupElementPlus(app)
@@ -30,3 +32,4 @@ const setupAll = async () => {
 }
 
 setupAll()
+Logger.prettyPrimary(`欢迎使用`, import.meta.env.VITE_APP_TITLE)

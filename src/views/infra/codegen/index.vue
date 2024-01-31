@@ -2,6 +2,7 @@
 import { Refresh, Search, RefreshRight, Plus } from '@element-plus/icons-vue'
 import * as CodegenApi from '@/api/infra/codegen'
 import { dateFormatter } from '@/utils/date'
+import download from '@/utils/download'
 import ImportTable from './ImportTable.vue'
 import EditTable from './EditTable.vue'
 import PreviewCode from './PreviewCode.vue'
@@ -65,6 +66,12 @@ const handleDel = async (id: number) => {
   await getPage()
 }
 
+/** 生成代码操作 */
+const handleGenTable = async (id: number, className: string) => {
+  const res = await CodegenApi.downloadCodegen(id)
+  download.zip(res, 'codegen-' + className + '.zip')
+}
+
 onMounted(() => {
   getPage()
 })
@@ -117,7 +124,9 @@ onMounted(() => {
           <el-divider direction="vertical" />
           <el-button link type="primary" size="small" @click="previewForm(row.id)"> 预览 </el-button>
           <el-divider direction="vertical" />
-          <el-button link type="primary" size="small"> 生成代码 </el-button>
+          <el-button link type="primary" size="small" @click="handleGenTable(row.id, row.className)">
+            生成代码
+          </el-button>
           <el-divider direction="vertical" />
           <el-button link type="danger" size="small" @click="handleDel(row.id)"> 删除 </el-button>
         </template>
