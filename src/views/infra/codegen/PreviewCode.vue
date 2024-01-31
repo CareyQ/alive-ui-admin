@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useClipboard } from '@vueuse/core'
 import * as CodegenApi from '@/api/infra/codegen'
-import { handleTree } from '@/utils/tree'
+import { handleTree2 } from '@/utils/tree'
 // 导入代码高亮样式
 import hljs from 'highlight.js'
 import 'highlight.js/styles/github.css'
@@ -37,7 +37,7 @@ const open = async (tableId: number) => {
     previewCodegen.value = data
 
     let file = handleFiles(data)
-    preview.fileTree = handleTree(file, 'id', 'parentId', 'children', '/')
+    preview.fileTree = handleTree2(file, 'id', 'parentId', 'children', '/')
     preview.activeName = data[0].filePath
   } finally {
     loading.value = false
