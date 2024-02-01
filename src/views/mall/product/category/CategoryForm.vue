@@ -12,7 +12,7 @@ const formData = ref({
   id: undefined,
   parentId: undefined,
   name: undefined,
-  sort: undefined,
+  sort: 0,
   icon: undefined,
   status: 1
 })
@@ -47,7 +47,7 @@ const resetForm = () => {
     id: undefined,
     parentId: undefined,
     name: undefined,
-    sort: undefined,
+    sort: 0,
     icon: undefined,
     status: 1
   }
@@ -86,13 +86,13 @@ const submitForm = async () => {
       <el-form-item label="分类名称" prop="name">
         <el-input v-model="formData.name" placeholder="请输入分类名称" />
       </el-form-item>
-      <el-form-item label="排序" prop="sort">
-        <el-input v-model="formData.sort" placeholder="请输入排序" />
+      <el-form-item label="分类排序" prop="sort">
+        <el-input-number v-model="formData.sort" :min="0" controls-position="right" />
       </el-form-item>
-      <el-form-item label="图标" prop="icon">
+      <el-form-item label="分类图标" prop="icon">
         <el-input v-model="formData.icon" placeholder="请输入图标" />
       </el-form-item>
-      <el-form-item label="启用状态">
+      <el-form-item label="分类状态">
         <el-switch v-model="formData.status" :active-value="1" :inactive-value="0" />
       </el-form-item>
     </el-form>

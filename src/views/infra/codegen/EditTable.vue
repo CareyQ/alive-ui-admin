@@ -193,6 +193,7 @@ const submitForm = async () => {
                 <el-option label="<=" value="<=" />
                 <el-option label="LIKE" value="LIKE" />
                 <el-option label="BETWEEN" value="BETWEEN" />
+                <el-option label="BETWEEN_DATA" value="BETWEEN_DATA" />
               </el-select>
             </template>
           </el-table-column>

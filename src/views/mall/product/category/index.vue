@@ -4,7 +4,7 @@ import { DICT_TYPE } from '@/utils/dict'
 import { dateFormatter } from '@/utils/date'
 import { handleTree } from '@/utils/tree'
 import * as ProductCategoryApi from '@/api/product/category'
-import ProductCategoryForm from './ProductCategoryForm.vue'
+import CategoryForm from './CategoryForm.vue'
 
 defineOptions({ name: 'ProductCategory' })
 
@@ -19,7 +19,7 @@ const queryParams = reactive({
   name: undefined
 })
 
-const getProductCategoryList = async () => {
+const getCategoryList = async () => {
   tableLoading.value = true
   try {
     const data = await ProductCategoryApi.getList(queryParams)
@@ -37,16 +37,16 @@ const handleDel = async (id: number) => {
   await message.delConfirm()
   await ProductCategoryApi.del(id)
   message.success('删除成功')
-  await getProductCategoryList()
+  await getCategoryList()
 }
 
 const resetQuery = async () => {
   queryFormRef.value.resetFields()
-  await getProductCategoryList()
+  await getCategoryList()
 }
 
 onMounted(() => {
-  getProductCategoryList()
+  getCategoryList()
 })
 </script>
 
@@ -58,13 +58,13 @@ onMounted(() => {
       </el-form-item>
 
       <el-form-item>
-        <el-button type="primary" :icon="Search" @click="getProductCategoryList">搜索</el-button>
+        <el-button type="primary" :icon="Search" @click="getCategoryList">搜索</el-button>
         <el-button :icon="Refresh" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
 
     <div class="table-header">
-      <el-button type="info" :icon="RefreshRight" @click="getProductCategoryList()" />
+      <el-button type="info" :icon="RefreshRight" @click="getCategoryList()" />
       <el-button type="primary" :icon="Plus" @click="openForm(undefined)">添加商品分类</el-button>
     </div>
 
@@ -95,7 +95,7 @@ onMounted(() => {
       </el-table-column>
     </el-table>
   </div>
-  <ProductCategoryForm ref="formRef" @success="getProductCategoryList()" />
+  <CategoryForm ref="formRef" @success="getCategoryList()" />
 </template>
 
 <style lang="scss" scoped></style>
