@@ -93,6 +93,7 @@ export const getDictLabel = (dictType: string, value: any): string => {
 
 export enum DICT_TYPE {
   COMMON_STATUS = 'common_status',
+  TRUE_OR_FALSE = 'true_or_false',
 
   USER_TYPE = 'user_type',
 
