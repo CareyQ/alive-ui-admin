@@ -19,6 +19,8 @@ import '@/styles/index.scss'
 import VueDOMPurifyHTML from 'vue-dompurify-html'
 
 import Logger from '@/utils/logger'
+// custom directives
+import directives from '@/directives/index'
 
 const setupAll = async () => {
   const app = createApp(App)
@@ -27,7 +29,7 @@ const setupAll = async () => {
   setupRouter(app)
   await router.isReady()
 
-  app.use(VueDOMPurifyHTML)
+  app.use(directives).use(VueDOMPurifyHTML)
   app.mount('#app')
 }
 

@@ -30,3 +30,8 @@ declare global {
     readonly env: ImportMetaEnv
   }
 }
+
+declare namespace NodeJS {
+  type Timer = any
+  type Timeout = any
+}

@@ -5,23 +5,26 @@ const message = useMessage()
 const formLoading = ref(false)
 const dialogTitle = ref('')
 const dialogVisible = ref(false)
-
 const formRef = ref()
 
-const formData = ref({
-  id: '',
+const defaultData: RoleApi.Role = {
+  id: undefined,
   name: '',
   code: '',
-  remark: ''
-})
+  remark: undefined,
+  status: 1
+}
 
+const formData = ref<RoleApi.Role>(defaultData)
 const formRules = reactive({
   name: [{ required: true, message: '请输入角色名称', trigger: 'blur' }],
   code: [{ required: true, message: '请输入角色标识', trigger: 'blur' }]
 })
 
-const open = async (id: number) => {
+let refersh: () => void
+const open = async (id: number, getTableList: () => void) => {
   resetForm()
+  refersh = getTableList
   dialogVisible.value = true
   if (id) {
     dialogTitle.value = '编辑角色'
@@ -38,16 +41,10 @@ const open = async (id: number) => {
 defineExpose({ open })
 
 const resetForm = () => {
-  formData.value = {
-    id: '',
-    name: '',
-    code: '',
-    remark: ''
-  }
+  formData.value = defaultData
   formRef.value?.resetFields()
 }
 
-const emit = defineEmits(['success'])
 const submitForm = async () => {
   const valid = await formRef.value?.validate()
   if (!valid) {
@@ -59,7 +56,7 @@ const submitForm = async () => {
     await RoleApi.save(data)
     message.success('保存成功')
     dialogVisible.value = false
-    emit('success')
+    refersh()
   } finally {
     formLoading.value = false
   }
@@ -85,7 +82,7 @@ const submitForm = async () => {
     <template #footer>
       <span>
         <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="submitForm">保存</el-button>
+        <el-button type="primary" v-throttle="submitForm">保存</el-button>
       </span>
     </template>
   </Dialog>

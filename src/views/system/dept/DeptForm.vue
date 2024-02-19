@@ -5,12 +5,10 @@ const message = useMessage()
 const formLoading = ref(false)
 const dialogTitle = ref('')
 const dialogVisible = ref(false)
-
 const treeData = ref<any[]>([])
-
 const formRef = ref()
 
-const formData = ref({
+const defaultData: DeptApi.Dept = {
   id: '',
   name: '',
   parentId: '',
@@ -19,14 +17,17 @@ const formData = ref({
   mobile: undefined,
   remark: undefined,
   status: 1
-})
+}
 
+const formData = ref<DeptApi.Dept>(defaultData)
 const formRules = reactive({
   name: [{ required: true, message: '请输入部门名称', trigger: 'blur' }]
 })
 
-const open = async (id: number) => {
+let refersh: () => void
+const open = async (id: number, getTableList: () => void) => {
   resetForm()
+  refersh = getTableList
   dialogVisible.value = true
   const data = await DeptApi.getSimpleList()
   if (data) {
@@ -47,20 +48,10 @@ const open = async (id: number) => {
 defineExpose({ open })
 
 const resetForm = () => {
-  formData.value = {
-    id: '',
-    name: '',
-    parentId: '',
-    sort: Number(0),
-    managerId: undefined,
-    mobile: undefined,
-    remark: undefined,
-    status: 1
-  }
+  formData.value = defaultData
   formRef.value?.resetFields()
 }
 
-const emit = defineEmits(['success'])
 const submitForm = async () => {
   const valid = await formRef.value?.validate()
   if (!valid) {
@@ -72,7 +63,7 @@ const submitForm = async () => {
     await DeptApi.save(data)
     message.success('保存成功')
     dialogVisible.value = false
-    emit('success')
+    refersh()
   } finally {
     formLoading.value = false
   }

@@ -6,35 +6,17 @@ const message = useMessage()
 const dialogTitle = ref('')
 const dialogVisible = ref(false)
 
-const labelSuffix = ref('')
 const formLoading = ref(false)
 const formRef = ref()
 
 const menuType = [
-  {
-    value: 1,
-    label: '目录'
-  },
-  {
-    value: 2,
-    label: '分组'
-  },
-  {
-    value: 3,
-    label: '菜单'
-  },
-  {
-    value: 4,
-    label: '按钮'
-  }
+  { value: 1, label: '目录' },
+  { value: 2, label: '分组' },
+  { value: 3, label: '菜单' },
+  { value: 4, label: '按钮' }
 ]
 
-const currentType = ref({
-  type: menuType[0].value,
-  label: menuType[0].label
-})
-
-const formData = ref<MenuApi.MenuVO>({
+const defaultData: MenuApi.MenuVO = {
   id: '',
   type: 1,
   parentId: '',
@@ -47,7 +29,14 @@ const formData = ref<MenuApi.MenuVO>({
   componentName: '',
   status: 1,
   keepAlive: true
+}
+
+const currentType = ref({
+  type: menuType[0].value,
+  label: menuType[0].label
 })
+
+const formData = ref<MenuApi.MenuVO>(defaultData)
 
 const parent = ref<any[]>([])
 
@@ -55,8 +44,10 @@ const formRules = reactive({
   name: [{ required: true, message: '请输入名称', trigger: 'blur' }]
 })
 
-const open = async (id: number, parentId?: number) => {
+let refersh: () => void
+const open = async (id: number, getTableList: () => void, parentId?: number) => {
   resetForm()
+  refersh = getTableList
   dialogVisible.value = true
   formLoading.value = true
   try {
@@ -108,28 +99,10 @@ const handleParentChange = (node) => {
 }
 
 const resetForm = () => {
-  formData.value = {
-    id: '',
-    type: 1,
-    parentId: '',
-    name: '',
-    permission: '',
-    icon: '',
-    sort: Number(0),
-    path: '',
-    component: '',
-    componentName: '',
-    status: 1,
-    keepAlive: true
-  }
-  currentType.value = {
-    type: 1,
-    label: '目录'
-  }
+  formData.value = defaultData
   formRef.value?.resetFields()
 }
 
-const emit = defineEmits(['success'])
 const submitForm = async () => {
   const valid = await formRef.value?.validate()
   if (!valid) {
@@ -145,7 +118,7 @@ const submitForm = async () => {
     await MenuApi.saveMenu(data)
     message.success('保存成功')
     dialogVisible.value = false
-    emit('success')
+    refersh()
   } finally {
     formLoading.value = false
   }
@@ -160,7 +133,7 @@ const submitForm = async () => {
         <el-text>{{ currentType.label }}</el-text>
       </el-form-item>
 
-      <el-form-item :label="'父级' + labelSuffix" prop="parentId">
+      <el-form-item :label="'父级'" prop="parentId">
         <el-tree-select
           v-model="formData.parentId"
           :data="parent"
@@ -221,7 +194,7 @@ const submitForm = async () => {
     <template #footer>
       <span>
         <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="submitForm">保存</el-button>
+        <el-button type="primary" v-throttle="submitForm">保存</el-button>
       </span>
     </template>
   </Dialog>

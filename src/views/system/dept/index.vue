@@ -1,89 +1,51 @@
 <script setup lang="ts">
-import { RefreshRight, Plus, Search, Refresh } from '@element-plus/icons-vue'
+import { Plus } from '@element-plus/icons-vue'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import * as DeptApi from '@/api/system/dept'
 import DeptForm from './DeptForm.vue'
 
 defineOptions({ name: 'SystemDept' })
 
+const aliveTable = ref()
 const message = useMessage()
-
-const tableLoading = ref(false)
-const tableData = ref<any>([])
 const formRef = ref()
-const queryFormRef = ref()
-
-const queryParams = reactive({
-  name: '',
-  status: undefined
-})
-
-const getDeptList = async () => {
-  tableLoading.value = true
-  try {
-    tableData.value = await DeptApi.getList(queryParams)
-  } finally {
-    tableLoading.value = false
-  }
-}
-
 const openForm = (id?: number) => {
-  formRef.value.open(id)
+  formRef.value.open(id, aliveTable.value.getTableList)
 }
 
 const handleDel = async (id: number) => {
-  await message.delConfirm()
-  await DeptApi.del(id)
-  message.success('删除成功')
-  await getDeptList()
+  try {
+    await message.delConfirm()
+    await DeptApi.del(id)
+    message.success('删除成功')
+    await aliveTable.value.getTableList()
+  } catch {}
 }
-
-const resetQuery = async () => {
-  queryFormRef.value.resetFields()
-  await getDeptList()
-}
-
-onMounted(() => {
-  getDeptList()
-})
 </script>
 
 <template>
-  <div class="page">
-    <el-form ref="queryFormRef" class="table-header" :model="queryParams" inline>
-      <el-form-item label="部门名称" prop="name">
-        <el-input v-model="queryParams.name" placeholder="请输入部门名称" clearable />
-      </el-form-item>
-      <el-form-item label="状态" prop="status">
-        <el-select v-model="queryParams.status" placeholder="请选择状态" clearable>
-          <el-option
-            v-for="(item, index) in getIntDictOptions(DICT_TYPE.COMMON_STATUS)"
-            :key="index"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" :icon="Search" @click="getDeptList">搜索</el-button>
-        <el-button :icon="Refresh" @click="resetQuery">重置</el-button>
-      </el-form-item>
-    </el-form>
+  <div class="table-box">
+    <AliveTable ref="aliveTable" :request-api="DeptApi.getList" :pagination="false">
+      <template #search>
+        <el-form-item label="部门名称" prop="name">
+          <el-input v-model="aliveTable.searchParam.name" placeholder="请输入部门名称" clearable />
+        </el-form-item>
+        <el-form-item label="状态" prop="status">
+          <el-select v-model="aliveTable.searchParam.status" placeholder="请选择状态" clearable>
+            <el-option
+              v-for="(item, index) in getIntDictOptions(DICT_TYPE.COMMON_STATUS)"
+              :key="index"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+      </template>
 
-    <div class="table-header">
-      <el-button type="info" :icon="RefreshRight" @click="getDeptList" />
-      <el-button type="primary" :icon="Plus" @click="openForm(undefined)">添加部门</el-button>
-    </div>
+      <template #operation>
+        <el-button type="primary" :icon="Plus" @click="openForm()">添加岗位</el-button>
+      </template>
 
-    <el-table
-      ref="tableRef"
-      v-loading="tableLoading"
-      :data="tableData"
-      border
-      stripe
-      show-overflow-tooltip
-      row-key="id"
-    >
       <el-table-column label="部门名称" prop="name" />
       <el-table-column align="center" label="负责人" prop="managerName" />
       <el-table-column align="center" label="联系电话" prop="mobile" />
@@ -102,9 +64,7 @@ onMounted(() => {
           <el-button link type="danger" size="small" @click="handleDel(row.id)">删除</el-button>
         </template>
       </el-table-column>
-    </el-table>
+    </AliveTable>
   </div>
-  <DeptForm ref="formRef" @success="getDeptList" />
+  <DeptForm ref="formRef" />
 </template>
-
-<style lang="scss" scoped></style>

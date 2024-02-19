@@ -5,22 +5,24 @@ const message = useMessage()
 const formLoading = ref(false)
 const dialogTitle = ref('')
 const dialogVisible = ref(false)
-
 const formRef = ref()
 
-const formData = ref({
-  id: '',
+const defaultData: PostApi.Post = {
+  id: undefined,
   name: '',
   remark: undefined,
   status: 1
-})
+}
 
+const formData = ref<PostApi.Post>(defaultData)
 const formRules = reactive({
   name: [{ required: true, message: '请输入岗位名称', trigger: 'blur' }]
 })
 
-const open = async (id: number) => {
+let refersh: () => void
+const open = async (id: number, getTableList: () => void) => {
   resetForm()
+  refersh = getTableList
   dialogVisible.value = true
   if (id) {
     dialogTitle.value = '编辑岗位'
@@ -37,16 +39,10 @@ const open = async (id: number) => {
 defineExpose({ open })
 
 const resetForm = () => {
-  formData.value = {
-    id: '',
-    name: '',
-    remark: undefined,
-    status: 1
-  }
+  formData.value = defaultData
   formRef.value?.resetFields()
 }
 
-const emit = defineEmits(['success'])
 const submitForm = async () => {
   const valid = await formRef.value?.validate()
   if (!valid) {
@@ -58,11 +54,10 @@ const submitForm = async () => {
     await PostApi.save(data)
     message.success('保存成功')
     dialogVisible.value = false
-    emit('success')
+    refersh()
   } finally {
     formLoading.value = false
   }
-  dialogVisible.value = false
 }
 </script>
 
@@ -85,7 +80,7 @@ const submitForm = async () => {
     <template #footer>
       <span>
         <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="submitForm">保存</el-button>
+        <el-button type="primary" v-throttle="submitForm">保存</el-button>
       </span>
     </template>
   </Dialog>

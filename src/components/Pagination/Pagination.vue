@@ -1,70 +1,21 @@
-<script lang="ts" setup>
-defineOptions({ name: 'Pagination' })
+<script lang="ts" setup name="Pagination">
+import type { Pageable } from '@/hooks/useTable'
 
-const props = defineProps({
-  // 总条目数
-  total: {
-    required: true,
-    type: Number
-  },
-  // 当前页数：current
-  page: {
-    type: Number,
-    default: 1
-  },
-  // 每页显示条目个数：size
-  limit: {
-    type: Number,
-    default: 20
-  },
-  // 设置最大页码按钮数。 页码按钮的数量，当总页数超过该值时会折叠
-  // 移动端页码按钮的数量端默认值 5
-  pagerCount: {
-    type: Number,
-    default: document.body.clientWidth < 992 ? 5 : 7
-  }
-})
+interface PaginationProps {
+  pageable: Pageable
+  handleSizeChange: (size: number) => void
+  handleCurrentChange: (currentPage: number) => void
+}
 
-const emit = defineEmits(['update:page', 'update:limit', 'pagination', 'pagination'])
-const currentPage = computed({
-  get() {
-    return props.page
-  },
-  set(val) {
-    // 触发 update:page 事件，更新 limit 属性，从而更新 pageNo
-    emit('update:page', val)
-  }
-})
-const pageSize = computed({
-  get() {
-    return props.limit
-  },
-  set(val) {
-    // 触发 update:limit 事件，更新 limit 属性，从而更新 pageSize
-    emit('update:limit', val)
-  }
-})
-const handleSizeChange = (val) => {
-  // 如果修改后超过最大页面，强制跳转到第 1 页
-  if (currentPage.value * val > props.total) {
-    currentPage.value = 1
-  }
-  // 触发 pagination 事件，重新加载列表
-  emit('pagination', { page: currentPage.value, limit: val })
-}
-const handleCurrentChange = (val) => {
-  // 触发 pagination 事件，重新加载列表
-  emit('pagination', { page: val, limit: pageSize.value })
-}
+defineProps<PaginationProps>()
 </script>
 
 <template>
   <el-pagination
-    v-model:current-page="currentPage"
-    v-model:page-size="pageSize"
-    :page-sizes="[10, 20, 30, 50, 100]"
-    :pager-count="pagerCount"
-    :total="total"
+    :current-page="pageable.current"
+    :page-size="pageable.size"
+    :page-sizes="[10, 25, 50, 100]"
+    :total="pageable.total"
     layout="total, prev, pager, next, sizes"
     @size-change="handleSizeChange"
     @current-change="handleCurrentChange"
@@ -73,8 +24,7 @@ const handleCurrentChange = (val) => {
 
 <style lang="scss" scoped>
 .el-pagination {
-  margin-top: 13px;
-  margin-right: 15px;
+  margin-top: 15px;
   justify-content: flex-end;
 }
 </style>

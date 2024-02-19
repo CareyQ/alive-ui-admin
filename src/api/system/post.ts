@@ -1,7 +1,7 @@
 import request from '@/utils/axios'
 
 export interface Post {
-  id: number | string
+  id?: number
   name: string
   remark?: string
   status?: number

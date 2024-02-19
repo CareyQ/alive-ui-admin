@@ -33,7 +33,6 @@ const open = async (id: number) => {
 }
 defineExpose({ open })
 
-const emit = defineEmits(['success'])
 const submitForm = async () => {
   treeLoading.value = true
   try {
@@ -47,7 +46,6 @@ const submitForm = async () => {
     await PermissionApi.assignRoleMenu(data)
     message.success('保存成功')
     drawerVisible.value = false
-    emit('success')
   } finally {
     treeLoading.value = false
   }
@@ -71,7 +69,7 @@ const submitForm = async () => {
     />
     <template #footer>
       <el-button @click="drawerVisible = false">取消</el-button>
-      <el-button type="primary" @click="submitForm">保存</el-button>
+      <el-button type="primary" v-throttle="submitForm">保存</el-button>
     </template>
   </el-drawer>
 </template>

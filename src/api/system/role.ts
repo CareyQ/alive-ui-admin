@@ -1,10 +1,11 @@
 import request from '@/utils/axios'
 
 export interface Role {
-  id: number | string
+  id?: number
   name: string
   code: string
-  remark: string
+  remark?: string
+  status?: number
 }
 
 export interface RolePageDTO {

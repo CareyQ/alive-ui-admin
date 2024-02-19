@@ -2,7 +2,7 @@
 import * as MenuApi from '@/api/system/menu'
 import { isEmpty, sortBy } from 'lodash-es'
 import { DICT_TYPE } from '@/utils/dict'
-import { RefreshRight, Plus, Refresh, MoreFilled } from '@element-plus/icons-vue'
+import { Plus, Refresh, MoreFilled } from '@element-plus/icons-vue'
 import { filterTree } from '@/utils/tree'
 import MenuForm from './MenuForm.vue'
 import { CACHE_KEY, useCache } from '@/hooks/useCache'
@@ -12,10 +12,10 @@ const message = useMessage()
 
 defineOptions({ name: 'SystemMenu' })
 
+const aliveTable = ref()
 const treeLoading = ref(true)
 const tableLoading = ref(true)
 const treeRef = ref()
-const tableRef = ref()
 const formRef = ref()
 
 const treeFilter = ref('')
@@ -87,7 +87,7 @@ const filterAllMenu = (treeList: any[]): any[] => {
 }
 
 const openForm = (id?: number, parentId?: number) => {
-  formRef.value.open(id, parentId)
+  formRef.value.open(id, getList, parentId)
 }
 
 const handleDropClick = (event: string, node: any) => {
@@ -129,8 +129,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="page page-split">
-    <div class="page-left">
+  <div class="main-box">
+    <div class="card tree-filter">
       <el-input v-model="treeFilter" placeholder="输入菜单名搜索" clearable />
       <el-tree
         ref="treeRef"
@@ -164,23 +164,14 @@ onMounted(() => {
       </el-tree>
     </div>
 
-    <div class="page-right">
-      <div class="table-header">
-        <el-button type="info" :icon="RefreshRight" @click="getList" />
-        <el-button type="primary" :icon="Plus" @click="openForm()">添加菜单</el-button>
-        <el-button type="warning" :icon="Refresh" @click="refershCache">刷新菜单缓存</el-button>
-      </div>
+    <div class="table-box">
+      <AliveTable ref="aliveTable" :request-auto="false" :data="tableData" :refersh="false" :pagination="false">
+        <template #operation>
+          <el-button type="primary" :icon="Plus" @click="openForm()">添加菜单</el-button>
+          <el-button type="warning" :icon="Refresh" @click="refershCache">刷新菜单缓存</el-button>
+        </template>
 
-      <el-table
-        ref="tableRef"
-        v-loading="tableLoading"
-        :data="tableData"
-        border
-        stripe
-        show-overflow-tooltip
-        class="menu-table"
-      >
-        <el-table-column label="菜单名称" prop="name" width="150" />
+        <el-table-column align="center" label="菜单名称" prop="name" width="150" />
         <el-table-column align="center" label="权限标识" prop="permission" width="150" />
         <el-table-column align="center" label="路由" prop="path" width="100" />
         <el-table-column align="center" label="排序" prop="sort" width="80" />
@@ -224,11 +215,11 @@ onMounted(() => {
             <el-button link type="danger" size="small" @click="handleDel(scope.row.id)">删除</el-button>
           </template>
         </el-table-column>
-      </el-table>
+      </AliveTable>
     </div>
   </div>
 
-  <MenuForm ref="formRef" @success="getList" />
+  <MenuForm ref="formRef" />
 </template>
 
 <style lang="scss" scoped>

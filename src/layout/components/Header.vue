@@ -63,7 +63,7 @@ onUnmounted(() => {
 
 <style lang="scss" scoped>
 .header-wrap {
-  padding: 10px 16px 0 10px;
+  padding: 10px 10px 0 10px;
 }
 
 .el-header {
