@@ -2,7 +2,7 @@
 import { Search, Delete, RefreshRight } from '@element-plus/icons-vue'
 import { useTable } from '@/hooks/useTable'
 
-export interface ProTableProps {
+export interface AliveTableProps {
   data?: any[] // 静态 table data 数据，若存在则不会使用 requestApi 返回的 data ==> 非必传
   requestApi?: (params: any) => Promise<any> // 请求表格数据的 api ==> 非必传
   requestAuto?: boolean // 是否自动执行请求 api ==> 非必传（默认为true）
@@ -14,7 +14,7 @@ export interface ProTableProps {
 }
 
 // 接受父组件参数，配置默认值
-const props = withDefaults(defineProps<ProTableProps>(), {
+const props = withDefaults(defineProps<AliveTableProps>(), {
   requestAuto: true,
   refersh: true,
   pagination: true,

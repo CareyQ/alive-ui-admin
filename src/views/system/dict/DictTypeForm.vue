@@ -87,7 +87,7 @@ const submitForm = async () => {
     <template #footer>
       <span>
         <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="submitForm">保存</el-button>
+        <el-button type="primary" v-throttle="submitForm">保存</el-button>
       </span>
     </template>
   </Dialog>

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { RefreshRight, Plus, Search, MoreFilled, Refresh } from '@element-plus/icons-vue'
+import { RefreshRight, Plus, MoreFilled, Refresh } from '@element-plus/icons-vue'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { useDictStoreWithOut } from '@/store/modules/dict'
 import * as DictApi from '@/api/system/dict'
@@ -8,25 +8,21 @@ import DictDataForm from './DictDataForm.vue'
 
 defineOptions({ name: 'SystemDcit' })
 
+const aliveTable = ref()
+const treeLoading = ref(true)
 const message = useMessage()
 const dictStore = useDictStoreWithOut()
 
-const dictTypeLoading = ref(false)
-const dictDataLoading = ref(false)
-
 const selectDictType = ref<DictApi.DictType | null>(null)
 const treeData = ref<any>([])
-const tableData = ref<any>([])
 
 const treeRef = ref()
 const dictTypeFormRef = ref()
 const dictDataFormRef = ref()
-const queryFormRef = ref()
-
-const total = ref(0)
+const treeFilter = ref('')
 
 const getDictTypeList = async () => {
-  dictTypeLoading.value = true
+  treeLoading.value = true
   try {
     const data = await DictApi.getDictTypeList()
     if (!data || data.length <= 0) {
@@ -35,36 +31,8 @@ const getDictTypeList = async () => {
     treeData.value = data
     selectDictType.value = null
   } finally {
-    dictTypeLoading.value = false
+    treeLoading.value = false
   }
-}
-
-const queryParams = reactive({
-  current: 1,
-  size: 10,
-  label: '',
-  dictType: '',
-  status: undefined
-})
-
-const resetQuery = async () => {
-  queryFormRef.value.resetFields()
-  selectDictType.value = null
-  queryParams.current = 1
-  await getDictDataPage()
-}
-
-const getDictDataPage = async () => {
-  dictDataLoading.value = true
-  try {
-    queryParams.dictType = selectDictType.value?.type || ''
-    const data = await DictApi.getDictDataPage(queryParams)
-    tableData.value = data.records
-    total.value = data.total
-  } finally {
-    dictTypeLoading.value = false
-  }
-  dictDataLoading.value = false
 }
 
 const openDictTypeForm = (id?: number) => {
@@ -72,7 +40,7 @@ const openDictTypeForm = (id?: number) => {
 }
 
 const openDictDataForm = (id?: number) => {
-  dictDataFormRef.value.open(id, selectDictType.value)
+  dictDataFormRef.value.open(id, selectDictType.value, aliveTable.value.getTableList)
 }
 
 const handleDropClick = (event: string, node: any) => {
@@ -85,52 +53,65 @@ const handleDropClick = (event: string, node: any) => {
 
 const handleCurrentChange = (node) => {
   selectDictType.value = node
-  getDictDataPage()
+  aliveTable.value.getTableList()
+}
+
+const getTableList = (params: any) => {
+  if (selectDictType.value) {
+    Object.assign(params, { dictType: selectDictType.value.type })
+  }
+  return DictApi.getDictDataPage(params)
 }
 
 const refreshCache = () => {
   dictStore.resetDict()
 }
 
+watch(treeFilter, (val: string) => {
+  treeRef.value!.filter(val)
+})
+
 const handleDictTypeDel = async (id: number) => {
   await message.delConfirm()
   await DictApi.delDictType(id)
   message.success('删除成功')
   await getDictTypeList()
-  await resetQuery()
 }
 
 const handleDictDataDel = async (id: number) => {
   await message.delConfirm()
   await DictApi.delDictData(id)
   message.success('删除成功')
-  await getDictDataPage()
+  await aliveTable.value.getTableList()
+}
+
+const filterNode = (value: string, data: Tree) => {
+  if (!value) return true
+  return data.name.includes(value)
 }
 
 onMounted(() => {
   getDictTypeList()
-  getDictDataPage()
 })
 </script>
 
 <template>
-  <div class="page page-split">
-    <div class="page-left">
-      <div>
+  <div class="main-box dict-page">
+    <div class="card tree-filter" style="width: 230px">
+      <div style="margin-bottom: 15px">
         <el-button type="info" :icon="RefreshRight" @click="getDictTypeList" />
         <el-button type="primary" :icon="Plus" @click="openDictTypeForm(undefined)"> 新增类型 </el-button>
       </div>
-
-      <el-input placeholder="输入字典类型搜索" />
-
+      <el-input v-model="treeFilter" placeholder="输入字典类型搜索" clearable />
       <el-tree
         ref="treeRef"
-        v-loading="dictTypeLoading"
+        v-loading="treeLoading"
         :data="treeData"
-        node-key="id"
         :props="{ label: 'name' }"
-        highlight-current
+        node-key="id"
+        :filter-node-method="filterNode"
         @current-change="handleCurrentChange"
+        highlight-current
       >
         <template #default="{ node }">
           <span class="custom-tree-node flex-center-between">
@@ -153,42 +134,29 @@ onMounted(() => {
       </el-tree>
     </div>
 
-    <div class="page-right">
-      <el-form ref="queryFormRef" class="table-header" :model="queryParams" inline>
-        <el-form-item label="字典标签" prop="label">
-          <el-input v-model="queryParams.label" placeholder="请输入字典标签" clearable />
-        </el-form-item>
-        <el-form-item label="状态" prop="status">
-          <el-select v-model="queryParams.status" placeholder="请选择状态" clearable>
-            <el-option
-              v-for="(item, index) in getIntDictOptions(DICT_TYPE.COMMON_STATUS)"
-              :key="index"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" :icon="Search" @click="getDictDataPage">搜索</el-button>
-          <el-button :icon="Refresh" @click="resetQuery">重置</el-button>
-        </el-form-item>
-      </el-form>
+    <div class="table-box">
+      <AliveTable ref="aliveTable" :request-api="getTableList">
+        <template #search>
+          <el-form-item label="字典标签" prop="label">
+            <el-input v-model="aliveTable.queryParams.label" placeholder="请输入字典标签" clearable />
+          </el-form-item>
+          <el-form-item label="状态" prop="status">
+            <el-select v-model="aliveTable.queryParams.status" placeholder="请选择状态" clearable>
+              <el-option
+                v-for="(item, index) in getIntDictOptions(DICT_TYPE.COMMON_STATUS)"
+                :key="index"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+          </el-form-item>
+        </template>
 
-      <div class="table-header">
-        <el-button type="info" :icon="RefreshRight" @click="getDictDataPage" />
-        <el-button type="primary" :icon="Plus" @click="openDictDataForm(undefined)"> 添加数据 </el-button>
-        <el-button type="warning" :icon="Refresh" @click="refreshCache">刷新字典缓存</el-button>
-      </div>
+        <template #operation>
+          <el-button type="primary" :icon="Plus" @click="openDictDataForm(undefined)"> 添加数据 </el-button>
+          <el-button type="warning" :icon="Refresh" @click="refreshCache">刷新字典缓存</el-button>
+        </template>
 
-      <el-table
-        ref="tableRef"
-        v-loading="dictDataLoading"
-        :data="tableData"
-        border
-        stripe
-        show-overflow-tooltip
-        class="data-table"
-      >
         <el-table-column label="字典标签" prop="label" />
         <el-table-column label="字典键值" prop="value" />
         <el-table-column label="备注" prop="remark" />
@@ -214,23 +182,18 @@ onMounted(() => {
             <el-button link type="danger" size="small" @click="handleDictDataDel(scope.row.id)"> 删除 </el-button>
           </template>
         </el-table-column>
-      </el-table>
-
-      <Pagination
-        v-model:limit="queryParams.size"
-        v-model:page="queryParams.current"
-        :total="total"
-        @pagination="getDictDataPage"
-      />
+      </AliveTable>
     </div>
   </div>
 
   <DictTypeForm ref="dictTypeFormRef" @success="getDictTypeList" />
-  <DictDataForm ref="dictDataFormRef" @success="getDictDataPage" />
+  <DictDataForm ref="dictDataFormRef" />
 </template>
 
-<style lang="scss" scoped>
-.dict-data {
-  width: calc(100% - 230px);
+<style lang="scss">
+.dict-page {
+  .el-tree-node__content > .el-tree-node__expand-icon {
+    padding: 0;
+  }
 }
 </style>

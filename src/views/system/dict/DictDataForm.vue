@@ -5,38 +5,22 @@ const message = useMessage()
 const formLoading = ref(false)
 const dialogTitle = ref('')
 const dialogVisible = ref(false)
-const dictType = ref<DictApi.DictType | null>(null)
-
 const formRef = ref()
+const dictType = ref<DictApi.DictType | null>(null)
 
 interface ColorType {
   label: string
   value: ElType
 }
 const colorTypeOptions: ColorType[] = [
-  {
-    value: 'default',
-    label: '默认'
-  },
-  {
-    value: 'success',
-    label: '成功'
-  },
-  {
-    value: 'info',
-    label: '信息'
-  },
-  {
-    value: 'warning',
-    label: '警告'
-  },
-  {
-    value: 'danger',
-    label: '危险'
-  }
+  { value: 'default', label: '默认' },
+  { value: 'success', label: '成功' },
+  { value: 'info', label: '信息' },
+  { value: 'warning', label: '警告' },
+  { value: 'danger', label: '危险' }
 ]
 
-const formData = ref({
+const defaultData: DictApi.DictData = {
   id: '',
   label: '',
   value: '',
@@ -44,20 +28,23 @@ const formData = ref({
   colorType: '',
   remark: '',
   status: 1
-})
+}
 
+const formData = ref<DictApi.DictData>(defaultData)
 const formRules = reactive({
   label: [{ required: true, message: '请输入字典标签', trigger: 'blur' }],
   value: [{ required: true, message: '请输入字典类型', trigger: 'blur' }]
 })
 
-const open = async (id: number, node: any) => {
+let refersh: () => void
+const open = async (id: number, node: any, getTableList: () => void) => {
   if (!id && !node) {
     message.warning('请选择字典类型')
     return
   }
   dictType.value = node
   resetForm()
+  refersh = getTableList
   dialogVisible.value = true
   if (id) {
     dialogTitle.value = '编辑字典数据'
@@ -75,19 +62,10 @@ const open = async (id: number, node: any) => {
 defineExpose({ open })
 
 const resetForm = () => {
-  formData.value = {
-    id: '',
-    label: '',
-    value: '',
-    dictType: '',
-    colorType: '',
-    remark: '',
-    status: 1
-  }
+  formData.value = defaultData
   formRef.value?.resetFields()
 }
 
-const emit = defineEmits(['success'])
 const submitForm = async () => {
   const valid = await formRef.value?.validate()
   if (!valid) {
@@ -99,11 +77,10 @@ const submitForm = async () => {
     await DictApi.saveDictData(data)
     message.success('保存成功')
     dialogVisible.value = false
-    emit('success')
+    refersh()
   } finally {
     formLoading.value = false
   }
-  dialogVisible.value = false
 }
 </script>
 
@@ -150,7 +127,7 @@ const submitForm = async () => {
     <template #footer>
       <span>
         <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="submitForm">保存</el-button>
+        <el-button type="primary" v-throttle="submitForm">保存</el-button>
       </span>
     </template>
   </Dialog>

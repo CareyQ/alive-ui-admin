@@ -9,13 +9,13 @@ const message = useMessage()
 const formLoading = ref(false)
 const dialogTitle = ref('')
 const dialogVisible = ref(false)
-
 const formRef = ref()
+
 const deptTree = ref()
 const postList = ref()
 const isEdit = ref(false)
 
-const formData = ref({
+const defaultData: UesrApi.User = {
   id: undefined,
   username: '',
   nickname: '',
@@ -26,7 +26,9 @@ const formData = ref({
   gender: undefined,
   email: undefined,
   mobile: undefined
-})
+}
+
+const formData = ref<UesrApi.User>(defaultData)
 
 const formRules = reactive({
   username: [
@@ -42,8 +44,10 @@ const formRules = reactive({
   email: [{ validator: validateEmail, trigger: 'blur' }]
 })
 
-const open = async (id: number) => {
+let refersh: () => void
+const open = async (id: number, getTableList: () => void) => {
   resetForm()
+  refersh = getTableList
   dialogVisible.value = true
   if (id) {
     dialogTitle.value = '编辑用户'
@@ -76,22 +80,10 @@ const getPost = async () => {
 }
 
 const resetForm = () => {
-  formData.value = {
-    id: undefined,
-    username: '',
-    nickname: '',
-    password: '',
-    remark: undefined,
-    deptId: undefined,
-    postIds: undefined,
-    gender: undefined,
-    email: undefined,
-    mobile: undefined
-  }
+  formData.value = defaultData
   formRef.value?.resetFields()
 }
 
-const emit = defineEmits(['success'])
 const submitForm = async () => {
   const valid = await formRef.value?.validate()
   if (!valid) {
@@ -103,7 +95,7 @@ const submitForm = async () => {
     await UesrApi.save(data)
     message.success('保存成功')
     dialogVisible.value = false
-    emit('success')
+    refersh()
   } finally {
     formLoading.value = false
   }
@@ -234,7 +226,7 @@ onMounted(() => {
     <template #footer>
       <span>
         <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="submitForm">保存</el-button>
+        <el-button type="primary" v-throttle="submitForm">保存</el-button>
       </span>
     </template>
   </Dialog>

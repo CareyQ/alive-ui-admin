@@ -69,10 +69,17 @@ export const useTable = (
       Object.assign(state.totalParam, initParam, pageParam.value)
       let data = await api({ ...state.searchInitParam, ...state.totalParam })
       dataCallBack && (data = dataCallBack(data))
-      state.tableData = data.records
-      // 解构后台返回的分页数据
-      const { current, size, total } = data
-      updatePageable({ current, size, total })
+      if (!data) {
+        state.tableData = []
+      }
+      if (data.records) {
+        state.tableData = data.records
+        // 解构后台返回的分页数据
+        const { current, size, total } = data
+        updatePageable({ current, size, total })
+      } else {
+        state.tableData = data || []
+      }
     } catch (error) {
       requestError && requestError(error)
     } finally {
