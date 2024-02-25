@@ -22,7 +22,7 @@ const getTableList = (params: any) => {
 </script>
 
 <template>
-    <div class="table-box">
+  <div class="table-box">
     <AliveTable ref="aliveTable" :request-api="getTableList">
       <template #search>
         <el-form-item label="操作人员" prop="nickname">

@@ -98,6 +98,7 @@ service.interceptors.response.use(
       removeToken()
       const { wsCache } = useCache()
       wsCache.clear()
+      window.location.href = window.location.href
       return Promise.reject('登录已过期，请重新登录')
     }
 

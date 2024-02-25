@@ -55,9 +55,6 @@ const getTableList = (params: any) => {
         </template>
       </el-table-column>
       <el-table-column align="center" label="登录时间" prop="loginTime" :formatter="dateFormatter" />
-    
     </AliveTable>
   </div>
 </template>
-
-<style scoped></style>
