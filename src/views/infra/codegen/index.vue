@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Refresh, Search, RefreshRight, Plus } from '@element-plus/icons-vue'
+import { Plus } from '@element-plus/icons-vue'
 import * as CodegenApi from '@/api/infra/codegen'
 import { dateFormatter } from '@/utils/date'
 import download from '@/utils/download'
@@ -9,49 +9,24 @@ import PreviewCode from './PreviewCode.vue'
 
 defineOptions({ name: 'InfraCodegen' })
 
+const aliveTable = ref()
 const message = useMessage()
-
-const tableLoading = ref(false)
-const tableData = ref<any>([])
-
-const queryFormRef = ref()
-
-const createDate = ref<ElDate>([undefined, undefined])
-const total = ref(0)
-const queryParams = reactive({
-  current: 1,
-  size: 10,
-  tableName: undefined,
-  tableComment: undefined,
-  startDate: computed(() => createDate.value[0]),
-  endDate: computed(() => createDate.value[1])
-})
-
-const getPage = async () => {
-  tableLoading.value = true
-  try {
-    const data = await CodegenApi.getPage(queryParams)
-    tableData.value = data.records
-    total.value = data.total
-  } finally {
-    tableLoading.value = false
-  }
+const editRef = ref()
+const openForm = (id?: number) => {
+  editRef.value.open(id, aliveTable.value.getTableList)
 }
 
-const resetQuery = async () => {
-  queryFormRef.value.resetFields()
-  createDate.value = [undefined, undefined]
-  await getPage()
+const getTableList = (params: any) => {
+  let newParams = JSON.parse(JSON.stringify(params))
+  newParams.createDate && (newParams.startDate = newParams.createDate[0])
+  newParams.createDate && (newParams.endDate = newParams.createDate[1])
+  delete newParams.createDate
+  return CodegenApi.getPage(newParams)
 }
 
 const importRef = ref()
 const openImportTable = () => {
-  importRef.value.open()
-}
-
-const editRef = ref()
-const openForm = (id: number) => {
-  editRef.value.open(id)
+  importRef.value.open(aliveTable.value.getTableList)
 }
 
 const previewRef = ref()
@@ -63,7 +38,7 @@ const handleDel = async (id: number) => {
   await message.delConfirm()
   await CodegenApi.delCodegen(id)
   message.success('删除成功')
-  await getPage()
+  await aliveTable.value.getTableList()
 }
 
 /** 生成代码操作 */
@@ -71,26 +46,23 @@ const handleGenTable = async (id: number, className: string) => {
   const res = await CodegenApi.downloadCodegen(id)
   download.zip(res, 'codegen-' + className + '.zip')
 }
-
-onMounted(() => {
-  getPage()
-})
 </script>
 
 <template>
-  <div class="page">
-    <el-form ref="queryFormRef" :model="queryParams" class="table-header" inline>
-      <el-form-item label="表名称" prop="tableName">
-        <el-input v-model="queryParams.tableName" placeholder="请输入表名称" clearable />
+    <div class="table-box">
+    <AliveTable ref="aliveTable" :request-api="getTableList">
+      <template #search>
+        <el-form-item label="表名称" prop="tableName">
+        <el-input v-model="aliveTable.searchParam.tableName" placeholder="请输入表名称" clearable />
       </el-form-item>
 
       <el-form-item label="表描述" prop="tableComment">
-        <el-input v-model="queryParams.tableComment" placeholder="请输入表描述" clearable />
+        <el-input v-model="aliveTable.searchParam.tableComment" placeholder="请输入表描述" clearable />
       </el-form-item>
 
       <el-form-item label="创建日期" prop="startDate">
         <el-date-picker
-          v-model="createDate"
+          v-model="aliveTable.searchParam.createDate"
           value-format="YYYY-MM-DD"
           type="daterange"
           range-separator="至"
@@ -98,19 +70,12 @@ onMounted(() => {
           end-placeholder="结束日期"
         />
       </el-form-item>
+      </template>
 
-      <el-form-item>
-        <el-button type="primary" :icon="Search" @click="getPage">搜索</el-button>
-        <el-button :icon="Refresh" @click="resetQuery">重置</el-button>
-      </el-form-item>
-    </el-form>
+      <template #operation>
+        <el-button type="primary" :icon="Plus" @click="openImportTable()">导入</el-button>
+      </template>
 
-    <div class="table-header">
-      <el-button type="info" :icon="RefreshRight" @click="getPage" />
-      <el-button type="primary" :icon="Plus" @click="openImportTable()">导入</el-button>
-    </div>
-
-    <el-table ref="tableRef" v-loading="tableLoading" :data="tableData" border stripe show-overflow-tooltip>
       <el-table-column align="center" label="表名称" prop="tableName" />
       <el-table-column align="center" label="表描述" prop="tableComment" />
       <el-table-column align="center" label="数据源" prop="dataSourceName" />
@@ -131,16 +96,10 @@ onMounted(() => {
           <el-button link type="danger" size="small" @click="handleDel(row.id)"> 删除 </el-button>
         </template>
       </el-table-column>
-    </el-table>
-
-    <Pagination
-      v-model:limit="queryParams.size"
-      v-model:page="queryParams.current"
-      :total="total"
-      @pagination="getPage"
-    />
+    </AliveTable>
   </div>
-  <ImportTable ref="importRef" @success="getPage" />
-  <EditTable ref="editRef" @success="getPage" />
+
+  <ImportTable ref="importRef" />
+  <EditTable ref="editRef"  />
   <PreviewCode ref="previewRef" />
 </template>

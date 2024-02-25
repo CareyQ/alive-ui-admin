@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { Refresh, Search } from '@element-plus/icons-vue'
 import { dateFormatter } from '@/utils/date'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import * as LogApi from '@/api/infra/log'
@@ -7,45 +6,19 @@ import ErrorLogDetail from './components/ErrorLogDetail.vue'
 
 defineOptions({ name: 'InfraOperateLog' })
 
+const aliveTable = ref()
 const message = useMessage()
-const tableLoading = ref(false)
-const tableData = ref<any>([])
-
-const queryFormRef = ref()
-const detailRef = ref()
-
-const createDate = ref<ElDate>([undefined, undefined])
-const total = ref(0)
-const queryParams = reactive({
-  current: 1,
-  size: 10,
-  nickname: undefined,
-  userType: undefined,
-  requestUrl: undefined,
-  processStatus: undefined,
-  startDate: computed(() => createDate.value[0]),
-  endDate: computed(() => createDate.value[1])
-})
-
-const getPage = async () => {
-  tableLoading.value = true
-  try {
-    const data = await LogApi.getErrorLog(queryParams)
-    tableData.value = data.records
-    total.value = data.total
-  } finally {
-    tableLoading.value = false
-  }
+const formRef = ref()
+const openForm = (id?: number) => {
+  formRef.value.open(id, aliveTable.value.getTableList)
 }
 
-const resetQuery = async () => {
-  queryFormRef.value.resetFields()
-  createDate.value = [undefined, undefined]
-  await getPage()
-}
-
-const openDetail = (id: number) => {
-  detailRef.value.open(id)
+const getTableList = (params: any) => {
+  let newParams = JSON.parse(JSON.stringify(params))
+  newParams.createDate && (newParams.startDate = newParams.createDate[0])
+  newParams.createDate && (newParams.endDate = newParams.createDate[1])
+  delete newParams.createDate
+  return LogApi.getErrorLog(newParams)
 }
 
 const handleProcess = async (id: number, processStatus: number) => {
@@ -57,25 +30,21 @@ const handleProcess = async (id: number, processStatus: number) => {
     await LogApi.updateErrorProcessStatus(id, processStatus)
     await message.success(type)
     // 刷新列表
-    await getPage()
+    await aliveTable.value.getTableList()
   } catch {}
 }
-
-onMounted(() => {
-  getPage()
-})
 </script>
 
 <template>
-  <div class="page">
-    <div class="table-header">
-      <el-form ref="queryFormRef" :model="queryParams" inline>
+    <div class="table-box">
+    <AliveTable ref="aliveTable" :request-api="getTableList">
+      <template #search>
         <el-form-item label="操作人员" prop="nickname">
-          <el-input v-model="queryParams.nickname" placeholder="请输入操作人员" clearable />
+          <el-input v-model="aliveTable.searchParam.nickname" placeholder="请输入操作人员" clearable />
         </el-form-item>
 
         <el-form-item label="用户类型" prop="userType">
-          <el-select v-model="queryParams.userType" placeholder="请选择用户类型" clearable>
+          <el-select v-model="aliveTable.searchParam.userType" placeholder="请选择用户类型" clearable>
             <el-option
               v-for="(item, index) in getIntDictOptions(DICT_TYPE.USER_TYPE)"
               :key="index"
@@ -86,11 +55,11 @@ onMounted(() => {
         </el-form-item>
 
         <el-form-item label="请求地址" prop="requestUrl">
-          <el-input v-model="queryParams.requestUrl" placeholder="请输入请求地址" clearable />
+          <el-input v-model="aliveTable.searchParam.requestUrl" placeholder="请输入请求地址" clearable />
         </el-form-item>
 
         <el-form-item label="处理状态" prop="processStatus">
-          <el-select v-model="queryParams.processStatus" placeholder="请选择处理状态" clearable>
+          <el-select v-model="aliveTable.searchParam.processStatus" placeholder="请选择处理状态" clearable>
             <el-option
               v-for="(item, index) in getIntDictOptions(DICT_TYPE.INFRA_ERROR_LOG_PROCESS_STATUS)"
               :key="index"
@@ -102,7 +71,7 @@ onMounted(() => {
 
         <el-form-item label="异常时间" prop="startDate">
           <el-date-picker
-            v-model="createDate"
+            v-model="aliveTable.searchParam.createDate"
             value-format="YYYY-MM-DD"
             type="daterange"
             range-separator="至"
@@ -110,15 +79,8 @@ onMounted(() => {
             end-placeholder="结束日期"
           />
         </el-form-item>
+      </template>
 
-        <el-form-item>
-          <el-button type="primary" :icon="Search" @click="getPage">搜索</el-button>
-          <el-button :icon="Refresh" @click="resetQuery">重置</el-button>
-        </el-form-item>
-      </el-form>
-    </div>
-
-    <el-table ref="tableRef" v-loading="tableLoading" :data="tableData" border stripe show-overflow-tooltip>
       <el-table-column align="center" label="日志编号" prop="id" />
       <el-table-column align="center" label="用户昵称" prop="nickname" />
       <el-table-column align="center" label="用户类型" prop="userType">
@@ -135,9 +97,9 @@ onMounted(() => {
         </template>
       </el-table-column>
 
-      <el-table-column label="操作" align="center">
+      <el-table-column label="操作" align="center" width="150">
         <template #default="{ row }">
-          <el-button link size="small" type="primary" @click="openDetail(row.id)"> 详情 </el-button>
+          <el-button link size="small" type="primary" @click="openForm(row.id)"> 详情 </el-button>
           <el-button link size="small" type="primary" v-if="row.processStatus === 0" @click="handleProcess(row.id, 1)">
             处理
           </el-button>
@@ -146,16 +108,7 @@ onMounted(() => {
           </el-button>
         </template>
       </el-table-column>
-    </el-table>
-
-    <Pagination
-      v-model:limit="queryParams.size"
-      v-model:page="queryParams.current"
-      :total="total"
-      @pagination="getPage"
-    />
+    </AliveTable>
   </div>
-  <ErrorLogDetail ref="detailRef" />
+  <ErrorLogDetail ref="formRef" />
 </template>
-
-<style scoped></style>

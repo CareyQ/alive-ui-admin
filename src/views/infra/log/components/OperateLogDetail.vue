@@ -90,5 +90,3 @@ defineExpose({ open })
     </el-descriptions>
   </Dialog>
 </template>
-
-<style scoped></style>

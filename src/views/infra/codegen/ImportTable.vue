@@ -19,7 +19,9 @@ const queryParams = reactive({
   comment: undefined
 })
 
-const open = async () => {
+let refersh: () => void
+const open = async (getTableList: () => void) => {
+  refersh = getTableList
   dbConfigList.value = await ConfigApi.getConfigList()
   if (dbConfigList.value.length === 0) {
     message.error('未找到数据源配置')
@@ -64,9 +66,9 @@ const handleImportTable = async () => {
       tableNames: tableList.value
     })
     message.success('导入成功')
-    emit('success')
     dialogVisible.value = false
     tableList.value = []
+    refersh()
   } finally {
     importLoading.value = false
   }
@@ -117,5 +119,3 @@ const handleImportTable = async () => {
     </template>
   </Dialog>
 </template>
-
-<style scoped></style>

@@ -1,50 +1,32 @@
 <script setup lang="ts">
-import { RefreshRight, Plus } from '@element-plus/icons-vue'
+import { Plus } from '@element-plus/icons-vue'
 import * as ConfigApi from '@/api/infra/dataSourceConfig'
 import DataSourceConfigForm from './DataSourceConfigForm.vue'
 
 defineOptions({ name: 'DataSourceConfig' })
 
+const aliveTable = ref()
 const message = useMessage()
-
-const tableLoading = ref(false)
-const tableData = ref<any>([])
-
 const formRef = ref()
-
 const openForm = (id?: number) => {
-  formRef.value.open(id)
-}
-
-const getList = async () => {
-  tableLoading.value = true
-  try {
-    tableData.value = await ConfigApi.getConfigList()
-  } finally {
-    tableLoading.value = false
-  }
+  formRef.value.open(id, aliveTable.value.getTableList)
 }
 
 const handleDel = async (id: number) => {
   await message.delConfirm()
   await ConfigApi.delConfig(id)
   message.success('删除成功')
-  await getList()
+  await aliveTable.value.getTableList()
 }
-
-onMounted(() => {
-  getList()
-})
 </script>
 
 <template>
-  <div class="page">
-    <div class="table-header">
-      <el-button type="info" :icon="RefreshRight" @click="getList" />
-      <el-button type="primary" :icon="Plus" @click="openForm(undefined)">添加数据源</el-button>
-    </div>
+    <div class="table-box">
+    <AliveTable ref="aliveTable" :request-api="ConfigApi.getConfigList" :pagination="false">
+      <template #operation>
+        <el-button type="primary" :icon="Plus" @click="openForm(undefined)">添加数据源</el-button>
+      </template>
 
-    <el-table ref="tableRef" v-loading="tableLoading" :data="tableData" border stripe show-overflow-tooltip>
       <el-table-column align="center" label="配置编号" prop="id" />
       <el-table-column align="center" label="数据源名称" prop="name" />
       <el-table-column align="center" label="数据源链接" prop="url" />
@@ -57,7 +39,8 @@ onMounted(() => {
           <el-button link type="danger" size="small" @click="handleDel(row.id)">删除</el-button>
         </template>
       </el-table-column>
-    </el-table>
+    </AliveTable>
   </div>
-  <DataSourceConfigForm ref="formRef" @success="getList" />
+
+  <DataSourceConfigForm ref="formRef"/>
 </template>

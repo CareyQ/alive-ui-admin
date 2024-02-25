@@ -13,7 +13,9 @@ const formRef = ref()
 const table = ref<any>({})
 const columns = ref<any>([])
 
-const open = async (tableId: number) => {
+let refersh: () => void
+const open = async (tableId: number, getTableList: () => void) => {
+  refersh = getTableList
   dialogVisible.value = true
   dataLoading.value = true
   dialogTitle.value = `编辑表（${table.value.tableName}）`
@@ -26,8 +28,6 @@ const open = async (tableId: number) => {
   }
 }
 defineExpose({ open })
-
-const emit = defineEmits(['success'])
 
 const formRules = reactive({
   tableName: [{ required: true, message: '请输入表名称', trigger: 'blur' }],
@@ -54,7 +54,7 @@ const submitForm = async () => {
     await CodegenApi.updateCodegen(params)
     message.success('保存成功')
     dialogVisible.value = false
-    emit('success')
+    refersh()
   } finally {
     submitLoading.value = false
   }

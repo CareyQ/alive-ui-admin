@@ -5,17 +5,19 @@ const message = useMessage()
 const formLoading = ref(false)
 const dialogTitle = ref('')
 const dialogVisible = ref(false)
-const categoryList = ref<any[]>([])
 const formRef = ref()
+const categoryList = ref<any[]>([])
 
-const formData = ref({
+const defaultData: ProductCategoryApi.ProductCategoryDTO = {
   id: undefined,
   parentId: undefined,
   name: undefined,
   sort: 0,
   icon: undefined,
   status: 1
-})
+}
+
+const formData = ref<ProductCategoryApi.ProductCategoryDTO>(defaultData)
 
 const formRules = reactive({
   parentId: [{ required: true, message: '请选择父级分类', trigger: 'blur' }],
@@ -23,8 +25,10 @@ const formRules = reactive({
   sort: [{ required: true, message: '排序不能为空', trigger: 'blur' }]
 })
 
-const open = async (id: number) => {
+let refersh: () => void
+const open = async (id: number, getTableList: () => void) => {
   resetForm()
+  refersh = getTableList
   dialogVisible.value = true
   if (id) {
     dialogTitle.value = '编辑商品分类'
@@ -43,18 +47,10 @@ const open = async (id: number) => {
 defineExpose({ open })
 
 const resetForm = () => {
-  formData.value = {
-    id: undefined,
-    parentId: undefined,
-    name: undefined,
-    sort: 0,
-    icon: undefined,
-    status: 1
-  }
+  formData.value = defaultData
   formRef.value?.resetFields()
 }
 
-const emit = defineEmits(['success'])
 const submitForm = async () => {
   const valid = await formRef.value?.validate()
   if (!valid) {
@@ -66,7 +62,7 @@ const submitForm = async () => {
     await ProductCategoryApi.save(data)
     message.success('保存成功')
     dialogVisible.value = false
-    emit('success')
+    refersh()
   } finally {
     formLoading.value = false
   }

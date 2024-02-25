@@ -45,5 +45,6 @@ onMounted(() => {
 </script>
 
 <template>
-  <el-tag :type="dictData?.colorType">{{ dictData.label }}</el-tag>
+  <el-tag v-if="dictData?.colorType" :type="dictData?.colorType">{{ dictData.label }}</el-tag>
+  <el-tag v-else>{{ dictData.label }}</el-tag>
 </template>

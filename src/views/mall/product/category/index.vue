@@ -1,82 +1,35 @@
 <script setup lang="ts">
-import { RefreshRight, Plus, Search, Refresh } from '@element-plus/icons-vue'
 import { DICT_TYPE } from '@/utils/dict'
 import { dateFormatter } from '@/utils/date'
-import { handleTree } from '@/utils/tree'
 import * as ProductCategoryApi from '@/api/product/category'
 import CategoryForm from './CategoryForm.vue'
 
 defineOptions({ name: 'ProductCategory' })
 
+const aliveTable = ref()
 const message = useMessage()
-
-const tableLoading = ref(false)
-const tableData = ref<any>([])
 const formRef = ref()
-const queryFormRef = ref()
-
-const queryParams = reactive({
-  name: undefined
-})
-
-const getCategoryList = async () => {
-  tableLoading.value = true
-  try {
-    const data = await ProductCategoryApi.getList(queryParams)
-    tableData.value = handleTree(data, 'id', 'parentId')
-  } finally {
-    tableLoading.value = false
-  }
-}
-
 const openForm = (id?: number) => {
-  formRef.value.open(id)
+  formRef.value.open(id, aliveTable.value.getTableList)
 }
 
 const handleDel = async (id: number) => {
   await message.delConfirm()
   await ProductCategoryApi.del(id)
   message.success('删除成功')
-  await getCategoryList()
+  await aliveTable.value.getTableList()
 }
-
-const resetQuery = async () => {
-  queryFormRef.value.resetFields()
-  await getCategoryList()
-}
-
-onMounted(() => {
-  getCategoryList()
-})
 </script>
 
 <template>
-  <div class="page">
-    <el-form ref="queryFormRef" :model="queryParams" class="table-header" inline>
-      <el-form-item label="分类名称" prop="name">
-        <el-input v-model="queryParams.name" placeholder="请输入分类名称" clearable />
-      </el-form-item>
+  <div class="table-box">
+    <AliveTable ref="aliveTable" :request-api="ProductCategoryApi.getList" :pagination="false">
+      <template #searchOne>
+        <el-form-item prop="name">
+          <el-input v-model="aliveTable.searchParam.name" placeholder="请输入分类名称" clearable />
+        </el-form-item>
+      </template>
 
-      <el-form-item>
-        <el-button type="primary" :icon="Search" @click="getCategoryList">搜索</el-button>
-        <el-button :icon="Refresh" @click="resetQuery">重置</el-button>
-      </el-form-item>
-    </el-form>
-
-    <div class="table-header">
-      <el-button type="info" :icon="RefreshRight" @click="getCategoryList()" />
-      <el-button type="primary" :icon="Plus" @click="openForm(undefined)">添加商品分类</el-button>
-    </div>
-
-    <el-table
-      ref="tableRef"
-      v-loading="tableLoading"
-      :data="tableData"
-      border
-      stripe
-      show-overflow-tooltip
-      row-key="id"
-    >
       <el-table-column label="分类名称" prop="name" />
       <el-table-column label="排序" align="center" prop="sort" />
       <el-table-column label="图标" align="center" prop="icon" />
@@ -93,9 +46,7 @@ onMounted(() => {
           <el-button link type="danger" size="small" @click="handleDel(row.id)">删除</el-button>
         </template>
       </el-table-column>
-    </el-table>
+    </AliveTable>
   </div>
-  <CategoryForm ref="formRef" @success="getCategoryList()" />
+  <CategoryForm ref="formRef" />
 </template>
-
-<style lang="scss" scoped></style>

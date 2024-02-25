@@ -163,7 +163,10 @@ onMounted(() => {
 
         <el-table-column align="center" label="颜色类型" prop="colorType">
           <template #default="{ row }">
-            <el-tag :type="row.colorType === 'default' ? '' : row.colorType" v-if="row.colorType">
+            <el-tag :type="row.colorType" v-if="row.colorType && row.colorType !== 'default'">
+              {{ row.colorType }}
+            </el-tag>
+            <el-tag v-if="row.colorType && row.colorType === 'default'">
               {{ row.colorType }}
             </el-tag>
           </template>

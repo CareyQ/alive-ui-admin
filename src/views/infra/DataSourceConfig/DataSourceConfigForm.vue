@@ -5,17 +5,17 @@ const message = useMessage()
 const formLoading = ref(false)
 const dialogTitle = ref('')
 const dialogVisible = ref(false)
-
 const formRef = ref()
 
-const formData = ref({
+const defaultData: ConfigApi.DataSourceConfigDTO = {
   id: undefined,
   name: undefined,
   url: undefined,
   username: undefined,
   password: undefined
-})
+}
 
+const formData = ref<ConfigApi.DataSourceConfigDTO>(defaultData)
 const formRules = reactive({
   name: [{ required: true, message: '请输入数据源名称', trigger: 'blur' }],
   url: [{ required: true, message: '请输入数据源链接', trigger: 'blur' }],
@@ -23,8 +23,10 @@ const formRules = reactive({
   password: [{ required: true, message: '请输入数据源密码', trigger: 'blur' }]
 })
 
-const open = async (id: number) => {
+let refersh: () => void
+const open = async (id: number, getTableList: () => void) => {
   resetForm()
+  refersh = getTableList
   dialogVisible.value = true
   if (id) {
     dialogTitle.value = '编辑配置'
@@ -41,17 +43,10 @@ const open = async (id: number) => {
 defineExpose({ open })
 
 const resetForm = () => {
-  formData.value = {
-    id: undefined,
-    name: undefined,
-    url: undefined,
-    username: undefined,
-    password: undefined
-  }
+  formData.value = defaultData
   formRef.value?.resetFields()
 }
 
-const emit = defineEmits(['success'])
 const submitForm = async () => {
   const valid = await formRef.value?.validate()
   if (!valid) {
@@ -63,7 +58,7 @@ const submitForm = async () => {
     await ConfigApi.saveConfig(data)
     message.success('保存成功')
     dialogVisible.value = false
-    emit('success')
+    refersh()
   } finally {
     formLoading.value = false
   }

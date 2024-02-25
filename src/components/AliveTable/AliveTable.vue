@@ -23,6 +23,7 @@ const props = withDefaults(defineProps<AliveTableProps>(), {
 
 const tableRef = ref()
 const hasSearch = ref(false)
+const hasOneSearch = ref(false)
 // 是否显示搜索模块
 const isShowSearch = ref(false)
 
@@ -43,6 +44,7 @@ const {
 onMounted(() => {
   props.requestAuto && getTableList()
   hasSearch.value = !!useSlots().search
+  hasOneSearch.value = !!useSlots().searchOne
   props.data && (pageable.value.total = props.data.length)
 })
 
@@ -96,8 +98,16 @@ defineExpose({
       </div>
 
       <!-- 表格头右侧工具栏 -->
-      <div class="table-header-ri" v-if="hasSearch">
-        <el-button @click="isShowSearch = !isShowSearch"> {{ isShowSearch ? '折叠搜索' : '展开搜索' }} </el-button>
+      <div class="table-header-ri" v-if="hasSearch || hasOneSearch">
+        <el-form v-if="hasOneSearch" ref="formRef" :model="searchParam" style="display: flex">
+          <slot name="searchOne"></slot>
+          <el-form-item style="margin-left: 10px">
+            <el-button type="primary" :icon="Search" @click="search" />
+          </el-form-item>
+        </el-form>
+        <el-button v-else @click="isShowSearch = !isShowSearch">
+          {{ isShowSearch ? '折叠搜索' : '展开搜索' }}
+        </el-button>
       </div>
     </div>
 
@@ -159,6 +169,16 @@ defineExpose({
 .alive-table {
   .el-table__header th {
     background-color: var(--el-fill-color-light);
+  }
+}
+</style>
+
+<style lang="scss">
+.alive-table {
+  .table-header-ri {
+    .el-form-item {
+      margin-bottom: 0;
+    }
   }
 }
 </style>
