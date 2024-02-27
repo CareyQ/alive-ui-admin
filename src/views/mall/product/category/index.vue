@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Plus } from '@element-plus/icons-vue'
 import { DICT_TYPE } from '@/utils/dict'
 import { dateFormatter } from '@/utils/date'
 import * as ProductCategoryApi from '@/api/product/category'
@@ -23,11 +24,15 @@ const handleDel = async (id: number) => {
 
 <template>
   <div class="table-box">
-    <AliveTable ref="aliveTable" :request-api="ProductCategoryApi.getList" :pagination="false">
+    <AliveTable ref="aliveTable" :request-api="ProductCategoryApi.getList" :pagination="false" tree-data>
       <template #searchOne>
         <el-form-item prop="name">
           <el-input v-model="aliveTable.searchParam.name" placeholder="请输入分类名称" clearable />
         </el-form-item>
+      </template>
+
+      <template #operation>
+        <el-button type="primary" :icon="Plus" @click="openForm()">添加商品分类</el-button>
       </template>
 
       <el-table-column label="分类名称" prop="name" />

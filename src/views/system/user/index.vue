@@ -166,5 +166,3 @@ onMounted(() => {
   <UserForm ref="formRef" />
   <UserAssignRoleForm ref="assignRoleFormRef" />
 </template>
-
-<style scoped></style>

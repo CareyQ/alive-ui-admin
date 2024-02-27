@@ -5,18 +5,18 @@ const message = useMessage()
 const formLoading = ref(false)
 const dialogTitle = ref('')
 const dialogVisible = ref(false)
-
 const formRef = ref()
 
-const formData = ref({
+const defaultData: ProductBrandApi.ProductBrandDTO = {
   id: undefined,
   name: undefined,
   sort: 0,
   logo: undefined,
   description: undefined,
   status: 1
-})
+}
 
+const formData = ref<ProductBrandApi.ProductBrandDTO>(defaultData)
 const formRules = reactive({
   name: [{ required: true, message: '品牌名称不能为空', trigger: 'blur' }],
   sort: [{ required: true, message: '排序不能为空', trigger: 'blur' }],
@@ -24,8 +24,10 @@ const formRules = reactive({
   status: [{ required: true, message: '状态不能为空', trigger: 'blur' }]
 })
 
-const open = async (id: number) => {
+let refersh: () => void
+const open = async (id: number, getTableList: () => void) => {
   resetForm()
+  refersh = getTableList
   dialogVisible.value = true
   if (id) {
     dialogTitle.value = '编辑商品品牌'
@@ -42,18 +44,10 @@ const open = async (id: number) => {
 defineExpose({ open })
 
 const resetForm = () => {
-  formData.value = {
-    id: undefined,
-    name: undefined,
-    sort: 0,
-    logo: undefined,
-    description: undefined,
-    status: 1
-  }
+  formData.value = defaultData
   formRef.value?.resetFields()
 }
 
-const emit = defineEmits(['success'])
 const submitForm = async () => {
   const valid = await formRef.value?.validate()
   if (!valid) {
@@ -65,7 +59,7 @@ const submitForm = async () => {
     await ProductBrandApi.save(data)
     message.success('保存成功')
     dialogVisible.value = false
-    emit('success')
+    refersh()
   } finally {
     formLoading.value = false
   }

@@ -1,6 +1,7 @@
 <script lang="ts" setup name="AliveTable">
 import { Search, Delete, RefreshRight } from '@element-plus/icons-vue'
 import { useTable } from '@/hooks/useTable'
+import { handleTree } from '@/utils/tree'
 
 export interface AliveTableProps {
   data?: any[] // 静态 table data 数据，若存在则不会使用 requestApi 返回的 data ==> 非必传
@@ -11,6 +12,7 @@ export interface AliveTableProps {
   pagination?: boolean // 是否需要分页组件 ==> 非必传（默认为true）
   initParam?: any // 初始化请求参数 ==> 非必传（默认为{}）
   refersh?: boolean
+  treeData?: boolean
 }
 
 // 接受父组件参数，配置默认值
@@ -18,7 +20,8 @@ const props = withDefaults(defineProps<AliveTableProps>(), {
   requestAuto: true,
   refersh: true,
   pagination: true,
-  initParam: {}
+  initParam: {},
+  treeData: false
 })
 
 const tableRef = ref()
@@ -51,7 +54,10 @@ onMounted(() => {
 // 处理表格数据
 const processTableData = computed(() => {
   if (!props.data) {
-    return tableData.value
+    if (!props.treeData) {
+      return tableData.value
+    }
+    return handleTree(tableData.value, 'id', 'parentId')
   }
   if (!props.pagination) {
     return props.data
