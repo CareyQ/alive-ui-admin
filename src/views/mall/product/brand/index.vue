@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Plus } from '@element-plus/icons-vue'
 import { dateFormatter } from '@/utils/date'
-import { DICT_TYPE } from '@/utils/dict'
+import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import * as ProductBrandApi from '@/api/product/brand'
 import BrandForm from './BrandForm.vue'
 
@@ -33,18 +33,23 @@ const handleDel = async (id: number) => {
 <template>
   <div class="table-box">
     <AliveTable ref="aliveTable" :request-api="getTableList">
-      <template #searchOne>
+      <template #search>
         <el-form-item label="品牌名称" prop="name">
-          <el-input v-model="aliveTable.queryParams.name" placeholder="请输入品牌名称" clearable />
+          <el-input v-model="aliveTable.searchParam.name" placeholder="请输入品牌名称" clearable />
         </el-form-item>
         <el-form-item label="状态" prop="status">
-          <el-select v-model="aliveTable.queryParams.status" placeholder="请选择状态" clearable>
-            <el-option label="请选择字典生成" value="" />
+          <el-select v-model="aliveTable.searchParam.status" placeholder="请选择状态" clearable>
+            <el-option
+              v-for="(item, index) in getIntDictOptions(DICT_TYPE.COMMON_STATUS)"
+              :key="index"
+              :label="item.label"
+              :value="item.value"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="创建时间" prop="createTime">
           <el-date-picker
-            v-model="aliveTable.createDate"
+            v-model="aliveTable.searchParam.createDate"
             value-format="YYYY-MM-DD"
             type="daterange"
             range-separator="至"
@@ -70,12 +75,10 @@ const handleDel = async (id: number) => {
       <el-table-column align="center" label="操作" width="200">
         <template #default="{ row }">
           <el-button link type="primary" size="small" @click="openForm(row.id)"> 编辑 </el-button>
-          <el-divider direction="vertical" />
-          <el-button link type="danger" size="small" @click="handleDel(row.id)">删除</el-button>
+          <el-button link type="danger" size="small" @click="handleDel(row.id)"> 删除 </el-button>
         </template>
       </el-table-column>
     </AliveTable>
   </div>
-
   <BrandForm ref="formRef" />
 </template>
