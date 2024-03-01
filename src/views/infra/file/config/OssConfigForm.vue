@@ -5,10 +5,9 @@ const message = useMessage()
 const formLoading = ref(false)
 const dialogTitle = ref('')
 const dialogVisible = ref(false)
-
 const formRef = ref()
 
-const formData = ref({
+const defaultData: OssConfigApi.OssConfigDTO = {
   id: undefined,
   name: undefined,
   accessKey: undefined,
@@ -17,8 +16,9 @@ const formData = ref({
   endpoint: undefined,
   region: undefined,
   master: undefined
-})
+}
 
+const formData = ref<OssConfigApi.OssConfigDTO>(defaultData)
 const formRules = reactive({
   name: [{ required: true, message: '配置名称不能为空', trigger: 'blur' }],
   accessKey: [{ required: true, message: 'accessKey不能为空', trigger: 'blur' }],
@@ -29,8 +29,10 @@ const formRules = reactive({
   master: [{ required: true, message: '是否为主配置不能为空', trigger: 'blur' }]
 })
 
-const open = async (id: number) => {
+let refersh: () => void
+const open = async (id: number, getTableList: () => void) => {
   resetForm()
+  refersh = getTableList
   dialogVisible.value = true
   if (id) {
     dialogTitle.value = '编辑对象存储配置'
@@ -47,20 +49,10 @@ const open = async (id: number) => {
 defineExpose({ open })
 
 const resetForm = () => {
-  formData.value = {
-    id: undefined,
-    name: undefined,
-    accessKey: undefined,
-    secretKey: undefined,
-    bucket: undefined,
-    endpoint: undefined,
-    region: undefined,
-    master: undefined
-  }
+  formData.value = defaultData
   formRef.value?.resetFields()
 }
 
-const emit = defineEmits(['success'])
 const submitForm = async () => {
   const valid = await formRef.value?.validate()
   if (!valid) {
@@ -72,7 +64,7 @@ const submitForm = async () => {
     await OssConfigApi.saveOssConfig(data)
     message.success('保存成功')
     dialogVisible.value = false
-    emit('success')
+    refersh()
   } finally {
     formLoading.value = false
   }

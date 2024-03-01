@@ -1,5 +1,40 @@
 <script lang="ts" setup>
+import { Dashboard } from "@uppy/vue";
+import Uppy from '@uppy/core'
+import "@uppy/core/dist/style.css";
+import "@uppy/dashboard/dist/style.css";
+import XHRUpload from "@uppy/xhr-upload";
+import zh_CN from "@uppy/locales/lib/zh_CN";
+
 import * as FileApi from '@/api/infra/file'
+
+const uppy = computed(() => {
+  return new Uppy({
+    locale: zh_CN,
+    autoProceed: false,
+  }).use(XHRUpload, {
+    endpoint: `${import.meta.env.VITE_API_URL}/infra/file/upload`,
+    withCredentials: true,
+    formData: true,
+    fieldName: 'file',
+    method: 'post',
+    limit: 5,
+    timeout: 0,
+    getResponseError: (responseText: string, response: unknown) => {
+      try {
+        const response = JSON.parse(responseText);
+        console.log(responseText, response);
+        
+      } catch (e) {
+        const responseBody = response as XMLHttpRequest;
+        const { status, statusText } = responseBody;
+        const defaultMessage = [status, statusText].join(": ");
+        return new Error(defaultMessage);
+      }
+      return new Error("Internal Server Error");
+    },
+  });
+});
 
 const message = useMessage()
 const formLoading = ref(false)
@@ -18,14 +53,6 @@ const formData = ref({
   size: undefined
 })
 
-const formRules = reactive({
-  configId: [{ required: true, message: '配置编号不能为空', trigger: 'blur' }],
-  name: [{ required: true, message: '文件名不能为空', trigger: 'blur' }],
-  path: [{ required: true, message: '文件路径不能为空', trigger: 'blur' }],
-  url: [{ required: true, message: '文件 URL不能为空', trigger: 'blur' }],
-  type: [{ required: true, message: '文件类型不能为空', trigger: 'change' }],
-  size: [{ required: true, message: '文件大小不能为空', trigger: 'blur' }]
-})
 
 const open = async (id: number) => {
   resetForm()
@@ -56,57 +83,14 @@ const resetForm = () => {
   }
   formRef.value?.resetFields()
 }
-
-const emit = defineEmits(['success'])
-const submitForm = async () => {
-  const valid = await formRef.value?.validate()
-  if (!valid) {
-    return
-  }
-  formLoading.value = true
-  try {
-    const data = formData.value
-    await FileApi.saveFile(data)
-    message.success('保存成功')
-    dialogVisible.value = false
-    emit('success')
-  } finally {
-    formLoading.value = false
-  }
-  dialogVisible.value = false
-}
 </script>
 
 <template>
   <Dialog :title="dialogTitle" v-model="dialogVisible">
-    <el-form ref="formRef" :model="formData" :rules="formRules" label-width="80px" v-loading="formLoading">
-      <el-form-item label="配置编号" prop="configId">
-        <el-input v-model="formData.configId" placeholder="请输入配置编号" />
-      </el-form-item>
-      <el-form-item label="文件名" prop="name">
-        <el-input v-model="formData.name" placeholder="请输入文件名" />
-      </el-form-item>
-      <el-form-item label="文件路径" prop="path">
-        <el-input v-model="formData.path" placeholder="请输入文件路径" />
-      </el-form-item>
-      <el-form-item label="文件 URL" prop="url">
-        <el-input v-model="formData.url" placeholder="请输入文件 URL" />
-      </el-form-item>
-      <el-form-item label="文件类型" prop="type">
-        <el-select v-model="formData.type" placeholder="请选择文件类型">
-          <el-option label="请选择字典生成" value="" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="文件大小" prop="size">
-        <el-input v-model="formData.size" placeholder="请输入文件大小" />
-      </el-form-item>
-    </el-form>
-
-    <template #footer>
-      <span>
-        <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="submitForm">保存</el-button>
-      </span>
-    </template>
+    <Dashboard :uppy="uppy" :props="{
+      theme: 'light',
+      width: '750px',
+      height: '550px'
+    }" />
   </Dialog>
 </template>
