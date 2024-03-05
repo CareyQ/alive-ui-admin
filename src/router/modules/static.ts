@@ -30,6 +30,16 @@ export const staticRouter: AppRouteRecordRaw[] = [
       title: '登录',
       noNavTab: true
     }
+  },
+  {
+    path: '/:catchAll(.*)',
+    component: () => import('@/views/home/index.vue'),
+    name: '',
+    meta: {
+      hidden: true,
+      title: '404',
+      noNavTab: true
+    }
   }
 ]
 

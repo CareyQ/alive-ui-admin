@@ -26,7 +26,6 @@ router.beforeEach(async (to, from, next) => {
         const permissionStore = usePermissionStoreWithOut()
         await permissionStore.generateRoutes()
         permissionStore.getAddRouters.forEach((route) => {
-          // 动态添加可访问路由表
           router.addRoute(route as unknown as RouteRecordRaw)
         })
         const redirectPath = from.query.redirect || to.path

@@ -3,13 +3,13 @@ import Vue from '@vitejs/plugin-vue'
 import VueJsx from '@vitejs/plugin-vue-jsx'
 import progress from 'vite-plugin-progress'
 import EslintPlugin from 'vite-plugin-eslint'
-import PurgeIcons from 'vite-plugin-purge-icons'
+import Icons from 'unplugin-icons/vite'
+import IconsResolver from 'unplugin-icons/resolver'
 import { ViteEjsPlugin } from 'vite-plugin-ejs'
 import ElementPlus from 'unplugin-element-plus/vite'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
-import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 
 export function createVitePlugins() {
   const root = process.cwd()
@@ -23,10 +23,13 @@ export function createVitePlugins() {
     Vue(),
     VueJsx(),
     progress(),
-    PurgeIcons(),
     ElementPlus({
       useSource: true,
       defaultLocale: 'zh-cn'
+    }),
+    Icons({
+      // 自动安装图标
+      autoInstall: true
     }),
     Components({
       // 要搜索组件的目录的相对路径
@@ -42,7 +45,8 @@ export function createVitePlugins() {
       resolvers: [
         ElementPlusResolver({
           importStyle: 'sass'
-        })
+        }),
+        IconsResolver()
       ],
       exclude: [/[\\/]node_modules[\\/]/]
     }),
@@ -76,11 +80,6 @@ export function createVitePlugins() {
     EslintPlugin({
       cache: false,
       include: ['src/**/*.vue', 'src/**/*.ts', 'src/**/*.tsx'] // 检查的文件
-    }),
-    createSvgIconsPlugin({
-      iconDirs: [pathResolve('src/assets/svgs')],
-      symbolId: 'icon-[dir]-[name]',
-      svgoOptions: true
     }),
     ViteEjsPlugin()
   ]

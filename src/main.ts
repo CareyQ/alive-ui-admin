@@ -7,8 +7,6 @@ import 'element-plus/es/hooks/use-locale/index'
 
 import './permission'
 
-// 导入全局的svg图标
-import '@/plugins/svgIcon'
 // 引入 element-plus
 import { setupElementPlus } from '@/plugins/elementPlus'
 
