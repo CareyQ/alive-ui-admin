@@ -2,7 +2,7 @@
 import { Upload } from '@element-plus/icons-vue'
 import { dateFormatter } from '@/utils/date'
 import * as FileApi from '@/api/infra/file'
-import FileForm from './FileForm.vue'
+import UploadFile from './UploadFile.vue'
 
 defineOptions({ name: 'FileList' })
 
@@ -75,5 +75,5 @@ const handleDel = async (id: number) => {
     </AliveTable>
   </div>
 
-  <FileForm ref="formRef" />
+  <UploadFile ref="formRef" />
 </template>
