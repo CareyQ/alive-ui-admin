@@ -67,6 +67,7 @@ const getBindValue = computed(() => {
 <style lang="scss">
 .el-dialog.alive-dialog {
   padding: 0;
+
   .el-dialog__header {
     padding: 0;
     margin-right: 0;
@@ -85,8 +86,8 @@ const getBindValue = computed(() => {
   .el-dialog__footer {
     padding: 12px 16px;
     box-shadow:
-      0px 12px 32px 4px rgba(0, 0, 0, 0.04),
-      0px 8px 20px rgba(0, 0, 0, 0.08);
+      0 12px 32px 4px rgba(0 0 0 / 4%),
+      0 8px 20px rgba(0 0 0 / 8%);
   }
 }
 

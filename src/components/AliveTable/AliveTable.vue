@@ -1,6 +1,7 @@
 <script lang="ts" setup name="AliveTable">
 import { Search, Delete, RefreshRight } from '@element-plus/icons-vue'
 import { useTable } from '@/hooks/useTable'
+import { useSelection } from '@/hooks/useSelection'
 import { handleTree } from '@/utils/tree'
 
 export interface AliveTableProps {
@@ -68,6 +69,9 @@ const processTableData = computed(() => {
   )
 })
 
+// 表格多选 Hooks
+const { selectionChange, selectedList, selectedListIds, isSelected } = useSelection('id')
+
 defineExpose({
   element: tableRef,
   tableData: processTableData,
@@ -77,7 +81,10 @@ defineExpose({
   search,
   reset,
   handleSizeChange,
-  handleCurrentChange
+  handleCurrentChange,
+  selectedList,
+  selectedListIds,
+  isSelected
 })
 </script>
 
@@ -100,7 +107,12 @@ defineExpose({
       <!-- 表格头左侧操作栏 -->
       <div class="table-header-lf">
         <el-button type="info" :icon="RefreshRight" @click="getTableList" v-if="refersh" />
-        <slot name="operation"></slot>
+        <slot
+          name="operation"
+          :selected-list="selectedList"
+          :selected-list-ids="selectedListIds"
+          :is-selected="isSelected"
+        ></slot>
       </div>
 
       <!-- 表格头右侧工具栏 -->
@@ -126,6 +138,7 @@ defineExpose({
       row-key="id"
       border
       show-overflow-tooltip
+      @selection-change="selectionChange"
     >
       <!-- 默认插槽 -->
       <slot></slot>
@@ -151,12 +164,12 @@ defineExpose({
   flex-direction: column;
   width: 100%;
   height: 100%;
-  overflow-x: hidden;
   padding: 16px;
+  overflow-x: hidden;
 }
 
 .alive-search {
-  padding: 13px 15px 0 15px;
+  padding: 13px 15px 0;
   margin-bottom: 13px;
 }
 

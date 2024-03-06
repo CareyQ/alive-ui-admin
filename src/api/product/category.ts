@@ -41,3 +41,8 @@ export const save = async (data: ProductCategoryDTO) => {
 export const del = async (id: number) => {
   return await request.delete({ url: `/product/category/del?id=` + id })
 }
+
+// 查询商品分类树
+export const getTree = async () => {
+  return await request.get({ url: `/product/category/tree` })
+}

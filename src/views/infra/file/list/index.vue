@@ -1,16 +1,23 @@
 <script setup lang="ts">
 import { Upload } from '@element-plus/icons-vue'
 import { dateFormatter } from '@/utils/date'
+import { fileSizeFormatter } from '@/utils'
 import * as FileApi from '@/api/infra/file'
 import UploadFile from './UploadFile.vue'
+import FileDetail from './FileDetail.vue'
 
 defineOptions({ name: 'FileList' })
 
 const aliveTable = ref()
 const message = useMessage()
 const formRef = ref()
-const openForm = (id?: number) => {
-  formRef.value.open(id, aliveTable.value.getTableList)
+const detailRef = ref()
+const openForm = () => {
+  formRef.value.open(aliveTable.value.getTableList)
+}
+
+const openDetail = (id: number) => {
+  detailRef.value.open(id)
 }
 
 const getTableList = (params: any) => {
@@ -18,7 +25,7 @@ const getTableList = (params: any) => {
   newParams.createDate && (newParams.startDate = newParams.createDate[0])
   newParams.createDate && (newParams.endDate = newParams.createDate[1])
   delete newParams.createDate
-  return FileApi.getOssConfigPage(newParams)
+  return FileApi.getFilePage(newParams)
 }
 
 const handleDel = async (id: number) => {
@@ -27,14 +34,26 @@ const handleDel = async (id: number) => {
   message.success('删除成功')
   await aliveTable.value.getTableList()
 }
+
+const configList = ref<Entry[]>([])
+const getConfigList = async () => {
+  const data = await FileApi.getOssConfigList()
+  configList.value = data
+}
+
+onMounted(() => {
+  getConfigList()
+})
 </script>
 
 <template>
   <div class="table-box">
     <AliveTable ref="aliveTable" :request-api="getTableList">
       <template #search>
-        <el-form-item label="配置编号" prop="configId">
-          <el-input v-model="aliveTable.searchParam.configId" placeholder="请输入配置编号" clearable />
+        <el-form-item label="存储配置" prop="configId">
+          <el-select v-model="aliveTable.searchParam.configId" placeholder="请选择存储配置" clearable>
+            <el-option v-for="(item, index) in configList" :key="index" :label="item.label" :value="item.value" />
+          </el-select>
         </el-form-item>
         <el-form-item label="文件名" prop="name">
           <el-input v-model="aliveTable.searchParam.name" placeholder="请输入文件名" clearable />
@@ -58,22 +77,26 @@ const handleDel = async (id: number) => {
         <el-button type="primary" :icon="Upload" @click="openForm()">上传文件</el-button>
       </template>
 
-      <el-table-column label="配置编号" align="center" prop="configId" />
-      <el-table-column label="文件名" align="center" prop="name" />
-      <el-table-column label="文件路径" align="center" prop="path" />
-      <el-table-column label="文件 URL" align="center" prop="url" />
-      <el-table-column label="文件类型" align="center" prop="type" />
-      <el-table-column label="文件大小" align="center" prop="size" />
-      <el-table-column align="center" label="创建时间" prop="createTime" :formatter="dateFormatter" width="300" />
+      <el-table-column label="文件">
+        <template #default="{ row }">
+          <div>{{ row.name }}</div>
+          <span style="font-size: 12px; color: rgb(107 114 128)">{{ row.type }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="文件大小" align="center" prop="size" :formatter="fileSizeFormatter" width="150" />
+      <el-table-column label="所属配置" align="center" prop="configName" width="150" />
+      <el-table-column label="文件 URL" align="center" prop="url" width="350" />
+      <el-table-column align="center" label="上传时间" prop="createTime" :formatter="dateFormatter" width="200" />
       <el-table-column align="center" label="操作" width="200">
         <template #default="{ row }">
-          <el-button link type="primary" size="small" @click="openForm(row.id)"> 编辑 </el-button>
+          <el-button link type="primary" size="small" @click="openDetail(row.id)"> 详情 </el-button>
           <el-divider direction="vertical" />
-          <el-button link type="danger" size="small" @click="handleDel(row.id)">删除</el-button>
+          <el-button link type="danger" size="small" @click="handleDel(row.id)"> 删除 </el-button>
         </template>
       </el-table-column>
     </AliveTable>
   </div>
 
   <UploadFile ref="formRef" />
+  <FileDetail ref="detailRef" />
 </template>

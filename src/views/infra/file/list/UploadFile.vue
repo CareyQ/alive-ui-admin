@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { Dashboard } from '@uppy/vue'
-import Uppy, { type SuccessResponse } from '@uppy/core'
+import Uppy from '@uppy/core'
 import '@uppy/core/dist/style.css'
 import '@uppy/dashboard/dist/style.css'
 import '@uppy/status-bar/dist/style.min.css'
@@ -46,14 +46,17 @@ onUnmounted(() => {
   uppy.value.close({ reason: 'unmount' })
 })
 
+let refersh: () => void
 const dialogVisible = ref(false)
-const open = async () => {
+const open = async (getTableList: () => void) => {
+  refersh = getTableList
   dialogVisible.value = true
 }
 defineExpose({ open })
 
 const handleClose = () => {
   uppy.value.cancelAll()
+  refersh()
 }
 </script>
 
@@ -66,7 +69,8 @@ const handleClose = () => {
         width: '750px',
         height: '300px',
         showProgressDetails: true,
-        proudlyDisplayPoweredByUppy: false
+        proudlyDisplayPoweredByUppy: false,
+        doneButtonHandler: () => (dialogVisible = false)
       }"
     />
   </Dialog>

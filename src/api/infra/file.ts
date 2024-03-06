@@ -76,3 +76,8 @@ export const saveOssConfig = async (data: OssConfigDTO) => {
 export const delOssConfig = async (id: number) => {
   return await request.delete({ url: `/infra/oss-config/del?id=` + id })
 }
+
+// 获取对象存储配置列表
+export const getOssConfigList = async () => {
+  return await request.get({ url: `/infra/oss-config/list` })
+}

@@ -18,10 +18,10 @@ const open = async (tableId: number, getTableList: () => void) => {
   refersh = getTableList
   dialogVisible.value = true
   dataLoading.value = true
-  dialogTitle.value = `编辑表（${table.value.tableName}）`
   try {
     const res = await CodegenApi.getDetail(tableId)
     table.value = res.table
+    dialogTitle.value = `编辑表（${table.value.tableName}）`
     columns.value = res.columns
   } finally {
     dataLoading.value = false
@@ -164,22 +164,22 @@ const submitForm = async () => {
           </el-table-column>
           <el-table-column align="center" label="插入" width="60">
             <template #default="{ row }">
-              <el-checkbox v-model="row.createOperation" false-label="false" true-label="true" />
+              <el-checkbox v-model="row.createOperation" false-value="false" true-value="true" />
             </template>
           </el-table-column>
           <el-table-column align="center" label="编辑" width="60">
             <template #default="{ row }">
-              <el-checkbox v-model="row.updateOperation" false-label="false" true-label="true" />
+              <el-checkbox v-model="row.updateOperation" false-value="false" true-value="true" />
             </template>
           </el-table-column>
           <el-table-column align="center" label="列表" width="60">
             <template #default="{ row }">
-              <el-checkbox v-model="row.queryResult" false-label="false" true-label="true" />
+              <el-checkbox v-model="row.queryResult" false-value="false" true-value="true" />
             </template>
           </el-table-column>
           <el-table-column align="center" label="查询" width="60">
             <template #default="{ row }">
-              <el-checkbox v-model="row.queryCondition" false-label="false" true-label="true" />
+              <el-checkbox v-model="row.queryCondition" false-value="false" true-value="true" />
             </template>
           </el-table-column>
           <el-table-column align="center" label="查询方式">
@@ -193,13 +193,13 @@ const submitForm = async () => {
                 <el-option label="<=" value="<=" />
                 <el-option label="LIKE" value="LIKE" />
                 <el-option label="BETWEEN" value="BETWEEN" />
-                <el-option label="BETWEEN_DATA" value="BETWEEN_DATA" />
+                <el-option label="BETWEEN_DATE" value="BETWEEN_DATE" />
               </el-select>
             </template>
           </el-table-column>
           <el-table-column align="center" label="空值" width="60">
             <template #default="{ row }">
-              <el-checkbox v-model="row.nullable" false-label="false" true-label="true" />
+              <el-checkbox v-model="row.nullable" false-value="false" true-value="true" />
             </template>
           </el-table-column>
           <el-table-column align="center" label="显示类型">
@@ -207,6 +207,7 @@ const submitForm = async () => {
               <el-select v-model="row.htmlType">
                 <el-option label="文本框" value="input" />
                 <el-option label="文本域" value="textarea" />
+                <el-option label="数值框" value="inputNumber" />
                 <el-option label="下拉框" value="select" />
                 <el-option label="单选框" value="radio" />
                 <el-option label="复选框" value="checkbox" />
