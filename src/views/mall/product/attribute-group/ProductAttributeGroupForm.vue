@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import * as ProductCategoryApi from '@/api/product/category'
 import * as ProductAttributeGroupApi from '@/api/product/attribute'
 
 const message = useMessage()
@@ -6,6 +7,11 @@ const formLoading = ref(false)
 const dialogTitle = ref('')
 const dialogVisible = ref(false)
 const formRef = ref()
+
+const categoryTree = ref()
+const getCategoryTree = async () => {
+  categoryTree.value = await ProductCategoryApi.getTree()
+}
 
 const defaultData: ProductAttributeGroupApi.ProductAttributeGroupDTO = {
   id: undefined,
@@ -62,15 +68,25 @@ const submitForm = async () => {
   }
   dialogVisible.value = false
 }
+
+onMounted(() => {
+  getCategoryTree()
+})
 </script>
 
 <template>
   <Dialog :title="dialogTitle" v-model="dialogVisible" width="30%">
-    <el-form ref="formRef" :model="formData" :rules="formRules" label-width="80px" v-loading="formLoading">
+    <el-form ref="formRef" :model="formData" :rules="formRules" label-width="100px" v-loading="formLoading">
       <el-form-item label="商品分类" prop="categoryId">
-        <el-select v-model="formData.categoryId" placeholder="请选择商品分类">
-          <el-option label="请选择字典生成" value="" />
-        </el-select>
+        <el-cascader
+          v-model="formData.categoryId"
+          :options="categoryTree"
+          :props="{ label: 'name', value: 'id', emitPath: false }"
+          clearable
+          placeholder="请选择商品分类"
+          filterable
+          style="width: 100%"
+        />
       </el-form-item>
       <el-form-item label="分组名称" prop="name">
         <el-input v-model="formData.name" placeholder="请输入属性分组名称" />

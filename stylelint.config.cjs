@@ -1,8 +1,13 @@
 module.exports = {
   root: true,
-  plugins: ['stylelint-order'],
+  plugins: ['stylelint-order', 'stylelint-scss'],
   customSyntax: 'postcss-html',
-  extends: ['stylelint-config-standard', 'stylelint-config-recommended-scss', 'stylelint-config-standard-vue'],
+  extends: [
+    'stylelint-config-standard',
+    'stylelint-config-recommended-scss',
+    'stylelint-config-standard-vue',
+    'stylelint-config-standard-scss'
+  ],
   ignoreFiles: ['**/*.js', '**/*.jsx', '**/*.tsx', '**/*.ts', '**/*.json', '**/*.md', '**/*.yaml'],
   overrides: [
     {
@@ -16,6 +21,7 @@ module.exports = {
     }
   ],
   rules: {
+    indentation: 2,
     'selector-class-pattern': '.',
     'selector-pseudo-element-no-unknown': [
       true,
@@ -32,7 +38,7 @@ module.exports = {
     'at-rule-no-unknown': [
       true,
       {
-        ignoreAtRules: ['function', 'if', 'each', 'include', 'mixin']
+        ignoreAtRules: ['function', 'if', 'each', 'include', 'mixin', 'use', 'forward']
       }
     ],
     'at-rule-empty-line-before': [

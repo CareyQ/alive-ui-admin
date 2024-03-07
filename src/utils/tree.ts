@@ -4,6 +4,13 @@ export interface TreeHelperConfig {
   pid: string
 }
 
+export interface Tree {
+  id: number
+  name: string
+  parentId: number
+  children: []
+}
+
 const DEFAULT_CONFIG: TreeHelperConfig = {
   id: 'id',
   children: 'children',
