@@ -8,9 +8,11 @@ const dialogTitle = ref('')
 const dialogVisible = ref(false)
 const formRef = ref()
 
-const props = withDefaults(defineProps<AttrEnums>(), {
-  group: () => [],
-  attrType: () => []
+const props = withDefaults(defineProps<{ enums: AttrEnums }>(), {
+  enums: {
+    group: () => [],
+    attrType: () => []
+  }
 })
 
 const defaultData: ProductAttributeApi.ProductAttributeDTO = {
@@ -85,12 +87,17 @@ const submitForm = async () => {
     <el-form ref="formRef" :model="formData" :rules="formRules" label-width="120px" v-loading="formLoading">
       <el-form-item label="所属分组" prop="groupId">
         <el-select v-model="formData.groupId" placeholder="请选择所属分组">
-          <el-option v-for="(item, index) in props.group" :key="index" :label="item.label" :value="item.value" />
+          <el-option v-for="(item, index) in props.enums.group" :key="index" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
       <el-form-item label="属性类型" prop="type">
         <el-select v-model="formData.type" placeholder="请选择属性类型">
-          <el-option v-for="(item, index) in props.attrType" :key="index" :label="item.label" :value="item.value" />
+          <el-option
+            v-for="(item, index) in props.enums.attrType"
+            :key="index"
+            :label="item.label"
+            :value="item.value"
+          />
         </el-select>
       </el-form-item>
       <el-form-item label="属性名称" prop="name">
