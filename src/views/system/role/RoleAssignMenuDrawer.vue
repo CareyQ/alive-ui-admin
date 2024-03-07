@@ -73,5 +73,3 @@ const submitForm = async () => {
     </template>
   </el-drawer>
 </template>
-
-<style scoped></style>

@@ -108,5 +108,3 @@ const handleNodeClick = (data: { [key: string]: any }) => {
     </el-scrollbar>
   </div>
 </template>
-
-<style lang="scss"></style>

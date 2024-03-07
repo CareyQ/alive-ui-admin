@@ -225,6 +225,7 @@ onMounted(() => {
 <style lang="scss" scoped>
 .custom-tree-node {
   width: 100%;
+
   .el-icon {
     margin-right: 10px;
     outline: none;
@@ -235,6 +236,7 @@ onMounted(() => {
   margin-right: 6px;
   margin-bottom: 2px;
   cursor: pointer;
+
   &:hover {
     background-color: var(--el-color-primary-light-7);
   }
@@ -245,11 +247,14 @@ onMounted(() => {
 .menu-table {
   .el-tag.menu-tag.is-closable {
     padding-right: 9px;
+
     .el-icon {
       display: none;
     }
+
     &:hover {
       padding-right: 5px;
+
       .el-icon {
         display: inline-flex;
       }

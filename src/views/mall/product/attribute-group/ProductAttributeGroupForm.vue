@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import * as ProductCategoryApi from '@/api/product/category'
+import { CascaderOption } from 'element-plus'
 import * as ProductAttributeGroupApi from '@/api/product/attribute'
 
 const message = useMessage()
@@ -8,10 +8,9 @@ const dialogTitle = ref('')
 const dialogVisible = ref(false)
 const formRef = ref()
 
-const categoryTree = ref()
-const getCategoryTree = async () => {
-  categoryTree.value = await ProductCategoryApi.getTree()
-}
+const props = defineProps({
+  categoryTree: Array as PropType<CascaderOption[]>
+})
 
 const defaultData: ProductAttributeGroupApi.ProductAttributeGroupDTO = {
   id: undefined,
@@ -68,10 +67,6 @@ const submitForm = async () => {
   }
   dialogVisible.value = false
 }
-
-onMounted(() => {
-  getCategoryTree()
-})
 </script>
 
 <template>
@@ -80,7 +75,7 @@ onMounted(() => {
       <el-form-item label="商品分类" prop="categoryId">
         <el-cascader
           v-model="formData.categoryId"
-          :options="categoryTree"
+          :options="props.categoryTree"
           :props="{ label: 'name', value: 'id', emitPath: false }"
           clearable
           placeholder="请选择商品分类"

@@ -34,6 +34,8 @@ const handleDel = async (id: number) => {
 
 const categoryTree = ref()
 const getCategoryTree = async () => {
+  console.log('index')
+
   categoryTree.value = await ProductCategoryApi.getTree()
 }
 
@@ -96,5 +98,5 @@ onMounted(() => {
       </el-table-column>
     </AliveTable>
   </div>
-  <ProductAttributeGroupForm ref="formRef" />
+  <ProductAttributeGroupForm ref="formRef" :category-tree="categoryTree" />
 </template>

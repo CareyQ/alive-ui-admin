@@ -28,7 +28,7 @@ export interface ProductAttributeDTO {
   filterType?: number
   searchType?: number
   relatedStatus?: number
-  addition?: number
+  addition?: boolean
 }
 
 export interface ProductAttributePageDTO {

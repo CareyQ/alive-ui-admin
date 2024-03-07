@@ -13,6 +13,7 @@
 html,
 body {
   @extend .size;
+
   padding: 0;
   margin: 0;
   overflow: hidden;
@@ -20,6 +21,7 @@ body {
 
 #app {
   @extend .size;
+
   background-color: var(--login-bg-color);
 }
 </style>

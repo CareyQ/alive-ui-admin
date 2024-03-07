@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import * as ProductAttributeApi from '@/api/product/attribute'
+import { AttrEnums } from './index.vue'
 
 const message = useMessage()
 const formLoading = ref(false)
@@ -7,37 +8,35 @@ const dialogTitle = ref('')
 const dialogVisible = ref(false)
 const formRef = ref()
 
+const props = withDefaults(defineProps<AttrEnums>(), {
+  group: () => [],
+  attrType: () => []
+})
+
 const defaultData: ProductAttributeApi.ProductAttributeDTO = {
   id: undefined,
   groupId: undefined,
   type: undefined,
   name: undefined,
-  selectType: undefined,
-  inputType: undefined,
+  selectType: 0,
+  inputType: 0,
   inputList: undefined,
-  sort: undefined,
-  filterType: undefined,
-  searchType: undefined,
-  relatedStatus: undefined,
-  addition: undefined
+  sort: 0,
+  filterType: 0,
+  searchType: 1,
+  relatedStatus: 0,
+  addition: false
 }
 
 const formData = ref<ProductAttributeApi.ProductAttributeDTO>(defaultData)
 const formRules = reactive({
   groupId: [{ required: true, message: '所属分组不能为空', trigger: 'change' }],
   type: [{ required: true, message: '属性类型不能为空', trigger: 'change' }],
-  name: [{ required: true, message: '属性名称不能为空', trigger: 'blur' }],
-  selectType: [{ required: true, message: '选择类型不能为空', trigger: 'change' }],
-  inputType: [{ required: true, message: '录入方式不能为空', trigger: 'change' }],
-  sort: [{ required: true, message: '排序不能为空', trigger: 'blur' }],
-  filterType: [{ required: true, message: '分类筛选样式不能为空', trigger: 'change' }],
-  searchType: [{ required: true, message: '检索类型不能为空', trigger: 'change' }],
-  relatedStatus: [{ required: true, message: '相同属性产品是否关联不能为空', trigger: 'blur' }],
-  addition: [{ required: true, message: '支持新增不能为空', trigger: 'blur' }]
+  name: [{ required: true, message: '属性名称不能为空', trigger: 'blur' }]
 })
 
 let refersh: () => void
-const open = async (id: number, getTableList: () => void) => {
+const open = async (id: number, getTableList: () => void, groupId?: number, attrType?: number) => {
   resetForm()
   refersh = getTableList
   dialogVisible.value = true
@@ -51,6 +50,8 @@ const open = async (id: number, getTableList: () => void) => {
     }
   } else {
     dialogTitle.value = '新增商品属性'
+    formData.value.groupId = groupId
+    formData.value.type = attrType
   }
 }
 defineExpose({ open })
@@ -80,54 +81,64 @@ const submitForm = async () => {
 </script>
 
 <template>
-  <Dialog :title="dialogTitle" v-model="dialogVisible" width="30%">
-    <el-form ref="formRef" :model="formData" :rules="formRules" label-width="80px" v-loading="formLoading">
+  <Dialog :title="dialogTitle" v-model="dialogVisible" width="35%">
+    <el-form ref="formRef" :model="formData" :rules="formRules" label-width="120px" v-loading="formLoading">
       <el-form-item label="所属分组" prop="groupId">
         <el-select v-model="formData.groupId" placeholder="请选择所属分组">
-          <el-option label="请选择字典生成" value="" />
+          <el-option v-for="(item, index) in props.group" :key="index" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
       <el-form-item label="属性类型" prop="type">
         <el-select v-model="formData.type" placeholder="请选择属性类型">
-          <el-option label="请选择字典生成" value="" />
+          <el-option v-for="(item, index) in props.attrType" :key="index" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
       <el-form-item label="属性名称" prop="name">
         <el-input v-model="formData.name" placeholder="请输入属性名称" />
       </el-form-item>
-      <el-form-item label="选择类型" prop="selectType">
-        <el-select v-model="formData.selectType" placeholder="请选择属性选择类型">
-          <el-option label="请选择字典生成" value="" />
-        </el-select>
+      <el-form-item label="属性选择类型" prop="selectType">
+        <el-radio-group v-model="formData.selectType">
+          <el-radio :value="0">唯一</el-radio>
+          <el-radio :value="1">单选</el-radio>
+          <el-radio :value="2">多选</el-radio>
+        </el-radio-group>
       </el-form-item>
-      <el-form-item label="属性录入方式，0手工录入 1从列表中选取" prop="inputType">
-        <el-select v-model="formData.inputType" placeholder="请选择属性录入方式，0手工录入 1从列表中选取">
-          <el-option label="请选择字典生成" value="" />
-        </el-select>
+      <el-form-item label="筛选样式" prop="filterType">
+        <el-radio-group v-model="formData.filterType">
+          <el-radio :value="0">普通</el-radio>
+          <el-radio :value="1">颜色</el-radio>
+        </el-radio-group>
       </el-form-item>
-      <el-form-item label="可选值列表，以逗号隔开" prop="inputList">
+      <el-form-item label="检索类型" prop="searchType">
+        <el-radio-group v-model="formData.searchType">
+          <el-radio :value="0">不检索</el-radio>
+          <el-radio :value="1">关键字检索</el-radio>
+          <el-radio :value="2">范围检索</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="属性录入方式" prop="inputType">
+        <el-radio-group v-model="formData.inputType">
+          <el-radio :value="0">手工录入</el-radio>
+          <el-radio :value="1">从列表中选取</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="可选值列表" prop="inputList">
         <el-input v-model="formData.inputList" placeholder="请输入可选值列表，以逗号隔开" />
       </el-form-item>
-      <el-form-item label="排序" prop="sort">
-        <el-input v-model="formData.sort" placeholder="请输入排序" />
-      </el-form-item>
-      <el-form-item label="分类筛选样式，1普通 1颜色" prop="filterType">
-        <el-select v-model="formData.filterType" placeholder="请选择分类筛选样式，1普通 1颜色">
-          <el-option label="请选择字典生成" value="" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="检索类型，0不需要进行检索 1关键字检索 2范围检索" prop="searchType">
-        <el-select v-model="formData.searchType" placeholder="请选择检索类型，0不需要进行检索 1关键字检索 2范围检索">
-          <el-option label="请选择字典生成" value="" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="相同属性产品是否关联，0不关联 1关联" prop="relatedStatus">
+      <el-form-item label="属性关联" prop="relatedStatus">
         <el-radio-group v-model="formData.relatedStatus">
-          <el-radio label="1">请选择字典生成</el-radio>
+          <el-radio :value="0">不关联</el-radio>
+          <el-radio :value="1">关联</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="支持新增" prop="addition">
-        <el-input v-model="formData.addition" placeholder="请输入支持新增" />
+        <el-radio-group v-model="formData.addition">
+          <el-radio :value="true">是</el-radio>
+          <el-radio :value="false">否</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="排序" prop="sort">
+        <el-input-number v-model="formData.sort" :min="0" controls-position="right" />
       </el-form-item>
     </el-form>
 

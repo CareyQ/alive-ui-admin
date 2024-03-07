@@ -200,22 +200,22 @@ watch(
 <style lang="scss" scoped>
 .nav-tabs {
   position: relative;
-  margin: 0 16px;
-  overflow-x: auto;
-  overflow-y: hidden;
-  justify-content: flex-start;
   height: var(--el-header-height);
+  margin: 0 16px;
+  overflow: auto hidden;
+  justify-content: flex-start;
   flex: 1;
 }
 
 .nav-tab {
+  z-index: 1;
   display: flex;
-  align-items: center;
-  padding: 0 16px;
   height: var(--nav-tab-height);
+  padding: 0 16px;
   cursor: pointer;
   user-select: none;
-  z-index: 1;
+  align-items: center;
+
   &:hover {
     color: var(--el-color-primary);
   }
@@ -226,7 +226,7 @@ watch(
   height: var(--nav-tab-height);
   background-color: var(--white-color);
   border-radius: var(--el-border-radius-base);
-  box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 0 12px rgb(0 0 0 / 12%);
   transition: all 0.2s;
 }
 
