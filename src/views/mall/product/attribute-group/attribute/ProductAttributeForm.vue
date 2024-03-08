@@ -8,11 +8,15 @@ const dialogTitle = ref('')
 const dialogVisible = ref(false)
 const formRef = ref()
 
-const props = withDefaults(defineProps<{ enums: AttrEnums }>(), {
-  enums: {
-    group: () => [],
-    attrType: () => []
-  }
+interface Enums {
+  enums: AttrEnums
+}
+
+const props = withDefaults(defineProps<Enums>(), {
+  enums: (): AttrEnums => ({
+    group: [],
+    attrType: []
+  })
 })
 
 const defaultData: ProductAttributeApi.ProductAttributeDTO = {

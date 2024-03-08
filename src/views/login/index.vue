@@ -24,8 +24,8 @@ const appStore = useAppStore()
 
 <style lang="scss" scoped>
 .page-container {
-  height: 100vh;
   width: 100%;
+  height: 100vh;
 }
 
 .height {
@@ -34,28 +34,33 @@ const appStore = useAppStore()
 
 .panel {
   @extend .height;
+
   padding: 50px;
 }
 
 .login-panel {
   @extend .height;
-  border-radius: 6px;
+
   overflow: hidden;
   background-color: white;
+  border-radius: 6px;
 }
 
 .login-intro {
   @extend .panel;
+
   width: 500px;
-  flex-direction: column;
-  background-color: var(--el-color-primary);
-  color: white;
   padding: 50px;
+  color: white;
+  background-color: var(--el-color-primary);
+  flex-direction: column;
+
   h1 {
+    margin: 0;
     font-size: 1.375rem;
     line-height: 1.5rem;
-    margin: 0;
   }
+
   p {
     position: relative;
     z-index: 1;
@@ -63,16 +68,18 @@ const appStore = useAppStore()
     margin-bottom: 0;
     font-size: 0.875rem;
   }
+
   img {
     position: relative;
-    margin: -10px auto 0;
-    width: 95%;
     z-index: 0;
+    width: 95%;
+    margin: -10px auto 0;
   }
 }
 
 .form-panel {
   @extend .panel;
+
   width: 400px;
 }
 </style>

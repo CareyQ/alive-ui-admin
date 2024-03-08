@@ -21,7 +21,6 @@ module.exports = {
     }
   ],
   rules: {
-    indentation: 2,
     'selector-class-pattern': '.',
     'selector-pseudo-element-no-unknown': [
       true,
