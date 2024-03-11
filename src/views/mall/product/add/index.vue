@@ -22,8 +22,8 @@ const defaultData: ProductApi.ProductDTO = {
   marketPrice: undefined,
   stock: undefined,
   unit: undefined,
-  detailHtml: undefined,
-  detailMobileHtml: undefined,
+  detailHtml: '',
+  detailMobileHtml: '',
   giftPoint: undefined,
   giftGrowth: undefined,
   usePointLimit: undefined,
@@ -36,18 +36,22 @@ const productData = ref<ProductApi.ProductDTO>(defaultData)
 </script>
 
 <template>
-  <div class="card product-page">
-    <el-steps :active="active" finish-status="success" align-center>
-      <el-step title="商品信息" />
-      <el-step title="商品促销" />
-      <el-step title="商品属性" />
-    </el-steps>
-    <ProductInfo v-show="showStatus[0]" v-model="productData" />
+  <div class="card">
+    <div class="product-page">
+      <el-steps :active="active" finish-status="success" align-center>
+        <el-step title="商品信息" />
+        <el-step title="商品促销" />
+        <el-step title="商品属性" />
+      </el-steps>
+      <ProductInfo v-show="showStatus[0]" v-model="productData" />
+    </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
 .product-page {
-  padding: 30px;
+  max-width: 1200px;
+  padding: 30px 0;
+  margin: 0 auto;
 }
 </style>

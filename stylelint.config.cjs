@@ -37,9 +37,16 @@ module.exports = {
     'at-rule-no-unknown': [
       true,
       {
-        ignoreAtRules: ['function', 'if', 'each', 'include', 'mixin', 'use', 'forward', 'extend']
+        ignoreAtRules: ['function', 'if', 'each', 'include', 'mixin', 'use', 'forward', 'extend', 'v-bind']
       }
     ],
+    'function-no-unknown': [
+      true,
+      {
+        ignoreFunctions: ['v-bind']
+      }
+    ],
+    'value-keyword-case': null,
     'at-rule-empty-line-before': [
       'always',
       {

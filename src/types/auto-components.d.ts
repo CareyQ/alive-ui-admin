@@ -9,6 +9,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     AliveTable: typeof import('./../components/AliveTable/AliveTable.vue')['default']
     Dialog: typeof import('./../components/Dialog/Dialog.vue')['default']
+    Editor: typeof import('./../components/Editor/Editor.vue')['default']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCascader: typeof import('element-plus/es')['ElCascader']
@@ -30,6 +31,7 @@ declare module 'vue' {
     ElFormItem: typeof import('element-plus/es')['ElFormItem']
     ElHeader: typeof import('element-plus/es')['ElHeader']
     ElIcon: typeof import('element-plus/es')['ElIcon']
+    ElImageViewer: typeof import('element-plus/es')['ElImageViewer']
     ElInput: typeof import('element-plus/es')['ElInput']
     ElInputNumber: typeof import('element-plus/es')['ElInputNumber']
     ElLink: typeof import('element-plus/es')['ElLink']
@@ -63,6 +65,7 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     Tag: typeof import('./../components/tag/Tag.vue')['default']
     TreeFilter: typeof import('./../components/TreeFilter/TreeFilter.vue')['default']
+    UploadImg: typeof import('./../components/Upload/UploadImg.vue')['default']
   }
   export interface ComponentCustomProperties {
     vLoading: typeof import('element-plus/es')['ElLoadingDirective']

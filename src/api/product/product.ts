@@ -15,8 +15,8 @@ export interface ProductDTO {
   marketPrice?: number
   stock?: number
   unit?: string
-  detailHtml?: string
-  detailMobileHtml?: string
+  detailHtml: string
+  detailMobileHtml: string
   giftPoint?: number
   giftGrowth?: number
   usePointLimit?: number

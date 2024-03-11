@@ -35,6 +35,8 @@
     "@uppy/vue": "^1.1.2",
     "@uppy/xhr-upload": "^3.6.4",
     "@vueuse/core": "^10.9.0",
+    "@wangeditor/editor": "^5.1.23",
+    "@wangeditor/editor-for-vue": "^5.1.12",
     "axios": "^1.6.7",
     "dayjs": "^1.11.10",
     "element-plus": "^2.6.0",
