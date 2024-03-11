@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import ProductInfo from './ProductInfo.vue'
 import * as ProductApi from '@/api/product/product'
+import ProductInfo from './ProductInfo.vue'
+import SaleDetail from './SaleDetail.vue'
 
 defineOptions({ name: 'ProductAdd' })
 
@@ -33,6 +34,22 @@ const defaultData: ProductApi.ProductDTO = {
 }
 
 const productData = ref<ProductApi.ProductDTO>(defaultData)
+
+const hideAll = () => {
+  for (let i = 0; i < showStatus.value.length; i++) {
+    showStatus.value[i] = false
+  }
+}
+
+const nextStep = (value?: any) => {
+  console.log(value)
+
+  if (active.value < showStatus.value.length - 1) {
+    active.value++
+    hideAll()
+    showStatus.value[active.value] = true
+  }
+}
 </script>
 
 <template>
@@ -43,7 +60,8 @@ const productData = ref<ProductApi.ProductDTO>(defaultData)
         <el-step title="商品促销" />
         <el-step title="商品属性" />
       </el-steps>
-      <ProductInfo v-show="showStatus[0]" v-model="productData" />
+      <ProductInfo v-show="showStatus[0]" v-model="productData" @next="nextStep" />
+      <SaleDetail v-show="showStatus[1]" v-model="productData" @next="nextStep" />
     </div>
   </div>
 </template>

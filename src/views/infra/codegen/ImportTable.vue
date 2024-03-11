@@ -53,7 +53,6 @@ const handleSelectionChange = (selection) => {
   tableList.value = selection.map((item) => item.name)
 }
 
-const emit = defineEmits(['success'])
 const handleImportTable = async () => {
   importLoading.value = true
   try {

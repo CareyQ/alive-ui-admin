@@ -30,25 +30,24 @@ const handleNext = () => {
   <div style="margin-top: 50px">
     <el-form ref="formRef" :model="formData" label-width="100px">
       <el-row :gutter="20">
-        <el-col :span="16">
-          <el-form-item label="商品名称" prop="name">
-            <el-input v-model="formData.name" placeholder="请输入商品名称" />
+        <el-col :span="6">
+          <el-form-item label="属性类型" prop="attributeGroupId">
+            <el-input v-model="formData.attributeGroupId" placeholder="请选择属性类型" />
           </el-form-item>
         </el-col>
-        <el-col :span="8">
-          <el-form-item label="商品分类" prop="categoryId">
-            <el-input v-model="formData.categoryId" placeholder="请输入商品名称" />
+        <el-col :span="6">
+          <el-form-item label="赠送积分" prop="giftPoint">
+            <el-input v-model="formData.giftPoint" />
           </el-form-item>
         </el-col>
-
-        <el-col :span="16">
-          <el-form-item label="副标题" prop="subTitle">
-            <el-input v-model="formData.subTitle" placeholder="请输入副标题" />
+        <el-col :span="6">
+          <el-form-item label="赠送成长值" prop="giftGrowth">
+            <el-input v-model="formData.giftGrowth" />
           </el-form-item>
         </el-col>
-        <el-col :span="8">
-          <el-form-item label="商品品牌" prop="brandId">
-            <el-input v-model="formData.brandId" placeholder="请输入商品名称" />
+        <el-col :span="6">
+          <el-form-item label="积分使用限制" prop="usePointLimit">
+            <el-input v-model="formData.usePointLimit" />
           </el-form-item>
         </el-col>
 

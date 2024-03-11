@@ -1,4 +1,4 @@
-<script setup lang="ts" name="WangEditor">
+<script setup lang="ts" name="Editor">
 import { nextTick, computed, inject, shallowRef, onBeforeUnmount } from 'vue'
 import { IToolbarConfig, IEditorConfig } from '@wangeditor/editor'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
@@ -139,7 +139,7 @@ defineExpose({
   /* 防止富文本编辑器全屏时 tabs组件 在其层级之上 */
   z-index: 2;
   width: 100%;
-  border: 1px solid var(--el-border-color);
+  border-top: 1px solid var(--el-border-color);
 
   .editor-toolbar {
     border-bottom: 1px solid var(--el-border-color);
@@ -147,6 +147,14 @@ defineExpose({
 
   .editor-content {
     overflow-y: hidden;
+
+    :deep(.w-e-text-placeholder) {
+      transform: translateY(-6px);
+    }
+
+    :deep(.w-e-scroll) > div {
+      min-height: 97%;
+    }
   }
 }
 
