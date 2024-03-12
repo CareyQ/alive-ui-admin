@@ -80,7 +80,7 @@ onMounted(() => {
       </template>
 
       <el-table-column label="编号" align="center" prop="id" />
-      <el-table-column label="商品分类" align="center" prop="categoryId" />
+      <el-table-column label="商品分类" align="center" prop="categoryName" />
       <el-table-column label="属性分组名称" align="center" prop="name" />
       <el-table-column label="排序" align="center" prop="sort" />
       <el-table-column align="center" label="创建时间" prop="createTime" :formatter="dateFormatter" width="300" />
