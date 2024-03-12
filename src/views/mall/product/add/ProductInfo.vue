@@ -1,5 +1,7 @@
 <script lang="ts" setup>
 import { type ProductDTO } from '@/api/product/product'
+import { getBrandList } from '@/api/product/brand'
+import * as ProductCategoryApi from '@/api/product/category'
 import UploadImg from '@/components/Upload/UploadImg.vue'
 import Editor from '@/components/Editor/Editor.vue'
 
@@ -10,25 +12,52 @@ const props = defineProps({
   }
 })
 
+const formRef = ref()
 const formData = props.modelValue
-
+const formRules = reactive({
+  name: [
+    { required: true, message: '商品名称不能为空', trigger: 'change' },
+    { min: 2, max: 140, message: '长度在 2 到 140 个字符', trigger: 'blur' }
+  ],
+  categoryId: [{ required: true, message: '商品分类不能为空', trigger: 'change' }],
+  subTitle: [{ required: true, message: '副标题不能为空', trigger: 'blur' }],
+  brandId: [{ required: true, message: '商品品牌不能为空', trigger: 'change' }],
+  snCode: [{ required: true, message: '商品编码不能为空', trigger: 'blur' }],
+  pic: [{ required: true, message: '封面图不能为空', trigger: 'blur' }],
+  unit: [{ required: true, message: '计量单位不能为空', trigger: 'blur' }]
+})
+const categoryTree = ref()
+const brandList = ref()
 const activeHtmlName = ref('pc')
 
 const handelPic = (val: string) => {
-  console.log(val)
-
   formData.pic = val
 }
 
 const emit = defineEmits(['next'])
-const handleNext = () => {
+const handleNext = async () => {
+  const valid = await formRef.value?.validate()
+  console.log(valid)
+
+  if (!valid) {
+    return
+  }
   emit('next', formData)
 }
+
+const getInitData = async () => {
+  categoryTree.value = await ProductCategoryApi.getTree()
+  brandList.value = await getBrandList()
+}
+
+onMounted(() => {
+  getInitData()
+})
 </script>
 
 <template>
   <div style="margin-top: 50px">
-    <el-form ref="formRef" :model="formData" label-width="100px">
+    <el-form ref="formRef" :model="formData" label-width="100px" :rules="formRules">
       <el-row :gutter="20">
         <el-col :span="16">
           <el-form-item label="商品名称" prop="name">
@@ -37,7 +66,15 @@ const handleNext = () => {
         </el-col>
         <el-col :span="8">
           <el-form-item label="商品分类" prop="categoryId">
-            <el-input v-model="formData.categoryId" placeholder="请输入商品名称" />
+            <el-cascader
+              v-model="formData.categoryId"
+              :options="categoryTree"
+              :props="{ label: 'name', value: 'id', emitPath: false }"
+              clearable
+              placeholder="请选择商品分类"
+              filterable
+              style="width: 100%"
+            />
           </el-form-item>
         </el-col>
 
@@ -48,7 +85,9 @@ const handleNext = () => {
         </el-col>
         <el-col :span="8">
           <el-form-item label="商品品牌" prop="brandId">
-            <el-input v-model="formData.brandId" placeholder="请输入商品名称" />
+            <el-select v-model="formData.brandId" placeholder="请选择商品品牌">
+              <el-option v-for="item in brandList" :key="item.value" :label="item.label" :value="item.value" />
+            </el-select>
           </el-form-item>
         </el-col>
 

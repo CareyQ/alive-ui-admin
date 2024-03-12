@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { type ProductDTO } from '@/api/product/product'
 import UploadImg from '@/components/Upload/UploadImg.vue'
-import Editor from '@/components/Editor/Editor.vue'
+import * as ProductAttributeApi from '@/api/product/attribute'
 
 const props = defineProps({
   modelValue: {
@@ -10,13 +10,17 @@ const props = defineProps({
   }
 })
 
+const message = useMessage()
+const formRef = ref()
+const attributeGroupList = ref()
+const attributeList = ref()
+const attributeParams = ref()
 const formData = props.modelValue
-
-const activeHtmlName = ref('pc')
+const formRules = reactive({
+  attributeGroupId: [{ required: true, message: '属性类型不能为空', trigger: 'change' }]
+})
 
 const handelPic = (val: string) => {
-  console.log(val)
-
   formData.pic = val
 }
 
@@ -24,15 +28,38 @@ const emit = defineEmits(['next'])
 const handleNext = () => {
   emit('next', formData)
 }
+
+const getInitData = async () => {
+  attributeGroupList.value = await ProductAttributeApi.getAttributeGroupList(props.modelValue.categoryId!)
+  if (attributeGroupList.value.length === 0) {
+    message.warning('该商品分类下暂无属性类型')
+  }
+}
+
+const getAttributeList = async (groupId: number, type: number) => {
+  const res = await ProductAttributeApi.getAttributeList(groupId, type)
+  console.log(res)
+}
+
+const handleGroupChange = (groupId: number) => {
+  getAttributeList(groupId, 0)
+  getAttributeList(groupId, 1)
+}
+
+onMounted(() => {
+  getInitData()
+})
 </script>
 
 <template>
   <div style="margin-top: 50px">
-    <el-form ref="formRef" :model="formData" label-width="100px">
+    <el-form ref="formRef" :model="formData" label-width="100px" :rules="formRules">
       <el-row :gutter="20">
         <el-col :span="6">
           <el-form-item label="属性类型" prop="attributeGroupId">
-            <el-input v-model="formData.attributeGroupId" placeholder="请选择属性类型" />
+            <el-select v-model="formData.attributeGroupId" placeholder="请选择属性类型" @change="handleGroupChange">
+              <el-option v-for="item in attributeGroupList" :key="item.value" :label="item.label" :value="item.value" />
+            </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -101,19 +128,6 @@ const handleNext = () => {
               </el-form-item>
             </el-col>
           </el-row>
-        </el-col>
-
-        <el-col>
-          <el-form-item label="商品详情：">
-            <el-tabs v-model="activeHtmlName" type="border-card">
-              <el-tab-pane label="电脑端详情" name="pc">
-                <Editor v-if="activeHtmlName === 'pc'" v-model:value="formData.detailHtml" />
-              </el-tab-pane>
-              <el-tab-pane label="移动端详情" name="mobile">
-                <Editor v-if="activeHtmlName === 'mobile'" v-model:value="formData.detailMobileHtml" />
-              </el-tab-pane>
-            </el-tabs>
-          </el-form-item>
         </el-col>
       </el-row>
 

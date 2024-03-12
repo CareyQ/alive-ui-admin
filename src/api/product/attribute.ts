@@ -59,6 +59,11 @@ export const delAttributeGroup = async (id: number) => {
   return await request.delete({ url: `/product/attribute/group/del?id=` + id })
 }
 
+// 查询商品属性分组列表
+export const getAttributeGroupList = async (categoryId: number) => {
+  return await request.get({ url: `/product/attribute/group/list?categoryId=` + categoryId })
+}
+
 // 查询商品属性分页
 export const getAttributePage = async (data: ProductAttributePageDTO) => {
   return await request.post({ url: `/product/attribute/page`, data })
@@ -82,4 +87,9 @@ export const delAttribute = async (id: number) => {
 // 查询商品属性相关枚举
 export const getAttributeEnums = async () => {
   return await request.get({ url: `/product/attribute/enums` })
+}
+
+// 查询商品属性列表
+export const getAttributeList = async (groupId: number, type: number) => {
+  return await request.get({ url: `/product/attribute/list?groupId=${groupId}&type=${type}` })
 }

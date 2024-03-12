@@ -36,3 +36,8 @@ export const save = async (data: ProductBrandDTO) => {
 export const del = async (id: number) => {
   return await request.delete({ url: `/product/brand/del?id=` + id })
 }
+
+// 查询商品品牌列表
+export const getBrandList = async () => {
+  return await request.get({ url: `/product/brand/list` })
+}
