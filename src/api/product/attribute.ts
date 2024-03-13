@@ -90,6 +90,6 @@ export const getAttributeEnums = async () => {
 }
 
 // 查询商品属性列表
-export const getAttributeList = async (groupId: number, type: number) => {
-  return await request.get({ url: `/product/attribute/list?groupId=${groupId}&type=${type}` })
+export const getAttributeList = async (categoryId: number) => {
+  return await request.get({ url: `/product/attribute/list?categoryId=${categoryId}` })
 }

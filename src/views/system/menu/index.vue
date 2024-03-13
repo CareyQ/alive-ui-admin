@@ -180,6 +180,11 @@ onMounted(() => {
             <el-switch v-model="scope.row.keepAlive" />
           </template>
         </el-table-column>
+        <el-table-column align="center" label="是否可见" prop="visible" width="100">
+          <template #default="{ row }">
+            {{ row.visible ? '是' : '否' }}
+          </template>
+        </el-table-column>
         <el-table-column align="center" label="状态" prop="status" width="80">
           <template #default="{ row }">
             <Tag :type="DICT_TYPE.COMMON_STATUS" :value="row.status" />

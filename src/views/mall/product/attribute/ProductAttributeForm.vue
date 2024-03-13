@@ -12,17 +12,18 @@ interface Enums {
   enums: AttrEnums
 }
 
-const props = withDefaults(defineProps<Enums>(), {
-  enums: (): AttrEnums => ({
-    group: [],
-    attrType: []
-  })
+const enums = ref<AttrEnums>({
+  group: [],
+  attrType: []
 })
+
+const getAttributeEnums = async () => {
+  enums.value = await ProductAttributeApi.getAttributeEnums()
+}
 
 const defaultData: ProductAttributeApi.ProductAttributeDTO = {
   id: undefined,
   groupId: undefined,
-  type: undefined,
   name: undefined,
   selectType: 0,
   inputType: 0,
@@ -37,17 +38,17 @@ const defaultData: ProductAttributeApi.ProductAttributeDTO = {
 const formData = ref<ProductAttributeApi.ProductAttributeDTO>(defaultData)
 const formRules = reactive({
   groupId: [{ required: true, message: '所属分组不能为空', trigger: 'change' }],
-  type: [{ required: true, message: '属性类型不能为空', trigger: 'change' }],
   name: [{ required: true, message: '属性名称不能为空', trigger: 'blur' }]
 })
 
 let refersh: () => void
-const open = async (id: number, getTableList: () => void, groupId?: number, attrType?: number) => {
+const open = async (id: number, getTableList: () => void, groupId?: number) => {
   resetForm()
   refersh = getTableList
+  getAttributeEnums()
   dialogVisible.value = true
   if (id) {
-    dialogTitle.value = '编辑商品属性'
+    dialogTitle.value = '编辑商品属性[参数属性]'
     formLoading.value = true
     try {
       formData.value = await ProductAttributeApi.getAttributeDetail(id)
@@ -55,9 +56,8 @@ const open = async (id: number, getTableList: () => void, groupId?: number, attr
       formLoading.value = false
     }
   } else {
-    dialogTitle.value = '新增商品属性'
+    dialogTitle.value = '新增商品属性[参数属性]'
     formData.value.groupId = groupId
-    formData.value.type = attrType
   }
 }
 defineExpose({ open })
@@ -91,17 +91,7 @@ const submitForm = async () => {
     <el-form ref="formRef" :model="formData" :rules="formRules" label-width="120px" v-loading="formLoading">
       <el-form-item label="所属分组" prop="groupId">
         <el-select v-model="formData.groupId" placeholder="请选择所属分组">
-          <el-option v-for="(item, index) in props.enums.group" :key="index" :label="item.label" :value="item.value" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="属性类型" prop="type">
-        <el-select v-model="formData.type" placeholder="请选择属性类型">
-          <el-option
-            v-for="(item, index) in props.enums.attrType"
-            :key="index"
-            :label="item.label"
-            :value="item.value"
-          />
+          <el-option v-for="(item, index) in enums.group" :key="index" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
       <el-form-item label="属性名称" prop="name">

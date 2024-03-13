@@ -11,6 +11,7 @@ export interface MenuVO {
   componentName: string
   icon: string
   keepAlive: boolean
+  visible: boolean
   status: number
   sort: number
   createTime?: Date

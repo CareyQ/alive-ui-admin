@@ -50,6 +50,14 @@ const nextStep = (value?: any) => {
   }
   console.log(productData.value)
 }
+
+const prevStep = () => {
+  if (active.value > 0 && active.value < showStatus.value.length) {
+    active.value--
+    hideAll()
+    showStatus.value[active.value] = true
+  }
+}
 </script>
 
 <template>
@@ -60,8 +68,8 @@ const nextStep = (value?: any) => {
         <el-step title="商品促销" />
         <el-step title="商品属性" />
       </el-steps>
-      <ProductInfo v-if="showStatus[0]" v-model="productData" @next="nextStep" />
-      <SaleDetail v-if="showStatus[1]" v-model="productData" @next="nextStep" />
+      <ProductInfo v-show="showStatus[0]" v-model="productData" @next="nextStep" />
+      <SaleDetail v-show="showStatus[1]" v-model="productData" @prev="prevStep" @next="nextStep" />
     </div>
   </div>
 </template>

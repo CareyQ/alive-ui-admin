@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Plus, EditPen, Delete, Grid } from '@element-plus/icons-vue'
+import { Plus, EditPen, Delete } from '@element-plus/icons-vue'
 import { dateFormatter } from '@/utils/date'
 import * as ProductAttributeGroupApi from '@/api/product/attribute'
 import * as ProductCategoryApi from '@/api/product/category'
@@ -7,7 +7,6 @@ import ProductAttributeGroupForm from './ProductAttributeGroupForm.vue'
 
 defineOptions({ name: 'ProductAttributeGroup' })
 
-const { push } = useRouter()
 const aliveTable = ref()
 const message = useMessage()
 const formRef = ref()
@@ -35,10 +34,6 @@ const handleDel = async (id: number) => {
 const categoryTree = ref()
 const getCategoryTree = async () => {
   categoryTree.value = await ProductCategoryApi.getTree()
-}
-
-const toAttribute = (id: number) => {
-  push({ name: 'ProductAttribute', params: { groupId: id } })
 }
 
 onMounted(() => {
@@ -80,15 +75,13 @@ onMounted(() => {
       </template>
 
       <el-table-column label="编号" align="center" prop="id" />
-      <el-table-column label="商品分类" align="center" prop="categoryId" />
+      <el-table-column label="商品分类" align="center" prop="categoryName" />
       <el-table-column label="属性分组名称" align="center" prop="name" />
       <el-table-column label="排序" align="center" prop="sort" />
       <el-table-column align="center" label="创建时间" prop="createTime" :formatter="dateFormatter" width="300" />
 
       <el-table-column align="center" label="操作" width="280">
         <template #default="{ row }">
-          <el-button :icon="Grid" link type="primary" size="small" @click="toAttribute(row.id)"> 属性值 </el-button>
-          <el-divider direction="vertical" />
           <el-button :icon="EditPen" link type="primary" size="small" @click="openForm(row.id)"> 编辑 </el-button>
           <el-divider direction="vertical" />
           <el-button :icon="Delete" link type="danger" size="small" @click="handleDel(row.id)"> 删除 </el-button>

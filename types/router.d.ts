@@ -21,6 +21,7 @@ declare global {
     redirect: string
     children?: AppCustomRouteRecordRaw[]
     keepAlive?: boolean
+    visible?: boolean
     parentId?: number
   }
 }

@@ -32,27 +32,6 @@ export const staticRouter: AppRouteRecordRaw[] = [
     }
   },
   {
-    path: '/mall/product',
-    component: Layout,
-    name: 'ProductCenter',
-    meta: {
-      hidden: true
-    },
-    children: [
-      {
-        path: 'attribute/:groupId(\\d+)',
-        component: () => import('@/views/mall/product/attribute-group/attribute/index.vue'),
-        name: 'ProductAttribute',
-        meta: {
-          noCache: true,
-          hidden: true,
-          title: '商品属性值',
-          keepAlive: true
-        }
-      }
-    ]
-  },
-  {
     path: '/:catchAll(.*)',
     component: () => import('@/views/home/index.vue'),
     name: '',

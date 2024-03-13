@@ -1,16 +1,12 @@
 <script lang="ts" setup>
-import { CascaderOption } from 'element-plus'
 import * as ProductAttributeGroupApi from '@/api/product/attribute'
+import * as ProductCategoryApi from '@/api/product/category'
 
 const message = useMessage()
 const formLoading = ref(false)
 const dialogTitle = ref('')
 const dialogVisible = ref(false)
 const formRef = ref()
-
-const props = defineProps({
-  categoryTree: Array as PropType<CascaderOption[]>
-})
 
 const defaultData: ProductAttributeGroupApi.ProductAttributeGroupDTO = {
   id: undefined,
@@ -31,6 +27,7 @@ const open = async (id: number, getTableList: () => void) => {
   resetForm()
   refersh = getTableList
   dialogVisible.value = true
+  getCategoryTree()
   if (id) {
     dialogTitle.value = '编辑商品属性分组'
     formLoading.value = true
@@ -67,6 +64,11 @@ const submitForm = async () => {
   }
   dialogVisible.value = false
 }
+
+const categoryTree = ref()
+const getCategoryTree = async () => {
+  categoryTree.value = await ProductCategoryApi.getTree()
+}
 </script>
 
 <template>
@@ -75,7 +77,7 @@ const submitForm = async () => {
       <el-form-item label="商品分类" prop="categoryId">
         <el-cascader
           v-model="formData.categoryId"
-          :options="props.categoryTree"
+          :options="categoryTree"
           :props="{ label: 'name', value: 'id', emitPath: false }"
           clearable
           placeholder="请选择商品分类"

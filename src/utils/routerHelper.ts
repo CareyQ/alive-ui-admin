@@ -83,7 +83,8 @@ export const generateRoute = (routes: AppCustomRouteRecordRaw[]): AppRouteRecord
     const meta = {
       title: route.name,
       icon: route.icon,
-      keepAlive: route.keepAlive || false
+      keepAlive: route.keepAlive || false,
+      hidden: !route.visible
     }
     // 路由地址转首字母大写驼峰，作为路由名称，适配keepAlive
     let data: AppRouteRecordRaw = {

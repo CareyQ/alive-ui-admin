@@ -28,7 +28,8 @@ const defaultData: MenuApi.MenuVO = {
   component: '',
   componentName: '',
   status: 1,
-  keepAlive: true
+  keepAlive: true,
+  visible: true
 }
 
 const currentType = ref({
@@ -174,6 +175,10 @@ const submitForm = async () => {
 
       <el-form-item label="显示排序" prop="sort">
         <el-input-number v-model="formData.sort" :min="0" controls-position="right" />
+      </el-form-item>
+
+      <el-form-item label="是否可见" prop="visible">
+        <el-switch v-model="formData.visible" :active-value="true" :inactive-value="false" />
       </el-form-item>
 
       <el-row>
