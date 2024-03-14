@@ -2,6 +2,7 @@
 import * as ProductApi from '@/api/product/product'
 import ProductInfo from './ProductInfo.vue'
 import SaleDetail from './SaleDetail.vue'
+import AttrDetail from './AttrDetail.vue'
 
 defineOptions({ name: 'ProductAdd' })
 
@@ -58,6 +59,10 @@ const prevStep = () => {
     showStatus.value[active.value] = true
   }
 }
+
+const submit = (value?: any) => {
+  console.log(value)
+}
 </script>
 
 <template>
@@ -70,6 +75,7 @@ const prevStep = () => {
       </el-steps>
       <ProductInfo v-show="showStatus[0]" v-model="productData" @next="nextStep" />
       <SaleDetail v-show="showStatus[1]" v-model="productData" @prev="prevStep" @next="nextStep" />
+      <AttrDetail v-show="showStatus[2]" v-model="productData" @prev="prevStep" @submit="submit" />
     </div>
   </div>
 </template>
