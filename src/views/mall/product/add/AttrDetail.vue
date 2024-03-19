@@ -1,15 +1,18 @@
 <script lang="ts" setup>
-import { Delete } from '@element-plus/icons-vue'
 import { type ProductDTO } from '@/api/product/product'
-import UploadImg from '@/components/Upload/UploadImg.vue'
 import * as ProductAttributeApi from '@/api/product/attribute'
 import SpecDialog from './components/SpecDialog.vue'
 import SpecTable from './components/SpecTable.vue'
+import SpecImgDialog from './components/SpecImgDialog.vue'
 
 const props = defineProps({
   modelValue: {
     type: Object as PropType<ProductDTO>,
     required: true
+  },
+  submitLoading: {
+    type: Boolean,
+    readonly: true
   }
 })
 
@@ -24,7 +27,12 @@ const formRules = reactive({
 
 const emit = defineEmits(['submit', 'prev'])
 const submit = () => {
-  emit('submit', formData)
+  const data = {
+    spec: specAttributes.value,
+    param: selectProductParam.value,
+    sku: specTableData.value
+  }
+  emit('submit', data)
 }
 
 const handlePrev = () => {
@@ -50,8 +58,13 @@ const specAttributes = ref<SEPC[]>([])
 
 // 规格
 const specFormRef = ref()
+const specImgRef = ref()
 const openSpecForm = () => {
   specFormRef.value.open()
+}
+
+const imgOperation = (row: any) => {
+  specImgRef.value.open(row)
 }
 
 const addSpec = (spec: string) => {
@@ -117,22 +130,25 @@ const buildTableData = () => {
   }
 
   const list = [] as any[]
-  specAttributes.value.forEach((e) => {
-    if (e.values.length === 0) {
-      message.error(`请先添加[${e.name}]规格值`)
+  for (let index = 0; index < specAttributes.value.length; index++) {
+    const element = specAttributes.value[index]
+    if (element.values.length === 0) {
+      message.error(`请先添加[${element.name}]规格值`)
       return
     }
-    list.push(e.values)
-  })
+    list.push(element.values)
+  }
+
   const result = cartesianProductOfArrays(list)
   specTableData.value = result.map((e, index) => {
     const no = String(index).padStart(3, '0')
     return {
+      uid: index,
       spec: e, // 如果只有一个属性的话返回的是一个 property 对象
       price: 0,
       marketPrice: 0,
       skuCode: props.modelValue.snCode ? props.modelValue.snCode + no : no,
-      picUrl: '',
+      picUrl: [],
       stock: 0,
       weight: 0,
       volume: 0
@@ -163,6 +179,10 @@ watch(
   },
   { deep: true, immediate: true }
 )
+
+const handleResult = (data: any) => {
+  specTableData.value[data.uid].picUrl = data.imgs
+}
 </script>
 
 <template>
@@ -174,7 +194,7 @@ watch(
             <el-tab-pane :label="item.groupName" v-for="(item, index) in selectProductParam" :key="index">
               <el-form ref="form" label-width="auto">
                 <el-form-item :label="paramItem.name" v-for="paramItem in item.attributes" :key="paramItem.id">
-                  <el-select v-if="paramItem.inputType === 1" class="paramInput">
+                  <el-select v-if="paramItem.inputType === 1" class="paramInput" v-model="paramItem.value">
                     <el-option
                       v-for="option in paramItem.inputList.split(',')"
                       :key="option"
@@ -182,7 +202,7 @@ watch(
                       :value="option"
                     />
                   </el-select>
-                  <el-input v-else class="paramInput" />
+                  <el-input v-else v-model="paramItem.value" class="paramInput" />
                 </el-form-item>
               </el-form>
             </el-tab-pane>
@@ -230,16 +250,17 @@ watch(
             </div>
           </div>
         </div>
-        <SpecTable :spec-table-data="specTableData" :table-headers="tableHeaders" />
+        <SpecTable :spec-table-data="specTableData" :table-headers="tableHeaders" @img-operation="imgOperation" />
       </el-form-item>
 
       <el-form-item style="text-align: center">
         <el-button @click="handlePrev">上一步，填写商品促销</el-button>
-        <el-button type="primary" @click="submit">提交商品</el-button>
+        <el-button type="primary" :loading="submitLoading" @click="submit">提交商品</el-button>
       </el-form-item>
     </el-form>
 
     <SpecDialog ref="specFormRef" @add-spec="addSpec" />
+    <SpecImgDialog ref="specImgRef" @result="handleResult" />
   </div>
 </template>
 

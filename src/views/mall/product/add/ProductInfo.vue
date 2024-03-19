@@ -110,6 +110,7 @@ onMounted(() => {
               height="120px"
               width="180px"
               @update:image-url="handelPic"
+              :folder="'product'"
             />
           </el-form-item>
         </el-col>

@@ -19,6 +19,7 @@ interface UploadFileProps {
   height?: string // 组件高度 ==> 非必传（默认为 150px）
   width?: string // 组件宽度 ==> 非必传（默认为 150px）
   borderRadius?: string // 组件边框圆角 ==> 非必传（默认为 8px）
+  folder: string
 }
 
 const props = withDefaults(defineProps<UploadFileProps>(), {
@@ -57,7 +58,7 @@ const handleHttpUpload = async (options: UploadRequestOptions) => {
   formData.append('file', options.file)
   try {
     const api = props.api ?? upload
-    const { data } = await api(formData)
+    const { data } = await api(formData, props.folder)
     emit('update:imageUrl', data)
     // 调用 el-form 内部的校验方法（可自动校验）
     formItemContext?.prop && formContext?.validateField([formItemContext.prop as string])
@@ -90,11 +91,13 @@ const beforeUpload: UploadProps['beforeUpload'] = (rawFile) => {
   const imgType = props.fileType.includes(rawFile.type as File.ImageMimeType)
   if (!imgType) {
     message.notifyWarning('上传图片不符合所需的格式！')
+    return false
   }
   if (!imgSize) {
     setTimeout(() => {
       message.notifyWarning(`上传图片大小不能超过 ${props.fileSize}M！`)
     }, 0)
+    return false
   }
   return imgType && imgSize
 }

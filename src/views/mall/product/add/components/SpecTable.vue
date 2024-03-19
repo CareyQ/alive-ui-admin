@@ -13,6 +13,11 @@ const props = defineProps({
     default: () => []
   }
 })
+
+const emit = defineEmits(['imgOperation'])
+const openImg = (row: any) => {
+  emit('imgOperation', row)
+}
 </script>
 
 <template>
@@ -60,8 +65,8 @@ const props = defineProps({
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作">
-        <template #default>
-          <el-button link size="small" type="primary"> 图片管理 </el-button>
+        <template #default="{ row }">
+          <el-button link size="small" type="primary" @click="openImg(row)"> 图片管理 </el-button>
         </template>
       </el-table-column>
     </el-table>

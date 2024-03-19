@@ -9,7 +9,6 @@ const props = defineProps({
   }
 })
 
-const message = useMessage()
 const formRef = ref()
 
 const selectProductParam = ref()

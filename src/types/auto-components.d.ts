@@ -67,6 +67,7 @@ declare module 'vue' {
     Tag: typeof import('./../components/tag/Tag.vue')['default']
     TreeFilter: typeof import('./../components/TreeFilter/TreeFilter.vue')['default']
     UploadImg: typeof import('./../components/Upload/UploadImg.vue')['default']
+    UploadImgs: typeof import('./../components/Upload/UploadImgs.vue')['default']
   }
   export interface ComponentCustomProperties {
     vLoading: typeof import('element-plus/es')['ElLoadingDirective']

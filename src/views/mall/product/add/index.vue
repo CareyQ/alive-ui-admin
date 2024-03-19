@@ -6,6 +6,7 @@ import AttrDetail from './AttrDetail.vue'
 
 defineOptions({ name: 'ProductAdd' })
 
+const message = useMessage()
 const active = ref(0)
 const showStatus = ref([true, false, false])
 
@@ -60,8 +61,15 @@ const prevStep = () => {
   }
 }
 
+const submitLoading = ref(false)
 const submit = (value?: any) => {
-  console.log(value)
+  submitLoading.value = true
+  try {
+    console.log(productData.value)
+    console.log(value)
+  } finally {
+    submitLoading.value = false
+  }
 }
 </script>
 
@@ -75,7 +83,13 @@ const submit = (value?: any) => {
       </el-steps>
       <ProductInfo v-show="showStatus[0]" v-model="productData" @next="nextStep" />
       <SaleDetail v-show="showStatus[1]" v-model="productData" @prev="prevStep" @next="nextStep" />
-      <AttrDetail v-show="showStatus[2]" v-model="productData" @prev="prevStep" @submit="submit" />
+      <AttrDetail
+        v-show="showStatus[2]"
+        v-model="productData"
+        @prev="prevStep"
+        :submitLoading="submitLoading"
+        @submit="submit"
+      />
     </div>
   </div>
 </template>
