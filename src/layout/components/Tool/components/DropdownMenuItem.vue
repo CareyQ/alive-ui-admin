@@ -31,12 +31,13 @@ const props = defineProps({
 
 <style lang="scss" scoped>
 .dropdown-menu-item {
-  padding: 0 10px;
   height: 38px;
+  padding: 0 10px;
+  margin-bottom: 2px;
+  white-space: nowrap;
   border-radius: 8px;
   transition: all 0.3s;
-  white-space: nowrap;
-  margin-bottom: 2px;
+
   &:hover {
     color: var(--white-color);
     background-color: var(--el-color-primary);

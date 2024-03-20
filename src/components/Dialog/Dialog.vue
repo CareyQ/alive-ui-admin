@@ -16,6 +16,10 @@ const props = defineProps({
   maxHeight: {
     type: [String, Number],
     default: '400px'
+  },
+  showClose: {
+    type: Boolean,
+    default: true
   }
 })
 
@@ -49,7 +53,7 @@ const getBindValue = computed(() => {
           {{ title }}
         </slot>
 
-        <Icon class="pointer" icon="ep:close" @click="close" />
+        <Icon class="pointer" icon="ep:close" @click="close" v-if="showClose" />
       </div>
     </template>
 

@@ -13,7 +13,7 @@ const props = defineProps({
 })
 
 const formRef = ref()
-const formData = props.modelValue
+const formData = computed(() => props.modelValue)
 const formRules = reactive({
   name: [
     { required: true, message: '商品名称不能为空', trigger: 'change' },
@@ -31,18 +31,16 @@ const brandList = ref()
 const activeHtmlName = ref('pc')
 
 const handelPic = (val: string) => {
-  formData.pic = val
+  formData.value.pic = val
 }
 
 const emit = defineEmits(['next'])
 const handleNext = async () => {
   const valid = await formRef.value?.validate()
-  console.log(valid)
-
   if (!valid) {
     return
   }
-  emit('next', formData)
+  emit('next', formData.value)
 }
 
 const getInitData = async () => {

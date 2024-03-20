@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Plus, ZoomIn, Delete } from '@element-plus/icons-vue'
 import { upload } from '@/api/infra/upload'
-import type { UploadProps, UploadFile, UploadUserFile, UploadRequestOptions } from 'element-plus'
+import type { UploadProps, UploadFile, UploadFiles, UploadUserFile, UploadRequestOptions } from 'element-plus'
 import { formContextKey, formItemContextKey } from 'element-plus'
 
 defineOptions({ name: 'UploadImgs' })
@@ -79,6 +79,7 @@ const beforeUpload: UploadProps['beforeUpload'] = (rawFile) => {
 const emit = defineEmits<{
   'update:fileList': [value: UploadUserFile[]]
   'update:status': [value: number]
+  'update:ready': [value: boolean]
 }>()
 
 /**
@@ -119,6 +120,11 @@ const uploadSuccess = (response: string | undefined, uploadFile: UploadFile) => 
  * */
 const handleRemove = (file: UploadFile) => {
   _fileList.value = _fileList.value.filter((item) => item.url !== file.url || item.name !== file.name)
+  emit('update:fileList', _fileList.value)
+}
+
+const handleChange = (uploadFile: UploadFile, uploadFiles: UploadFiles) => {
+  _fileList.value = uploadFiles
   emit('update:fileList', _fileList.value)
 }
 
@@ -171,6 +177,7 @@ defineExpose({ uploadImgs })
       :on-exceed="handleExceed"
       :on-success="uploadSuccess"
       :on-error="uploadError"
+      :on-change="handleChange"
       :drag="drag"
       :accept="fileType.join(',')"
       :auto-upload="false"
@@ -182,6 +189,16 @@ defineExpose({ uploadImgs })
       </div>
       <template #file="{ file }">
         <img :src="file.url" class="upload-image" />
+        <label class="el-upload-list__item-status-label">
+          <i class="el-icon el-icon--upload-success el-icon--check">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+              <path
+                fill="currentColor"
+                d="M406.656 706.944 195.84 496.256a32 32 0 1 0-45.248 45.248l256 256 512-512a32 32 0 0 0-45.248-45.248L406.592 706.944z"
+              />
+            </svg>
+          </i>
+        </label>
         <div class="upload-handle" @click.stop>
           <div class="handle-icon" @click="handlePictureCardPreview(file)">
             <el-icon><ZoomIn /></el-icon>

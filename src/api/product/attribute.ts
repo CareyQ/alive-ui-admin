@@ -106,8 +106,12 @@ export const getAttributeEnums = async () => {
 }
 
 // 查询商品属性列表
-export const getAttributeList = async (categoryId: number) => {
-  return await request.get({ url: `/product/attribute/list?categoryId=${categoryId}` })
+export const getAttributeList = async (categoryId: number, productId?: number) => {
+  let url = `/product/attribute/list?categoryId=${categoryId}`
+  if (productId) {
+    url += `&productId=${productId}`
+  }
+  return await request.get({ url })
 }
 
 // 保存商品属性值

@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { type ProductDTO } from '@/api/product/product'
-import * as ProductAttributeApi from '@/api/product/attribute'
 
 const props = defineProps({
   modelValue: {
@@ -11,7 +10,7 @@ const props = defineProps({
 
 const formRef = ref()
 
-const formData = props.modelValue
+const formData = computed(() => props.modelValue)
 const formRules = reactive({
   sort: [{ required: true, message: '排序不能为空', trigger: 'change' }],
   status: [{ required: true, message: '上架状态不能为空', trigger: 'change' }]
@@ -75,7 +74,7 @@ const handlePrev = () => {
 
       <el-form-item style="text-align: center">
         <el-button @click="handlePrev">上一步，填写商品信息</el-button>
-        <el-button type="primary" @click="handleNext">下一步，填写商品促销</el-button>
+        <el-button type="primary" @click="handleNext">下一步，填写商品属性</el-button>
       </el-form-item>
     </el-form>
   </div>

@@ -90,13 +90,13 @@ const handleLogin = async () => {
 
 <style lang="scss" scoped>
 .title {
-  font-size: 1.5rem;
   margin: 0;
+  font-size: 1.5rem;
   line-height: 1.2;
 }
 
 .login-btn {
-  margin-top: -18px;
   width: 100%;
+  margin-top: -18px;
 }
 </style>

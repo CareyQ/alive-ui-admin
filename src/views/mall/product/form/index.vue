@@ -1,12 +1,16 @@
 <script lang="ts" setup>
 import * as ProductApi from '@/api/product/product'
+import { useNavTabStore } from '@/store/modules/navTab'
 import ProductInfo from './ProductInfo.vue'
 import SaleDetail from './SaleDetail.vue'
 import AttrDetail from './AttrDetail.vue'
 
-defineOptions({ name: 'ProductAdd' })
+defineOptions({ name: 'ProductForm' })
 
+const { closeTab } = useNavTabStore()
 const message = useMessage()
+const { push, currentRoute } = useRouter()
+const { params } = useRoute()
 const active = ref(0)
 const showStatus = ref([true, false, false])
 
@@ -83,20 +87,40 @@ const submit = async (value?: any) => {
     productData.value.skus = skus
     // 处理 parma
     const tempParam: any[] = []
-    value.param.flatMap((e) => {
-      for (const item in e.attributes) {
+    value.param.forEach((e) => {
+      e.attributes.forEach((item) => {
         if (item.value) {
           tempParam.push({ attributeId: item.id, value: item.value })
         }
-      }
+      })
     })
     productData.value.param = tempParam
     await ProductApi.createProduct(productData.value)
     message.success('保存成功')
+    push({ name: 'ProductBrand' })
+    closeTab(unref(currentRoute))
   } finally {
     submitLoading.value = false
   }
 }
+
+const getDetail = async (id: number) => {
+  if (id) {
+    productData.value = await ProductApi.getDetail(id)
+  }
+}
+
+onBeforeRouteUpdate((to, from) => {
+  if (to.params.id !== from.params.id) {
+    const id = to.params.id as unknown as number
+    getDetail(id)
+  }
+})
+
+onMounted(async () => {
+  const id = params.id as unknown as number
+  await getDetail(id)
+})
 </script>
 
 <template>

@@ -18,6 +18,28 @@ export const staticRouter: AppRouteRecordRaw[] = [
           keepAlive: false,
           affix: true
         }
+      },
+      {
+        path: 'mall/product',
+        name: 'ProductCenter',
+        meta: {
+          title: '商品中心',
+          keepAlive: false,
+          hidden: true,
+          noNavTab: true
+        },
+        children: [
+          {
+            path: 'edit/:id(\\d+)',
+            component: () => import('@/views/mall/product/Edit.vue'),
+            name: 'ProductEdit',
+            meta: {
+              keepAlive: false,
+              hidden: true,
+              title: '商品编辑'
+            }
+          }
+        ]
       }
     ]
   },

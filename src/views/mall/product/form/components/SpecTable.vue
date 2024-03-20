@@ -26,7 +26,7 @@ const amountInput = (value: string | number) => {
 
 const otherInput = (value: string | number) => {
   const numValue = Number.parseFloat(value as string)
-  return !isNaN(numValue) ? numValue.toFixed(4) : ''
+  return !isNaN(numValue) ? numValue.toFixed(4).replace(/\.?0+$/, '') : ''
 }
 
 const integerInput = (value: string | number) => {

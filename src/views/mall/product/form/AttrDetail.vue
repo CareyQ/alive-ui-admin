@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { isEmpty } from 'lodash-es'
 import { type ProductDTO, ProductSkuDTO, ProductSpecDTO } from '@/api/product/product'
 import * as ProductAttributeApi from '@/api/product/attribute'
 import SpecDialog from './components/SpecDialog.vue'
@@ -20,13 +21,32 @@ const message = useMessage()
 const formRef = ref()
 
 const selectProductParam = ref()
-const formData = props.modelValue
+const formData = computed(() => props.modelValue)
 
 const emit = defineEmits(['submit', 'prev'])
 const submit = () => {
-  if (!specTableData.value || specTableData.value.length <= 0) {
+  if (isEmpty(specTableData.value)) {
     message.notifyError('商品 SKU 信息不能为空')
     return
+  }
+  for (const index in specTableData.value) {
+    const item = specTableData.value[index]
+    if (isEmpty(item.skuCode)) {
+      message.notifyError(`商品 SKU 编号不能为空`)
+      return
+    }
+    if (!item.price || item.price <= 0) {
+      message.notifyError(`商品 SKU[${item.skuCode}] 价格不能为0`)
+      return
+    }
+    if (!item.stock || item.stock <= 0) {
+      message.notifyError(`商品 SKU[${item.skuCode}] 库存不能为0`)
+      return
+    }
+    if (isEmpty(item.albumPics)) {
+      message.notifyError(`商品 SKU[${item}] 图片不能为空`)
+      return
+    }
   }
   const data = {
     spec: specAttributes.value,
@@ -41,21 +61,68 @@ const handlePrev = () => {
 }
 
 watch(
-  () => props.modelValue.categoryId,
-  async (newVal) => {
-    if (newVal) {
-      selectProductParam.value = await ProductAttributeApi.getAttributeList(newVal)
+  () => [props.modelValue.categoryId, props.modelValue.id],
+  async ([categoryId, id]) => {
+    if (categoryId || id) {
+      selectProductParam.value = await ProductAttributeApi.getAttributeList(categoryId!, id)
     }
-  }
+  },
+  { deep: true }
 )
 
-interface Sepc {
+watch(
+  () => props.modelValue.id,
+  (id) => {
+    if (id) {
+      const skus = formData.value.skus
+      for (let i = 0; i < skus.length; i++) {
+        skus[i].uid = i
+      }
+      const spec = skus.flatMap((e) => e.spec) as InputItem[]
+      specAttributes.value = transformSpecAttributes(spec)
+      specTableData.value = skus
+      console.log(specTableData.value)
+    }
+  },
+  { deep: true }
+)
+interface Spec {
   id?: number
   name: string
   values: ProductAttributeApi.ProductAttributeValueDTO[]
 }
 
-const specAttributes = ref<Sepc[]>([])
+interface InputItem {
+  attributeId: number
+  attributeName: string
+  value: string
+  valueId: number
+}
+
+/** 回显转换规格属性 */
+const transformSpecAttributes = (data: InputItem[]) => {
+  return data.reduce((prev: Spec[], current: InputItem) => {
+    const existsSpec = prev.find((e: Spec) => e.id === current.attributeId) || {
+      id: current.attributeId,
+      name: current.attributeName,
+      values: []
+    }
+
+    existsSpec.values.push({
+      id: current.valueId,
+      attributeId: current.attributeId,
+      value: current.value
+    })
+
+    if (!prev.includes(existsSpec as Spec)) {
+      prev.push(existsSpec)
+    }
+
+    return prev
+  }, [])
+}
+
+const specAttributes = ref<Spec[]>([])
 
 // 规格
 const specFormRef = ref()
@@ -70,7 +137,7 @@ const imgOperation = (row: any) => {
 
 /** 添加规格 */
 const addSpec = async (specName: string) => {
-  if (!specName || specName.length <= 0) {
+  if (isEmpty(specName)) {
     return
   }
   const isDuplicate = specAttributes.value.some((e) => {
@@ -101,13 +168,13 @@ const inputVisible = computed(() => (index: number) => {
 
 const inputRef = ref()
 const inputValue = ref('')
-const showInput = async (index) => {
+const showInput = async (index: number) => {
   attributeIndex.value = index
   inputRef.value[index].focus()
 }
 
 const handleInputConfirm = async (index: number, specId: number) => {
-  if (!inputValue.value || inputValue.value.length <= 0) {
+  if (isEmpty(inputValue.value)) {
     return
   }
   const specValue = {
@@ -146,7 +213,6 @@ const buildTableData = () => {
     message.error('请先添加规格')
     return
   }
-  console.log('specAttributes.value', specAttributes.value)
 
   const list = [] as any[]
   for (let index = 0; index < specAttributes.value.length; index++) {
@@ -165,9 +231,12 @@ const buildTableData = () => {
     })
     list.push(item)
   }
-  console.log('list', list)
+
   const result = cartesianProductOfArrays(list)
   specTableData.value = result.map((e: ProductSpecDTO[], index: number) => {
+    if (specTableData.value[index]) {
+      return specTableData.value[index]
+    }
     const no = String(index).padStart(3, '0')
     return {
       uid: index,
@@ -220,7 +289,7 @@ const handleResult = (data: any) => {
     <el-form ref="formRef" :model="formData" label-width="100px">
       <el-form-item label="商品参数" prop="params">
         <el-card shadow="never" class="params-card">
-          <el-tabs>
+          <el-tabs v-if="!isEmpty(selectProductParam)">
             <el-tab-pane :label="item.groupName" v-for="(item, index) in selectProductParam" :key="index">
               <el-form ref="form" label-width="auto">
                 <el-form-item :label="paramItem.name" v-for="paramItem in item.attributes" :key="paramItem.id">
