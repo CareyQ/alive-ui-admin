@@ -1,16 +1,27 @@
 import request from '@/utils/axios'
 
+export interface ProductParamDTO {
+  id?: number
+  attributeId: number
+  value: string
+}
+
+export interface ProductSpecDTO {
+  attributeId: number
+  attributeName: string
+  valueId: number
+  value: string
+}
+
 export interface ProductDTO {
   id?: number
   categoryId?: number
   brandId?: number
-  attributeGroupId?: number
   snCode?: string
   name?: string
   pic?: string
   status?: number
   sort?: number
-  salesVolume?: number
   price?: number
   marketPrice?: number
   stock?: number
@@ -20,9 +31,28 @@ export interface ProductDTO {
   giftPoint?: number
   giftGrowth?: number
   usePointLimit?: number
+  newStatus?: boolean
+  recommendStatus?: boolean
+  serviceIds?: Array<number>
   subTitle?: string
   keyword?: string
   intro?: string
+  param?: Array<ProductParamDTO>
+  skus: Array<ProductSkuDTO>
+}
+
+export interface ProductSkuDTO {
+  uid?: number
+  id?: number
+  productId?: number
+  spec?: Array<ProductSpecDTO>
+  skuCode?: string
+  price?: number
+  marketPrice?: number
+  stock?: number
+  albumPics?: Array<string>
+  weight?: number
+  volume?: number
 }
 
 export interface ProductPageDTO {
@@ -45,9 +75,9 @@ export const getDetail = async (id: number) => {
   return await request.get({ url: `/product/detail?id=` + id })
 }
 
-// 保存商品信息
-export const save = async (data: ProductDTO) => {
-  return await request.post({ url: `/product/save`, data })
+// 新增商品信息
+export const createProduct = async (data: ProductDTO) => {
+  return await request.post({ url: `/product/create`, data })
 }
 
 // 删除商品信息

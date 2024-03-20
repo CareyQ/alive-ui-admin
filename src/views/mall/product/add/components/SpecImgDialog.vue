@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import UploadImgs from '@/components/Upload/UploadImgs.vue'
-import type { UploadUserFile } from 'element-plus'
 
 const specImgDialogVisible = ref(false)
 const title = ref('')

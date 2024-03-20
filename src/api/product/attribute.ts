@@ -16,7 +16,7 @@ export interface ProductAttributeGroupPageDTO {
   size: number
 }
 
-export interface ProductAttributeDTO {
+export interface ProductAttributeParamDTO {
   id?: number
   groupId?: number
   type?: number
@@ -31,12 +31,23 @@ export interface ProductAttributeDTO {
   addition?: boolean
 }
 
+export interface ProductAttributeSpecDTO {
+  id?: number
+  name: string
+}
+
 export interface ProductAttributePageDTO {
   groupId?: number
   type?: number
   name?: string
   current: number
   size: number
+}
+
+export interface ProductAttributeValueDTO {
+  id?: number
+  attributeId: number
+  value: string
 }
 
 // 查询商品属性分组分页
@@ -74,9 +85,14 @@ export const getAttributeDetail = async (id: number) => {
   return await request.get({ url: `/product/attribute/detail?id=` + id })
 }
 
-// 保存商品属性
-export const saveAttribute = async (data: ProductAttributeDTO) => {
-  return await request.post({ url: `/product/attribute/save`, data })
+// 保存商品属性参数
+export const saveAttributeParam = async (data: ProductAttributeParamDTO) => {
+  return await request.post({ url: `/product/attribute/param/save`, data })
+}
+
+// 保存商品属性规格
+export const saveAttributeSpec = async (data: ProductAttributeSpecDTO) => {
+  return await request.post({ url: `/product/attribute/spec/save`, data })
 }
 
 // 删除商品属性
@@ -92,4 +108,14 @@ export const getAttributeEnums = async () => {
 // 查询商品属性列表
 export const getAttributeList = async (categoryId: number) => {
   return await request.get({ url: `/product/attribute/list?categoryId=${categoryId}` })
+}
+
+// 保存商品属性值
+export const saveAttributeValue = async (data: ProductAttributeValueDTO) => {
+  return await request.post({ url: `/product/attribute/value/save`, data })
+}
+
+// 删除商品属性值
+export const delAttributeValue = async (id: number) => {
+  return await request.delete({ url: `/product/attribute/value/del?id=` + id })
 }

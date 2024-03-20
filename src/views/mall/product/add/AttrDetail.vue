@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { type ProductDTO } from '@/api/product/product'
+import { type ProductDTO, ProductSkuDTO, ProductSpecDTO } from '@/api/product/product'
 import * as ProductAttributeApi from '@/api/product/attribute'
 import SpecDialog from './components/SpecDialog.vue'
 import SpecTable from './components/SpecTable.vue'
@@ -21,12 +21,13 @@ const formRef = ref()
 
 const selectProductParam = ref()
 const formData = props.modelValue
-const formRules = reactive({
-  attributeGroupId: [{ required: true, message: '属性类型不能为空', trigger: 'change' }]
-})
 
 const emit = defineEmits(['submit', 'prev'])
 const submit = () => {
+  if (!specTableData.value || specTableData.value.length <= 0) {
+    message.notifyError('商品 SKU 信息不能为空')
+    return
+  }
   const data = {
     spec: specAttributes.value,
     param: selectProductParam.value,
@@ -48,13 +49,13 @@ watch(
   }
 )
 
-interface SEPC {
+interface Sepc {
   id?: number
   name: string
-  values: SEPC[]
+  values: ProductAttributeApi.ProductAttributeValueDTO[]
 }
 
-const specAttributes = ref<SEPC[]>([])
+const specAttributes = ref<Sepc[]>([])
 
 // 规格
 const specFormRef = ref()
@@ -67,19 +68,28 @@ const imgOperation = (row: any) => {
   specImgRef.value.open(row)
 }
 
-const addSpec = (spec: string) => {
+/** 添加规格 */
+const addSpec = async (specName: string) => {
+  if (!specName || specName.length <= 0) {
+    return
+  }
   const isDuplicate = specAttributes.value.some((e) => {
-    return e.name === spec
+    return e.name === specName
   })
 
   if (isDuplicate) {
     message.error('规格名称已存在')
     return
   }
-  specAttributes.value.push({
-    name: spec,
+
+  const spec = {
+    id: undefined,
+    name: specName,
     values: []
-  })
+  }
+  spec.id = await ProductAttributeApi.saveAttributeSpec(spec)
+
+  specAttributes.value.push(spec)
   specFormRef.value.specDialogVisible = false
 }
 
@@ -96,24 +106,32 @@ const showInput = async (index) => {
   inputRef.value[index].focus()
 }
 
-const handleInputConfirm = (index: number) => {
-  specAttributes.value[index].values.push({
-    name: inputValue.value,
-    values: []
-  })
+const handleInputConfirm = async (index: number, specId: number) => {
+  if (!inputValue.value || inputValue.value.length <= 0) {
+    return
+  }
+  const specValue = {
+    id: undefined,
+    attributeId: specId,
+    value: inputValue.value
+  }
+  specValue.id = await ProductAttributeApi.saveAttributeValue(specValue)
+  specAttributes.value[index].values.push(specValue)
 
   attributeIndex.value = null
   inputValue.value = ''
 }
 
 /** 删除属性值*/
-const handleCloseValue = (index: number, valueIndex: number) => {
+const handleCloseValue = async (index: number, valueIndex: number, valueId: number) => {
   specAttributes.value[index].values?.splice(valueIndex, 1)
+  await ProductAttributeApi.delAttributeValue(valueId)
 }
 
 /** 删除属性*/
-const handleCloseSpec = (index: number) => {
+const handleCloseSpec = async (index: number, specId: number) => {
   specAttributes.value?.splice(index, 1)
+  await ProductAttributeApi.delAttribute(specId)
 }
 
 export interface TableHeader {
@@ -122,12 +140,13 @@ export interface TableHeader {
 }
 
 const tableHeaders = ref<TableHeader[]>([])
-const specTableData = ref([])
+const specTableData = ref<ProductSkuDTO[]>([])
 const buildTableData = () => {
   if (specAttributes.value.length === 0) {
     message.error('请先添加规格')
     return
   }
+  console.log('specAttributes.value', specAttributes.value)
 
   const list = [] as any[]
   for (let index = 0; index < specAttributes.value.length; index++) {
@@ -136,24 +155,33 @@ const buildTableData = () => {
       message.error(`请先添加[${element.name}]规格值`)
       return
     }
-    list.push(element.values)
+    const item = element.values.map((e) => {
+      return {
+        attributeId: element.id,
+        attributeName: element.name,
+        valueId: e.id,
+        value: e.value
+      }
+    })
+    list.push(item)
   }
-
+  console.log('list', list)
   const result = cartesianProductOfArrays(list)
-  specTableData.value = result.map((e, index) => {
+  specTableData.value = result.map((e: ProductSpecDTO[], index: number) => {
     const no = String(index).padStart(3, '0')
     return {
       uid: index,
-      spec: e, // 如果只有一个属性的话返回的是一个 property 对象
+      spec: e,
+      skuCode: props.modelValue.snCode ? props.modelValue.snCode + no : no,
       price: 0,
       marketPrice: 0,
-      skuCode: props.modelValue.snCode ? props.modelValue.snCode + no : no,
-      picUrl: [],
       stock: 0,
+      albumPics: [],
       weight: 0,
       volume: 0
     }
   })
+  console.log('tableData', specTableData.value)
 }
 
 const cartesianProductOfArrays = (arrays: any[][]) => {
@@ -181,13 +209,15 @@ watch(
 )
 
 const handleResult = (data: any) => {
-  specTableData.value[data.uid].picUrl = data.imgs
+  if (specTableData.value[data.uid]) {
+    specTableData.value[data.uid].albumPics = data.imgs
+  }
 }
 </script>
 
 <template>
   <div style="margin-top: 50px">
-    <el-form ref="formRef" :model="formData" label-width="100px" :rules="formRules">
+    <el-form ref="formRef" :model="formData" label-width="100px">
       <el-form-item label="商品参数" prop="params">
         <el-card shadow="never" class="params-card">
           <el-tabs>
@@ -219,7 +249,7 @@ const handleResult = (data: any) => {
           <div class="spec-item" v-for="(item, index) in specAttributes" :key="index">
             <div>
               <el-text>属性名：</el-text>
-              <el-tag type="warning" closable @close="handleCloseSpec(index)">
+              <el-tag type="warning" closable @close="handleCloseSpec(index, item.id!)">
                 {{ item.name }}
               </el-tag>
             </div>
@@ -230,9 +260,9 @@ const handleResult = (data: any) => {
                 :key="value.id"
                 closable
                 style="margin: 0 4px"
-                @close="handleCloseValue(index, valueIndex)"
+                @close="handleCloseValue(index, valueIndex, value.id!)"
               >
-                {{ value.name }}
+                {{ value.value }}
               </el-tag>
               <el-input
                 class="value-input"
@@ -241,8 +271,8 @@ const handleResult = (data: any) => {
                 v-show="inputVisible(index)"
                 :id="`input${index}`"
                 size="small"
-                @blur="handleInputConfirm(index)"
-                @keyup.enter="handleInputConfirm(index)"
+                @blur="handleInputConfirm(index, item.id!)"
+                @keyup.enter="handleInputConfirm(index, item.id!)"
               />
               <el-button v-show="!inputVisible(index)" size="small" @click="showInput(index)" style="margin-left: 4px">
                 + 添加

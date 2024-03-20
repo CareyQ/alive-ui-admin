@@ -38,3 +38,10 @@ export function generateUUID() {
   }
   return uuid
 }
+
+export const inputNumber = (value: string) => {
+  return value
+    .replace(/[^0-9.]/g, '')
+    .replace(/\.{2,}/g, '.')
+    .replace(/^(\-)*(\d+)\.(\d\d).*$/, '$1$2.$3')
+}

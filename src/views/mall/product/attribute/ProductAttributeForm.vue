@@ -21,7 +21,7 @@ const getAttributeEnums = async () => {
   enums.value = await ProductAttributeApi.getAttributeEnums()
 }
 
-const defaultData: ProductAttributeApi.ProductAttributeDTO = {
+const defaultData: ProductAttributeApi.ProductAttributeParamDTO = {
   id: undefined,
   groupId: undefined,
   name: undefined,
@@ -35,7 +35,7 @@ const defaultData: ProductAttributeApi.ProductAttributeDTO = {
   addition: false
 }
 
-const formData = ref<ProductAttributeApi.ProductAttributeDTO>(defaultData)
+const formData = ref<ProductAttributeApi.ProductAttributeParamDTO>(defaultData)
 const formRules = reactive({
   groupId: [{ required: true, message: '所属分组不能为空', trigger: 'change' }],
   name: [{ required: true, message: '属性名称不能为空', trigger: 'blur' }]
@@ -75,7 +75,7 @@ const submitForm = async () => {
   formLoading.value = true
   try {
     const data = formData.value
-    await ProductAttributeApi.saveAttribute(data)
+    await ProductAttributeApi.saveAttributeParam(data)
     message.success('保存成功')
     dialogVisible.value = false
     refersh()

@@ -19,12 +19,12 @@ const formRules = reactive({
     { required: true, message: '商品名称不能为空', trigger: 'change' },
     { min: 2, max: 140, message: '长度在 2 到 140 个字符', trigger: 'blur' }
   ],
-  categoryId: [{ required: true, message: '商品分类不能为空', trigger: 'change' }]
-  // subTitle: [{ required: true, message: '副标题不能为空', trigger: 'blur' }],
-  // brandId: [{ required: true, message: '商品品牌不能为空', trigger: 'change' }],
-  // snCode: [{ required: true, message: '商品编码不能为空', trigger: 'blur' }],
-  // pic: [{ required: true, message: '封面图不能为空', trigger: 'blur' }],
-  // unit: [{ required: true, message: '计量单位不能为空', trigger: 'blur' }]
+  categoryId: [{ required: true, message: '商品分类不能为空', trigger: 'change' }],
+  subTitle: [{ required: true, message: '副标题不能为空', trigger: 'blur' }],
+  brandId: [{ required: true, message: '商品品牌不能为空', trigger: 'change' }],
+  snCode: [{ required: true, message: '商品编码不能为空', trigger: 'blur' }],
+  pic: [{ required: true, message: '封面图不能为空', trigger: 'blur' }],
+  unit: [{ required: true, message: '计量单位不能为空', trigger: 'blur' }]
 })
 const categoryTree = ref()
 const brandList = ref()

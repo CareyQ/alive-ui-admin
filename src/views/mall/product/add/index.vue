@@ -14,13 +14,11 @@ const defaultData: ProductApi.ProductDTO = {
   id: undefined,
   categoryId: undefined,
   brandId: undefined,
-  attributeGroupId: undefined,
   snCode: undefined,
   name: undefined,
   pic: undefined,
-  status: undefined,
-  sort: undefined,
-  salesVolume: undefined,
+  status: 0,
+  sort: 0,
   price: undefined,
   marketPrice: undefined,
   stock: undefined,
@@ -30,9 +28,14 @@ const defaultData: ProductApi.ProductDTO = {
   giftPoint: undefined,
   giftGrowth: undefined,
   usePointLimit: undefined,
+  newStatus: false,
+  recommendStatus: false,
+  serviceIds: undefined,
   subTitle: undefined,
   keyword: undefined,
-  intro: undefined
+  intro: undefined,
+  param: undefined,
+  skus: []
 }
 
 const productData = ref<ProductApi.ProductDTO>(defaultData)
@@ -62,11 +65,34 @@ const prevStep = () => {
 }
 
 const submitLoading = ref(false)
-const submit = (value?: any) => {
+const submit = async (value?: any) => {
   submitLoading.value = true
   try {
-    console.log(productData.value)
-    console.log(value)
+    // 处理 sku 图片
+    const skus = value.sku
+    skus.forEach((item: any) => {
+      if (!item.albumPics && item.albumPics.length <= 0) {
+        return
+      }
+      const tempPics: any[] = []
+      item.albumPics.forEach((pic) => {
+        typeof pic === 'object' ? tempPics.push(pic.url) : tempPics.push(pic)
+      })
+      item.albumPics = tempPics
+    })
+    productData.value.skus = skus
+    // 处理 parma
+    const tempParam: any[] = []
+    value.param.flatMap((e) => {
+      for (const item in e.attributes) {
+        if (item.value) {
+          tempParam.push({ attributeId: item.id, value: item.value })
+        }
+      }
+    })
+    productData.value.param = tempParam
+    await ProductApi.createProduct(productData.value)
+    message.success('保存成功')
   } finally {
     submitLoading.value = false
   }

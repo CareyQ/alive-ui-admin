@@ -18,6 +18,21 @@ const emit = defineEmits(['imgOperation'])
 const openImg = (row: any) => {
   emit('imgOperation', row)
 }
+
+const amountInput = (value: string | number) => {
+  const numValue = Number.parseFloat(value as string)
+  return !isNaN(numValue) ? numValue.toFixed(2) : ''
+}
+
+const otherInput = (value: string | number) => {
+  const numValue = Number.parseFloat(value as string)
+  return !isNaN(numValue) ? numValue.toFixed(4) : ''
+}
+
+const integerInput = (value: string | number) => {
+  const numValue = Number.parseInt(value as string, 10)
+  return !isNaN(numValue) ? numValue.toString() : ''
+}
 </script>
 
 <template>
@@ -31,37 +46,37 @@ const openImg = (row: any) => {
         min-width="120"
       >
         <template #default="{ row }">
-          {{ row.spec[index]?.name }}
+          {{ row.spec[index]?.value }}
         </template>
       </el-table-column>
       <el-table-column align="center" label="商品编号" min-width="140">
         <template #default="{ row }">
-          <el-input v-model="row.skuCode" />
+          <el-input v-model="row.skuCode" :formatter="integerInput" />
         </template>
       </el-table-column>
       <el-table-column align="center" label="价格">
         <template #default="{ row }">
-          <el-input v-model="row.price" />
+          <el-input v-model="row.price" :formatter="amountInput" />
         </template>
       </el-table-column>
       <el-table-column align="center" label="市场价">
         <template #default="{ row }">
-          <el-input v-model="row.marketPrice" />
+          <el-input v-model="row.marketPrice" :formatter="amountInput" />
         </template>
       </el-table-column>
       <el-table-column align="center" label="库存">
         <template #default="{ row }">
-          <el-input v-model="row.stock" />
+          <el-input v-model="row.stock" :formatter="integerInput" />
         </template>
       </el-table-column>
-      <el-table-column align="center" label="重量">
+      <el-table-column align="center" label="重量/KG">
         <template #default="{ row }">
-          <el-input v-model="row.weight" />
+          <el-input v-model="row.weight" :formatter="otherInput" />
         </template>
       </el-table-column>
-      <el-table-column align="center" label="体积">
+      <el-table-column align="center" label="体积/m³">
         <template #default="{ row }">
-          <el-input v-model="row.volume" />
+          <el-input v-model="row.volume" :formatter="otherInput" />
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作">
