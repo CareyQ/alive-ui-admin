@@ -28,6 +28,21 @@ const getInitData = async () => {
   brandList.value = await ProductBrandApi.getBrandList()
 }
 
+const statusChange = async (row: any) => {
+  try {
+    // 修改状态的二次确认
+    const text = row.status === 1 ? '上架' : '下架'
+    await message.confirm(`确定要${text}该商品吗？`)
+    // 发起修改状态
+    await ProductApi.updateStatus(row.id!, row.status!)
+    // 刷新列表
+    await aliveTable.value.getTableList()
+  } catch {
+    // 取消后，进行恢复按钮
+    row.status = row.status === 1 ? 0 : 1
+  }
+}
+
 onMounted(() => {
   getInitData()
 })
@@ -85,6 +100,19 @@ onMounted(() => {
       <el-table-column label="库存" align="center" prop="stock" />
       <el-table-column label="排序" align="center" prop="sort" />
       <el-table-column label="销量" align="center" prop="salesVolume" />
+      <el-table-column align="center" label="状态" prop="status">
+        <template #default="{ row }">
+          <el-switch
+            v-model="row.status"
+            :active-value="1"
+            :inactive-value="0"
+            active-text="上架"
+            inactive-text="下架"
+            inline-prompt
+            @change="statusChange(row)"
+          />
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="操作" width="150">
         <template #default="{ row }">
           <el-button link type="primary" size="small" @click="openForm(row.id)"> 详情 </el-button>

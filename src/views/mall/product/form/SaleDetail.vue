@@ -18,7 +18,7 @@ const formRules = reactive({
 
 const emit = defineEmits(['next', 'prev'])
 const handleNext = () => {
-  emit('next', formData)
+  emit('next', formData.value)
 }
 
 const handlePrev = () => {

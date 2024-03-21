@@ -55,6 +55,9 @@ const nextStep = (value?: any) => {
     active.value++
     hideAll()
     showStatus.value[active.value] = true
+    console.log('nextValue', value)
+    console.log('nextData', productData.value)
+
     Object.assign(productData.value, value)
   }
   console.log(productData.value)
@@ -95,7 +98,13 @@ const submit = async (value?: any) => {
       })
     })
     productData.value.param = tempParam
-    await ProductApi.createProduct(productData.value)
+    console.log(productData.value)
+
+    if (productData.value.id) {
+      await ProductApi.updateProduct(productData.value)
+    } else {
+      await ProductApi.createProduct(productData.value)
+    }
     message.success('保存成功')
     push({ name: 'ProductBrand' })
     closeTab(unref(currentRoute))

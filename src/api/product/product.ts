@@ -80,7 +80,17 @@ export const createProduct = async (data: ProductDTO) => {
   return await request.post({ url: `/product/create`, data })
 }
 
+// 更新商品信息
+export const updateProduct = async (data: ProductDTO) => {
+  return await request.post({ url: `/product/update`, data })
+}
+
 // 删除商品信息
 export const del = async (id: number) => {
   return await request.delete({ url: `/product/del?id=` + id })
+}
+
+// 更新商品状态
+export const updateStatus = async (id: number, status: number) => {
+  return await request.put({ url: `/product/update-status?id=${id}&status=${status}` })
 }
