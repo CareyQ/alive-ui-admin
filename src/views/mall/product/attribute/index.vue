@@ -1,29 +1,15 @@
 <script setup lang="ts">
-import { Plus, EditPen, Delete, Grid } from '@element-plus/icons-vue'
+import { EditPen, Delete, Grid } from '@element-plus/icons-vue'
 import * as ProductAttributeApi from '@/api/product/attribute'
 import ProductAttributeForm from './ProductAttributeForm.vue'
 
 defineOptions({ name: 'ProductAttribute' })
 
-const { push } = useRouter()
 const aliveTable = ref()
 const message = useMessage()
 const formRef = ref()
 const openForm = (id?: number) => {
   formRef.value.open(id, aliveTable.value.getTableList, aliveTable.value.searchParam.groupId)
-}
-
-export interface AttrEnums {
-  group: Entry[]
-  attrType: Entry[]
-}
-
-const enums = ref<AttrEnums>({
-  group: [],
-  attrType: []
-})
-const getAttributeEnums = async () => {
-  enums.value = await ProductAttributeApi.getAttributeEnums()
 }
 
 const handleDel = async (id: number) => {
@@ -34,34 +20,15 @@ const handleDel = async (id: number) => {
     await aliveTable.value.getTableList()
   } catch {}
 }
-
-onMounted(async () => {
-  await getAttributeEnums()
-})
 </script>
 
 <template>
   <div class="table-box">
     <AliveTable ref="aliveTable" :request-api="ProductAttributeApi.getAttributePage">
-      <template #search>
-        <el-form-item label="所属分组" prop="groupId">
-          <el-select v-model="aliveTable.searchParam.groupId" placeholder="请选择所属分组" clearable>
-            <el-option v-for="(item, index) in enums?.group" :key="index" :label="item.label" :value="item.value" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="属性类型" prop="type">
-          <el-select v-model="aliveTable.searchParam.type" placeholder="请选择属性类型" clearable>
-            <el-option v-for="(item, index) in enums?.attrType" :key="index" :label="item.label" :value="item.value" />
-          </el-select>
-        </el-form-item>
+      <template #searchOne>
         <el-form-item label="属性名称" prop="name">
           <el-input v-model="aliveTable.searchParam.name" placeholder="请输入属性名称" clearable />
         </el-form-item>
-      </template>
-
-      <template #operation>
-        <el-button type="primary" :icon="Plus" @click="openForm(undefined)">添加参数属性</el-button>
-        <el-button type="warning" :icon="Grid" @click="push({ name: 'ProductAttributeGroup' })">属性分组</el-button>
       </template>
 
       <el-table-column label="编号" align="center" prop="id" />
