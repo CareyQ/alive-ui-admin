@@ -62,7 +62,7 @@ const handlePrev = () => {
         </div>
       </el-form-item>
       <el-form-item label="服务保障">
-        <el-checkbox-group v-model="formData.serviceIds">
+        <el-checkbox-group v-model="formData.service">
           <el-checkbox label="无忧退货" :value="1" />
           <el-checkbox label="极速退款" :value="2" />
           <el-checkbox label="免费包邮" :value="3" />

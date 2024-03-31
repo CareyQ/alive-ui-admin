@@ -1,8 +1,9 @@
 <script lang="ts" setup>
+import type { UploadFiles } from 'element-plus'
 import { type ProductDTO } from '@/api/product/product'
 import { getBrandList } from '@/api/product/brand'
 import * as ProductCategoryApi from '@/api/product/category'
-import UploadImg from '@/components/Upload/UploadImg.vue'
+import UploadImgs from '@/components/Upload/UploadImgs.vue'
 import Editor from '@/components/Editor/Editor.vue'
 
 const props = defineProps({
@@ -22,16 +23,16 @@ const formRules = reactive({
   categoryId: [{ required: true, message: '商品分类不能为空', trigger: 'change' }],
   subTitle: [{ required: true, message: '副标题不能为空', trigger: 'blur' }],
   brandId: [{ required: true, message: '商品品牌不能为空', trigger: 'change' }],
-  snCode: [{ required: true, message: '商品编码不能为空', trigger: 'blur' }],
-  pic: [{ required: true, message: '封面图不能为空', trigger: 'blur' }],
+  slidePic: [{ required: true, message: '轮播图不能为空', trigger: 'blur' }],
   unit: [{ required: true, message: '计量单位不能为空', trigger: 'blur' }]
 })
 const categoryTree = ref()
 const brandList = ref()
 const activeHtmlName = ref('pc')
-
-const handelPic = (val: string) => {
-  formData.value.pic = val
+const imgs = ref<any[]>([])
+const updateFileList = (fileList: UploadFiles) => {
+  imgs.value = fileList
+  setslidePic()
 }
 
 const emit = defineEmits(['next'])
@@ -40,7 +41,12 @@ const handleNext = async () => {
   if (!valid) {
     return
   }
+
   emit('next', formData.value)
+}
+
+const setslidePic = () => {
+  formData.value.slidePic = imgs.value.map((pic) => (typeof pic === 'object' ? pic.url : pic)!)
 }
 
 const getInitData = async () => {
@@ -51,6 +57,24 @@ const getInitData = async () => {
 onMounted(() => {
   getInitData()
 })
+
+/** 数据回显 */
+watch(
+  () => props.modelValue.id,
+  (id) => {
+    if (id) {
+      const slidePic = formData.value.slidePic
+      if (slidePic && slidePic.length !== 0) {
+        typeof slidePic[0] === 'string'
+          ? (imgs.value = slidePic.map((e: string) => ({ url: e })))
+          : (imgs.value = slidePic)
+      }
+    } else {
+      imgs.value = []
+    }
+  },
+  { deep: true }
+)
 </script>
 
 <template>
@@ -94,52 +118,17 @@ onMounted(() => {
             <el-input v-model="formData.keyword" placeholder="请输入关键字" />
           </el-form-item>
         </el-col>
+
         <el-col :span="8">
-          <el-form-item label="商品编码" prop="snCode">
-            <el-input v-model="formData.snCode" placeholder="请输入商品编码" />
+          <el-form-item label="计量单位" prop="unit">
+            <el-input v-model="formData.unit" placeholder="请输入商品计量单位" />
           </el-form-item>
         </el-col>
 
-        <el-col :span="6">
-          <el-form-item label="封面图" prop="pic">
-            <UploadImg
-              v-model:image-url="formData.pic"
-              :file-size="3"
-              height="120px"
-              width="180px"
-              @update:image-url="handelPic"
-              :folder="'product'"
-            />
+        <el-col :span="24">
+          <el-form-item label="商品轮播图" prop="slidePic">
+            <UploadImgs v-model:file-list="imgs" @update:file-list="updateFileList" :folder="'product'" />
           </el-form-item>
-        </el-col>
-
-        <el-col :span="18">
-          <el-row :gutter="20">
-            <el-col :span="8">
-              <el-form-item label="计量单位" prop="unit">
-                <el-input v-model="formData.unit" placeholder="请输入商品计量单位" />
-              </el-form-item>
-            </el-col>
-
-            <el-col :span="8">
-              <el-form-item label="价格" prop="price">
-                <el-input v-model="formData.price" placeholder="默认取属性最低价" />
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="市场价" prop="marketPrice">
-                <el-input v-model="formData.marketPrice" placeholder="默认取属性最低市场价" />
-              </el-form-item>
-            </el-col>
-          </el-row>
-
-          <el-row>
-            <el-col>
-              <el-form-item label="商品简介" prop="intro">
-                <el-input type="textarea" :rows="3" v-model="formData.intro" placeholder="请输入商品简介" />
-              </el-form-item>
-            </el-col>
-          </el-row>
         </el-col>
 
         <el-col>

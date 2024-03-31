@@ -34,27 +34,12 @@ const handleDel = async (id: number) => {
   message.success('删除成功')
   await aliveTable.value.getTableList()
 }
-
-const configList = ref<Entry[]>([])
-const getConfigList = async () => {
-  const data = await FileApi.getOssConfigList()
-  configList.value = data
-}
-
-onMounted(() => {
-  getConfigList()
-})
 </script>
 
 <template>
   <div class="table-box">
     <AliveTable ref="aliveTable" :request-api="getTableList">
       <template #search>
-        <el-form-item label="存储配置" prop="configId">
-          <el-select v-model="aliveTable.searchParam.configId" placeholder="请选择存储配置" clearable>
-            <el-option v-for="(item, index) in configList" :key="index" :label="item.label" :value="item.value" />
-          </el-select>
-        </el-form-item>
         <el-form-item label="文件名" prop="name">
           <el-input v-model="aliveTable.searchParam.name" placeholder="请输入文件名" clearable />
         </el-form-item>
@@ -84,8 +69,7 @@ onMounted(() => {
         </template>
       </el-table-column>
       <el-table-column label="文件大小" align="center" prop="size" :formatter="fileSizeFormatter" width="150" />
-      <el-table-column label="所属配置" align="center" prop="configName" width="150" />
-      <el-table-column label="文件 URL" align="center" prop="url" width="350" />
+      <el-table-column label="文件路径" align="center" prop="path" width="350" />
       <el-table-column align="center" label="上传时间" prop="createTime" :formatter="dateFormatter" width="200" />
       <el-table-column align="center" label="操作" width="200">
         <template #default="{ row }">

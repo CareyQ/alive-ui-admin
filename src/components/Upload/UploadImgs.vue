@@ -19,6 +19,7 @@ interface UploadFileProps {
   width?: string // 组件宽度 ==> 非必传（默认为 150px）
   borderRadius?: string // 组件边框圆角 ==> 非必传（默认为 8px）
   folder: string
+  autoUpload?: boolean
 }
 
 const props = withDefaults(defineProps<UploadFileProps>(), {
@@ -30,7 +31,8 @@ const props = withDefaults(defineProps<UploadFileProps>(), {
   fileType: () => ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
   height: '150px',
   width: '150px',
-  borderRadius: '8px'
+  borderRadius: '8px',
+  autoUpload: true
 })
 
 // 获取 el-form 组件上下文
@@ -180,7 +182,7 @@ defineExpose({ uploadImgs })
       :on-change="handleChange"
       :drag="drag"
       :accept="fileType.join(',')"
-      :auto-upload="false"
+      :auto-upload="autoUpload"
     >
       <div class="upload-empty">
         <slot name="empty">

@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import type { ProductSkuDTO } from '@/api/product/product'
 import * as ProductApi from '@/api/product/product'
 import { useNavTabStore } from '@/store/modules/navTab'
 import ProductInfo from './ProductInfo.vue'
@@ -18,13 +19,11 @@ const defaultData: ProductApi.ProductDTO = {
   id: undefined,
   categoryId: undefined,
   brandId: undefined,
-  snCode: undefined,
   name: undefined,
-  pic: undefined,
+  slidePic: undefined,
   status: 0,
   sort: 0,
   price: undefined,
-  marketPrice: undefined,
   stock: undefined,
   unit: undefined,
   detailHtml: '',
@@ -34,11 +33,9 @@ const defaultData: ProductApi.ProductDTO = {
   usePointLimit: undefined,
   newStatus: false,
   recommendStatus: false,
-  serviceIds: undefined,
+  service: undefined,
   subTitle: undefined,
   keyword: undefined,
-  intro: undefined,
-  param: undefined,
   skus: []
 }
 
@@ -72,32 +69,10 @@ const prevStep = () => {
 }
 
 const submitLoading = ref(false)
-const submit = async (value?: any) => {
+const submit = async (skus?: ProductSkuDTO[]) => {
   submitLoading.value = true
   try {
-    // 处理 sku 图片
-    const skus = value.sku
-    skus.forEach((item: any) => {
-      if (!item.albumPics && item.albumPics.length <= 0) {
-        return
-      }
-      const tempPics: any[] = []
-      item.albumPics.forEach((pic) => {
-        typeof pic === 'object' ? tempPics.push(pic.url) : tempPics.push(pic)
-      })
-      item.albumPics = tempPics
-    })
     productData.value.skus = skus
-    // 处理 parma
-    const tempParam: any[] = []
-    value.param.forEach((e) => {
-      e.attributes.forEach((item) => {
-        if (item.value) {
-          tempParam.push({ attributeId: item.id, value: item.value })
-        }
-      })
-    })
-    productData.value.param = tempParam
     console.log(productData.value)
 
     if (productData.value.id) {
@@ -145,8 +120,8 @@ onMounted(async () => {
       <AttrDetail
         v-show="showStatus[2]"
         v-model="productData"
-        @prev="prevStep"
         :submitLoading="submitLoading"
+        @prev="prevStep"
         @submit="submit"
       />
     </div>

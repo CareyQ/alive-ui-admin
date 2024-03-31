@@ -1,29 +1,14 @@
 import request from '@/utils/axios'
 
-export interface ProductParamDTO {
-  id?: number
-  attributeId: number
-  value: string
-}
-
-export interface ProductSpecDTO {
-  attributeId: number
-  attributeName: string
-  valueId: number
-  value: string
-}
-
 export interface ProductDTO {
   id?: number
-  categoryId?: number
-  brandId?: number
-  snCode?: string
+  categoryId?: number | string
+  brandId?: number | string
   name?: string
-  pic?: string
+  slidePic?: Array<string>
   status?: number
   sort?: number
   price?: number
-  marketPrice?: number
   stock?: number
   unit?: string
   detailHtml: string
@@ -33,26 +18,28 @@ export interface ProductDTO {
   usePointLimit?: number
   newStatus?: boolean
   recommendStatus?: boolean
-  serviceIds?: Array<number>
+  service?: Array<number>
   subTitle?: string
   keyword?: string
-  intro?: string
-  param?: Array<ProductParamDTO>
-  skus: Array<ProductSkuDTO>
+  skus?: Array<ProductSkuDTO>
 }
 
 export interface ProductSkuDTO {
-  uid?: number
   id?: number
   productId?: number
-  spec?: Array<ProductSpecDTO>
-  skuCode?: string
+  spec?: Array<ProductSpec>
+  snCode?: string
   price?: number
-  marketPrice?: number
   stock?: number
-  albumPics?: Array<string>
+  pic?: string
   weight?: number
   volume?: number
+}
+
+export interface ProductSpec {
+  attributeId: number
+  attributeName: string
+  value: string
 }
 
 export interface ProductPageDTO {
