@@ -52,12 +52,8 @@ const nextStep = (value?: any) => {
     active.value++
     hideAll()
     showStatus.value[active.value] = true
-    console.log('nextValue', value)
-    console.log('nextData', productData.value)
-
     Object.assign(productData.value, value)
   }
-  console.log(productData.value)
 }
 
 const prevStep = () => {
@@ -73,7 +69,6 @@ const submit = async (skus?: ProductSkuDTO[]) => {
   submitLoading.value = true
   try {
     productData.value.skus = skus
-    console.log(productData.value)
 
     if (productData.value.id) {
       await ProductApi.updateProduct(productData.value)
@@ -81,7 +76,7 @@ const submit = async (skus?: ProductSkuDTO[]) => {
       await ProductApi.createProduct(productData.value)
     }
     message.success('保存成功')
-    push({ name: 'ProductBrand' })
+    push({ name: 'ProductList' })
     closeTab(unref(currentRoute))
   } finally {
     submitLoading.value = false

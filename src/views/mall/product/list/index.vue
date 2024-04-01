@@ -34,7 +34,7 @@ const statusChange = async (row: any) => {
     const text = row.status === 1 ? '上架' : '下架'
     await message.confirm(`确定要${text}该商品吗？`)
     // 发起修改状态
-    await ProductApi.updateStatus(row.id!, row.status!)
+    await ProductApi.updateStatus(row.id!, row.status === 0 ? 1 : 0)
     // 刷新列表
     await aliveTable.value.getTableList()
   } catch {
@@ -93,7 +93,6 @@ onMounted(() => {
         </template>
       </el-table-column>
       <el-table-column label="名称" prop="name" />
-      <el-table-column label="货号" align="center" prop="snCode" />
       <el-table-column label="分类" align="center" prop="categoryName" />
       <el-table-column label="品牌" align="center" prop="brandName" />
       <el-table-column label="价格" align="center" prop="price" />
