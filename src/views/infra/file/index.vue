@@ -12,6 +12,7 @@ const aliveTable = ref()
 const message = useMessage()
 const formRef = ref()
 const detailRef = ref()
+const folders = ref([])
 const openForm = () => {
   formRef.value.open(aliveTable.value.getTableList)
 }
@@ -34,6 +35,14 @@ const handleDel = async (id: number) => {
   message.success('删除成功')
   await aliveTable.value.getTableList()
 }
+
+const getFileFolder = async () => {
+  folders.value = await FileApi.getFileFolder()
+}
+
+onMounted(() => {
+  getFileFolder()
+})
 </script>
 
 <template>
@@ -43,10 +52,12 @@ const handleDel = async (id: number) => {
         <el-form-item label="文件名" prop="name">
           <el-input v-model="aliveTable.searchParam.name" placeholder="请输入文件名" clearable />
         </el-form-item>
-        <el-form-item label="文件路径" prop="path">
-          <el-input v-model="aliveTable.searchParam.path" placeholder="请输入文件路径" clearable />
+        <el-form-item label="文件目录" prop="folder">
+          <el-select v-model="aliveTable.searchParam.folder" placeholder="请选择目录" clearable>
+            <el-option v-for="(item, index) in folders" :key="index" :label="item" :value="item" />
+          </el-select>
         </el-form-item>
-        <el-form-item label="创建时间" prop="createTime">
+        <el-form-item label="上传时间" prop="createTime">
           <el-date-picker
             v-model="aliveTable.searchParam.createDate"
             value-format="YYYY-MM-DD"
@@ -68,9 +79,9 @@ const handleDel = async (id: number) => {
           <span style="font-size: 12px; color: rgb(107 114 128)">{{ row.type }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="文件路径" align="center" prop="path" />
       <el-table-column label="文件大小" align="center" prop="size" :formatter="fileSizeFormatter" width="150" />
-      <el-table-column label="文件路径" align="center" prop="path" width="350" />
-      <el-table-column align="center" label="上传时间" prop="createTime" :formatter="dateFormatter" width="200" />
+      <el-table-column align="center" label="上传时间" prop="createTime" :formatter="dateFormatter" width="220" />
       <el-table-column align="center" label="操作" width="200">
         <template #default="{ row }">
           <el-button link type="primary" size="small" @click="openDetail(row.id)"> 详情 </el-button>

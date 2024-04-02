@@ -2,7 +2,7 @@ import request from '@/utils/axios'
 
 export interface FileDTO {
   id?: number
-  configId?: number
+  folder?: string
   name?: string
   path?: string
   url?: string
@@ -16,6 +16,11 @@ export interface FilePageDTO {
   createTime?: Date
   current: number
   size: number
+}
+
+// 查询文件目录
+export const getFileFolder = async () => {
+  return await request.get({ url: `/infra/file/folder` })
 }
 
 // 查询文件分页
