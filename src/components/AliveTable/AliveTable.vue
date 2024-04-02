@@ -117,7 +117,7 @@ defineExpose({
 
       <!-- 表格头右侧工具栏 -->
       <div class="table-header-ri" v-if="hasSearch || hasOneSearch">
-        <el-form v-if="hasOneSearch" ref="formRef" :model="searchParam" style="display: flex">
+        <el-form v-if="hasOneSearch" ref="formRef" :model="searchParam" style="display: flex" class="one-search">
           <slot name="searchOne"></slot>
           <el-form-item style="margin-left: 10px">
             <el-button type="primary" :icon="Search" @click="search" />
@@ -189,15 +189,15 @@ defineExpose({
   .el-table__header th {
     background-color: var(--el-fill-color-light);
   }
-}
-</style>
 
-<style lang="scss">
-.alive-table {
   .table-header-ri {
     .el-form-item {
       margin-bottom: 0;
     }
   }
+}
+
+.one-search .el-input {
+  width: 220px;
 }
 </style>
