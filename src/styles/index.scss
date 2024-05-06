@@ -56,6 +56,12 @@ ul {
   align-items: center;
 }
 
+.flex-center-around {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
 /* 禁止换行 */
 .no-wrap {
   white-space: nowrap;

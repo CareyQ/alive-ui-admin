@@ -4,6 +4,7 @@ import * as LoginApi from '@/api/login'
 import * as authUtil from '@/utils/auth'
 
 const { setLoginState, getLoginState } = useLoginState()
+const message = useMessage()
 
 const getShow = computed(() => unref(getLoginState) === LoginStateEnum.LOGIN)
 const loginLoading = ref(false)
@@ -77,13 +78,26 @@ const handleLogin = async () => {
         </el-col>
 
         <el-col :span="12" :offset="6">
-          <el-link style="float: right" type="primary" :underline="false" href=""> 忘记密码？ </el-link>
+          <el-link style="float: right" type="primary" :underline="false" href=""> 验证码登录 </el-link>
         </el-col>
       </el-row>
     </el-form-item>
 
     <el-form-item>
       <el-button type="primary" class="login-btn" @click="handleLogin" :loading="loginLoading"> 登 录 </el-button>
+      <el-link style="margin: 0 auto" type="primary" :underline="false" @click="message.notify('请联系管理员重置密码')">
+        已有帐号，忘记密码？
+      </el-link>
+    </el-form-item>
+
+    <el-form-item>
+      <el-divider>其他登录方式</el-divider>
+      <div class="flex-center-around" style="width: 100%">
+        <Icon class="pointer" icon="ri:wechat-fill" :size="30" />
+        <Icon class="pointer" icon="ri:dingding-fill" :size="30" />
+        <Icon class="pointer" icon="ri:github-fill" :size="30" />
+        <Icon class="pointer" icon="simple-icons:gitee" :size="25" />
+      </div>
     </el-form-item>
   </el-form>
 </template>
@@ -98,5 +112,11 @@ const handleLogin = async () => {
 .login-btn {
   width: 100%;
   margin-top: -18px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.pointer:hover {
+  color: var(--el-color-primary);
 }
 </style>

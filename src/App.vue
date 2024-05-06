@@ -5,14 +5,14 @@
 </template>
 
 <style lang="scss">
-.size {
+%size {
   width: 100%;
   height: 100%;
 }
 
 html,
 body {
-  @extend .size;
+  @extend %size;
 
   padding: 0;
   margin: 0;
@@ -20,7 +20,7 @@ body {
 }
 
 #app {
-  @extend .size;
+  @extend %size;
 
   background-color: var(--login-bg-color);
 }

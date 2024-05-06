@@ -28,18 +28,18 @@ const appStore = useAppStore()
   height: 100vh;
 }
 
-.height {
+%height {
   height: 500px;
 }
 
-.panel {
-  @extend .height;
+%panel {
+  @extend %height;
 
   padding: 50px;
 }
 
 .login-panel {
-  @extend .height;
+  @extend %height;
 
   overflow: hidden;
   background-color: white;
@@ -47,7 +47,7 @@ const appStore = useAppStore()
 }
 
 .login-intro {
-  @extend .panel;
+  @extend %panel;
 
   width: 500px;
   padding: 50px;
@@ -78,7 +78,7 @@ const appStore = useAppStore()
 }
 
 .form-panel {
-  @extend .panel;
+  @extend %panel;
 
   width: 400px;
 }

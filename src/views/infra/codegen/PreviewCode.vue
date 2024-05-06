@@ -199,9 +199,9 @@ onMounted(async () => {
 }
 
 .copy-btn {
+  position: absolute;
   top: 0;
   right: 10px;
-  position: absolute;
   z-index: 99;
 }
 </style>
@@ -209,8 +209,8 @@ onMounted(async () => {
 <style lang="scss">
 .preview-code {
   .el-scrollbar__wrap .el-scrollbar__view {
-    white-space: nowrap;
     display: inline-block;
+    white-space: nowrap;
   }
 }
 </style>

@@ -86,7 +86,7 @@
     "source.fixAll.eslint": "explicit"
   },
   "[vue]": {
-    "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   // 控制相关文件嵌套展示
   "explorer.fileNesting.enabled": true,
