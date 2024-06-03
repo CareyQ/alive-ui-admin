@@ -3,16 +3,15 @@ import { useAppStore } from '@/store/modules/app'
 import { LoginForm, RegisterForm } from './components'
 
 const appStore = useAppStore()
+
+const bg = '/src/assets/bg.jpg'
 </script>
 
 <template>
-  <div class="page-container flex-center">
+  <div class="login-page flex-center" :style="`background-image: url(${bg});`">
+    <div class="filter"></div>
     <div class="login-panel flex">
-      <section class="login-intro flex justify-center">
-        <h1>{{ appStore.getTitle }}</h1>
-        <p>欢迎使用本系统！</p>
-        <img src="@/assets/login-bg.svg" :alt="appStore.getTitle" />
-      </section>
+      <section class="login-intro" :style="`background-image: url(${bg});`"></section>
 
       <section class="form-panel flex align-center">
         <LoginForm />
@@ -23,63 +22,59 @@ const appStore = useAppStore()
 </template>
 
 <style lang="scss" scoped>
-.page-container {
+.login-page,
+.filter {
   width: 100%;
   height: 100vh;
+}
+
+.login-page,
+.login-intro {
+  position: relative;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 %height {
   height: 500px;
 }
 
-%panel {
-  @extend %height;
+%border-radius {
+  border-radius: 14px;
+}
 
-  padding: 50px;
+.filter {
+  position: absolute;
+  top: 0;
+  left: 0;
+  backdrop-filter: blur(28px);
 }
 
 .login-panel {
   @extend %height;
 
-  overflow: hidden;
-  background-color: white;
-  border-radius: 6px;
+  position: relative;
+  width: 60%;
+  padding: 35px 0;
 }
 
 .login-intro {
-  @extend %panel;
+  @extend %border-radius;
 
-  width: 500px;
-  padding: 50px;
-  color: white;
-  background-color: var(--el-color-primary);
-  flex-direction: column;
-
-  h1 {
-    margin: 0;
-    font-size: 1.375rem;
-    line-height: 1.5rem;
-  }
-
-  p {
-    position: relative;
-    z-index: 1;
-    margin-top: 10px;
-    margin-bottom: 0;
-    font-size: 0.875rem;
-  }
-
-  img {
-    position: relative;
-    z-index: 0;
-    width: 95%;
-    margin: -10px auto 0;
-  }
+  width: 70%;
+  height: 430px;
 }
 
 .form-panel {
-  @extend %panel;
+  @extend %border-radius;
+  @extend %height;
 
-  width: 400px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 360px;
+  padding: 50px;
+  background-color: #fff;
 }
 </style>
