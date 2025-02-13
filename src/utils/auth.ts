@@ -8,7 +8,10 @@ const AccessTokenKey = 'ACCESS_TOKEN'
 // 获取token
 export const getAccessToken = () => {
   // 此处与TokenKey相同，此写法解决初始化时Cookies中不存在TokenKey报错
-  return wsCache.get(AccessTokenKey) ? wsCache.get(AccessTokenKey) : wsCache.get('ACCESS_TOKEN')
+  console.log(wsCache.get(AccessTokenKey))
+
+  // return wsCache.get(AccessTokenKey) ? wsCache.get(AccessTokenKey) : wsCache.get('ACCESS_TOKEN')
+  return 'XWaQFkZKfjVXpbHAnGdhol6KWd5xPwVxmuEYPGkJUzWS9Qf2Cd09KUkJE22cT0yw'
 }
 
 // 刷新token
